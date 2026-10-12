@@ -1,0 +1,201 @@
+<!doctype html>
+<html lang="id" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Database viewer · Tools SagalaIT</title>
+<script src="../assets/theme.js"></script>
+<link rel="icon" href="data:,">
+<link rel="stylesheet" href="../assets/app.css">
+<link rel="stylesheet" href="app.css">
+</head>
+<body>
+
+<header class="wrap top">
+  <a class="back" href="../index.html">← Semua tools</a>
+  <button class="icon-btn" type="button" data-theme-toggle aria-label="Ganti tema terang atau gelap">
+    <svg width="20" height="20" viewBox="-11 -11 22 22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle r="9"/><path d="M0 -9 A9 9 0 0 1 0 9 Z" fill="currentColor"/></svg>
+  </button>
+</header>
+
+<main class="wrap dbv">
+  <div class="app-head">
+    <div>
+      <h1>Database viewer</h1>
+      <p class="lead">Lihat data tabel dari CSV, JSON, dump SQL, atau keluaran terminal MySQL. Hanya untuk melihat: tidak ada koneksi ke database dan tidak ada SQL yang dijalankan.</p>
+    </div>
+    <div class="actions">
+      <button class="btn" id="btnSample" type="button">Coba dengan contoh</button>
+      <button class="btn" id="btnClear" type="button">Bersihkan</button>
+    </div>
+  </div>
+
+  <section class="panel" id="inPanel">
+    <div class="panel-head"><h2>Masukan</h2><span class="small muted" id="srcNote"></span></div>
+    <label class="vh" for="input">Tempel data</label>
+    <textarea id="input" class="field" rows="7" spellcheck="false" placeholder="Tempel CSV, JSON, dump SQL, atau hasil SELECT dari terminal di sini, atau seret file ke area ini."></textarea>
+    <div class="opts">
+      <label>Format
+        <select id="fmt" class="field-sm">
+          <option value="auto" selected>Otomatis</option>
+          <option value="csv">CSV atau TSV</option>
+          <option value="json">JSON atau JSON Lines</option>
+          <option value="sql">Dump SQL</option>
+          <option value="mysql">Keluaran terminal MySQL</option>
+        </select>
+      </label>
+      <label>Pemisah
+        <select id="delim" class="field-sm">
+          <option value="auto" selected>Otomatis</option>
+          <option value=",">Koma</option>
+          <option value=";">Titik koma</option>
+          <option value="tab">Tab</option>
+          <option value="|">Pipa</option>
+        </select>
+      </label>
+      <label>Encoding file
+        <select id="enc" class="field-sm">
+          <option value="utf-8" selected>UTF-8</option>
+          <option value="windows-1252">Windows-1252</option>
+          <option value="latin1">Latin-1</option>
+        </select>
+      </label>
+      <label class="ck"><input type="checkbox" id="header" checked> Baris pertama adalah judul kolom (CSV)</label>
+    </div>
+    <div class="actions">
+      <label class="btn">Pilih file…<input class="vh" type="file" id="file"></label>
+      <button class="btn btn-primary" id="btnGo" type="button">Tampilkan</button>
+      <button class="btn" id="btnDetach" type="button" hidden>Lepas file</button>
+    </div>
+    <p class="small muted hint">Data diproses di browser ini saja dan tidak disimpan. Ctrl+Enter di kotak teks untuk menampilkan. Yang diingat hanya pemisah dan pilihan judul kolom.</p>
+    <div id="prog" class="prog" hidden>
+      <progress id="bar" max="1" value="0" aria-label="Progres membaca data"></progress>
+      <span class="small muted" id="progTxt" role="status"></span>
+      <button class="btn btn-sm" id="btnCancel" type="button">Batal</button>
+    </div>
+    <div id="msg" role="alert"></div>
+  </section>
+
+  <section class="panel empty" id="empty">
+    <p>Langkah pertama: tempel data di kotak di atas atau pilih file, lalu tekan Tampilkan.</p>
+    <button class="btn btn-primary" id="btnSample2" type="button">Coba dengan contoh</button>
+  </section>
+
+  <div id="result" class="stack" hidden>
+    <section class="panel">
+      <div class="panel-head"><h2>Ringkasan</h2></div>
+      <div class="sum" id="sum"></div>
+      <div class="issue info notes" id="notes" hidden></div>
+    </section>
+
+    <section class="panel">
+      <div class="panel-head"><h2 id="vTitle">Tabel</h2><span class="small muted" id="count" role="status"></span></div>
+      <div class="tabs" id="tabs" hidden></div>
+      <div class="toolbar">
+        <label class="vh" for="q">Cari di semua kolom</label>
+        <input id="q" type="search" class="field-sm q" placeholder="Cari di semua kolom" autocomplete="off">
+        <button class="btn btn-sm" type="button" data-drawer="dFilter" aria-expanded="false" aria-controls="dFilter">Filter <span id="fNum"></span></button>
+        <button class="btn btn-sm" type="button" data-drawer="dCols" aria-expanded="false" aria-controls="dCols">Kolom</button>
+        <button class="btn btn-sm" type="button" data-drawer="dExport" aria-expanded="false" aria-controls="dExport">Ekspor</button>
+      </div>
+      <p class="small opnote" id="opNote" role="status"></p>
+
+      <div class="drawer" id="dFilter" hidden>
+        <div class="frow">
+          <label>Kolom <select id="fCol" class="field-sm"></select></label>
+          <label>Syarat
+            <select id="fOp" class="field-sm">
+              <option value="has">berisi</option>
+              <option value="eq">sama dengan</option>
+              <option value="ne">tidak sama dengan</option>
+              <option value="gt">lebih besar dari</option>
+              <option value="lt">lebih kecil dari</option>
+              <option value="empty">kosong (string kosong)</option>
+              <option value="null">NULL</option>
+            </select>
+          </label>
+          <label class="grow">Nilai <input id="fVal" class="field-sm" type="text" autocomplete="off"></label>
+          <button class="btn btn-sm btn-primary" id="fAdd" type="button">Tambah filter</button>
+        </div>
+        <div class="chips" id="chips"></div>
+        <button class="btn btn-sm" id="fClear" type="button" hidden>Hapus semua filter</button>
+        <p class="small muted">Beberapa filter digabung dengan AND. Sel NULL tidak cocok dengan berisi, sama dengan, lebih besar, dan lebih kecil; sel NULL cocok dengan tidak sama dengan.</p>
+      </div>
+
+      <div class="drawer" id="dCols" hidden>
+        <div class="actions"><button class="btn btn-sm" id="colAll" type="button">Tampilkan semua</button><button class="btn btn-sm" id="colNone" type="button">Hanya kolom pertama</button><button class="btn btn-sm" id="colReset" type="button">Atur ulang lebar</button></div>
+        <div class="collist" id="colList"></div>
+        <p class="small muted">Seret tepi kanan judul kolom untuk mengubah lebar, atau fokuskan tepinya lalu tekan panah kiri atau kanan.</p>
+      </div>
+
+      <div class="drawer" id="dExport" hidden>
+        <div class="actions">
+          <button class="btn btn-sm btn-primary" id="exCsv" type="button">Unduh CSV</button>
+          <button class="btn btn-sm btn-primary" id="exJson" type="button">Unduh JSON</button>
+          <button class="btn btn-sm" id="exTsv" type="button">Salin sebagai TSV</button>
+          <label class="ck"><input type="checkbox" id="bom"> BOM UTF-8 pada CSV</label>
+        </div>
+        <p class="small muted" id="expNote"></p>
+        <p class="small muted">NULL ditulis sebagai sel kosong di CSV dan TSV, dan sebagai null di JSON.</p>
+      </div>
+
+      <div class="gridwrap" id="gw" tabindex="0" role="region" aria-label="Tabel data. Panah untuk berpindah sel, Enter untuk membuka nilai, Shift+Enter untuk membuka baris.">
+        <table class="grid" id="grid"></table>
+      </div>
+      <div class="empty" id="noRows" hidden>Tidak ada baris yang cocok dengan pencarian dan filter saat ini. Kosongkan kotak cari atau hapus filter.</div>
+      <p class="small muted hint">Klik judul kolom untuk mengurutkan (naik, turun, tanpa urut). Klik sel untuk melihat nilai penuh, klik nomor baris untuk melihat satu baris.</p>
+    </section>
+  </div>
+</main>
+
+<dialog id="cellDlg" class="dlg" aria-labelledby="cdTitle">
+  <div class="panel-head"><h2 id="cdTitle"></h2><button class="btn btn-sm" id="cdClose" type="button">Tutup</button></div>
+  <p class="small" id="cdNote"></p>
+  <pre class="src" id="cdPre"></pre>
+  <div class="actions" style="margin-top:12px">
+    <button class="btn btn-sm btn-primary" id="cdCopy" type="button">Salin nilai</button>
+    <a id="cdLink" class="btn btn-sm" href="../serialize-checker/" target="_blank" rel="noopener" hidden>Buka di Serialize Checker</a>
+  </div>
+</dialog>
+
+<dialog id="rowDlg" class="dlg" aria-labelledby="rdTitle">
+  <div class="panel-head"><h2 id="rdTitle"></h2><button class="btn btn-sm" id="rdClose" type="button">Tutup</button></div>
+  <div class="actions">
+    <button class="btn btn-sm" id="rdPrev" type="button">Baris sebelumnya</button>
+    <button class="btn btn-sm" id="rdNext" type="button">Baris berikutnya</button>
+    <button class="btn btn-sm" id="rdTsv" type="button">Salin TSV</button>
+    <button class="btn btn-sm" id="rdJson" type="button">Salin JSON</button>
+  </div>
+  <dl class="kv" id="rdList"></dl>
+</dialog>
+
+<script type="text/plain" id="sampleText">
+-- MySQL dump 10.13  Distrib 8.0.36
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+DROP TABLE IF EXISTS `pelanggan`;
+CREATE TABLE `pelanggan` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `nama` varchar(100) NOT NULL,
+  `kota` varchar(50) DEFAULT NULL,
+  `bergabung` datetime DEFAULT NULL,
+  `meta` json DEFAULT NULL,
+  `pengaturan` text,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB;
+LOCK TABLES `pelanggan` WRITE;
+INSERT INTO `pelanggan` VALUES (1,'Sari Wulandari','Bandung','2024-03-01 09:15:00','{"paket":"pro","aktif":true}','a:2:{s:5:"tema";s:5:"gelap";s:4:"font";i:14;}'),(2,'Budi O\'Neil','Jakarta','2024-03-05 14:02:11',NULL,''),(3,'Citra, \"Cici\" Lestari','Surabaya',NULL,'[1,2,3]','catatan baris 1\nbaris 2'),(10,'Dewi','Bandung','2024-04-20 08:00:00','{"paket":"gratis"}',NULL),(9,'Eko (a),(b)','Medan','2024-04-21 10:30:00',NULL,NULL);
+UNLOCK TABLES;
+CREATE TABLE `pesanan` (
+  `id` int NOT NULL,
+  `pelanggan_id` int NOT NULL,
+  `total` decimal(12,2) NOT NULL,
+  `catatan` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+);
+INSERT INTO `pesanan` (`id`,`pelanggan_id`,`total`,`catatan`) VALUES (1,1,150000.50,'Kirim cepat'),(2,2,89000.00,NULL),(3,1,1250000.00,'Diskon ''akhir tahun'''),(4,10,45000.25,'');
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+</script>
+
+<script src="app.js"></script>
+</body>
+</html>
