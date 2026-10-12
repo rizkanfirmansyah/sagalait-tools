@@ -10,7 +10,10 @@
   "groups": [
     { "id": "php", "name": "PHP dan data" },
     { "id": "teks", "name": "Teks dan encoding" },
-    { "id": "waktu", "name": "Waktu dan fokus" }
+    { "id": "waktu", "name": "Waktu dan fokus" },
+    { "id": "server", "name": "Server dan jaringan" },
+    { "id": "db", "name": "Database" },
+    { "id": "dev", "name": "Developer" }
   ],
   "tools": [
     {
@@ -50,6 +53,56 @@
       "path": "timer/",
       "icon": "⏱",
       "tags": ["countdown", "hitung mundur", "alarm", "pomodoro", "fokus"],
+      "favorite": false
+    },
+    {
+      "id": "jwt",
+      "name": "Decoder JWT",
+      "description": "Baca isi token JWT dan periksa masa berlakunya",
+      "group": "dev",
+      "path": "jwt/",
+      "icon": "JWT",
+      "tags": ["jwt", "token", "bearer", "auth", "jws", "claims", "oauth"],
+      "favorite": false
+    },
+    {
+      "id": "cron",
+      "name": "Cron dan timer",
+      "description": "Buat, jelaskan, dan uji jadwal cron atau systemd timer",
+      "group": "server",
+      "path": "cron/",
+      "icon": "*/5",
+      "tags": ["cron", "crontab", "systemd", "timer", "jadwal", "scheduler"],
+      "favorite": false
+    },
+    {
+      "id": "nginx-generator",
+      "name": "Nginx generator",
+      "description": "Buat konfigurasi server block: statis, reverse proxy, PHP-FPM",
+      "group": "server",
+      "path": "nginx-generator/",
+      "icon": "ng",
+      "tags": ["nginx", "reverse proxy", "proxy_pass", "php-fpm", "https", "server block"],
+      "favorite": false
+    },
+    {
+      "id": "db-viewer",
+      "name": "Database viewer",
+      "description": "Lihat data tabel dari CSV, JSON, atau dump SQL",
+      "group": "db",
+      "path": "db-viewer/",
+      "icon": "DB",
+      "tags": ["csv", "sql", "tabel", "dump", "mysql", "json"],
+      "favorite": false
+    },
+    {
+      "id": "firewall",
+      "name": "Generator firewall",
+      "description": "Buat aturan firewall MikroTik atau Linux (nftables)",
+      "group": "server",
+      "path": "firewall/",
+      "icon": "fw",
+      "tags": ["firewall", "mikrotik", "routeros", "nftables", "iptables", "nat", "port forward"],
       "favorite": false
     }
   ]

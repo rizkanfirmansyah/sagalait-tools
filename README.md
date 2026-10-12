@@ -13,6 +13,11 @@ serialize-checker/    app 1
 json-formatter/       app 2
 hitung-byte/          app 3
 timer/                app 4
+jwt/                  app 5
+cron/                 app 6
+nginx-generator/      app 7
+db-viewer/            app 8
+firewall/             app 9
 ```
 
 ## Menjalankan di lokal
