@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="id" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Generator firewall · Tools SagalaIT</title>
+<script src="../assets/theme.js"></script>
+<link rel="icon" href="data:,">
+<link rel="stylesheet" href="../assets/app.css">
+<link rel="stylesheet" href="app.css">
+</head>
+<body>
+
+<header class="wrap top">
+  <a class="back" href="../index.html">← Semua tools</a>
+  <button class="icon-btn" type="button" data-theme-toggle aria-label="Ganti tema terang atau gelap">
+    <svg width="20" height="20" viewBox="-11 -11 22 22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle r="9"/><path d="M0 -9 A9 9 0 0 1 0 9 Z" fill="currentColor"/></svg>
+  </button>
+</header>
+
+<main class="wrap">
+  <div class="app-head">
+    <div>
+      <h1>Generator firewall</h1>
+      <p class="lead">Buat aturan firewall MikroTik RouterOS atau Linux (nftables, iptables) dari form. Akses manajemen selalu menjadi aturan pertama, dan setiap hasil disertai cara memeriksa dan membatalkannya.</p>
+    </div>
+    <div class="actions">
+      <button class="btn" id="btnSample" type="button">Coba dengan contoh</button>
+      <button class="btn" id="btnClear" type="button">Bersihkan</button>
+    </div>
+  </div>
+
+  <div class="app-grid">
+    <div class="stack">
+      <div class="panel">
+        <div class="panel-head"><h2 id="tgt">Target</h2></div>
+        <div class="fw-tabs" id="tabs" role="group" aria-labelledby="tgt">
+          <button class="btn btn-primary" type="button" data-t="mt" aria-pressed="true">MikroTik RouterOS</button>
+          <button class="btn" type="button" data-t="lx" aria-pressed="false">Linux</button>
+        </div>
+      </div>
+      <div class="stack" id="form"></div>
+    </div>
+    <div class="stack" id="result" aria-live="polite"></div>
+  </div>
+</main>
+
+<script src="engine.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
