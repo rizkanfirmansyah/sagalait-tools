@@ -12,6 +12,7 @@ assets/theme.js       tema terang/gelap bersama
 serialize-checker/    app 1
 json-formatter/       app 2
 hitung-byte/          app 3
+timer/                app 4
 ```
 
 ## Menjalankan di lokal

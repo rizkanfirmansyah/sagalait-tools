@@ -9,7 +9,8 @@
   },
   "groups": [
     { "id": "php", "name": "PHP dan data" },
-    { "id": "teks", "name": "Teks dan encoding" }
+    { "id": "teks", "name": "Teks dan encoding" },
+    { "id": "waktu", "name": "Waktu dan fokus" }
   ],
   "tools": [
     {
@@ -40,6 +41,16 @@
       "icon": "B",
       "tags": ["byte", "strlen", "utf-8", "panjang", "karakter"],
       "favorite": true
+    },
+    {
+      "id": "timer",
+      "name": "Timer",
+      "description": "Hitung mundur dengan durasi dan suara pilihan",
+      "group": "waktu",
+      "path": "timer/",
+      "icon": "⏱",
+      "tags": ["countdown", "hitung mundur", "alarm", "pomodoro", "fokus"],
+      "favorite": false
     }
   ]
 }

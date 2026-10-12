@@ -1,0 +1,415 @@
+<!doctype html>
+<html lang="id" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Timer</title>
+<script src="../assets/theme.js"></script>
+<link rel="icon" href="data:,">
+<link rel="stylesheet" href="../assets/app.css">
+<style>
+  .tp { container-type: inline-size; }
+  .clock { display: flex; justify-content: center; align-items: flex-start; font: 700 clamp(30px, 13vw, 90px)/1 var(--mono); font-variant-numeric: tabular-nums; color: var(--ink); padding: 8px 0 4px; }
+  @supports (font-size: 1cqw) { .clock { font-size: clamp(30px, 16cqw, 150px); } }
+  .clock .seg { display: flex; flex-direction: column; align-items: center; }
+  .clock .lab { font: 500 clamp(11px, 2.6cqw, 14px)/1.4 var(--font); color: var(--muted); margin-top: 6px; }
+  .clock .sep { color: var(--muted); font-weight: 400; padding: 0 .06em; }
+  .bar { height: 8px; margin: 18px 0 12px; border: 1px solid var(--muted); border-radius: 5px; background: var(--well); overflow: hidden; }
+  .bar > i { display: block; height: 100%; width: 0; background: var(--mark); }
+  .status { text-align: center; color: var(--body); min-height: 1.5em; }
+  .ctl { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin-top: 16px; }
+  .ctl .btn { flex: 1 1 120px; max-width: 200px; }
+  .keys { text-align: center; margin-top: 12px; }
+  .done .clock { color: var(--err); }
+  .done .bar { border-color: var(--err); }
+  .done .bar > i { background: var(--err); }
+  @media (prefers-reduced-motion: no-preference) { .done .clock { animation: blink 2s ease-in-out infinite; } }
+  @keyframes blink { 50% { opacity: .35; } }
+
+  .dur { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+  .dur label, .row label { display: block; font-size: 14px; color: var(--body); margin-bottom: 4px; }
+  .field-sm.in { width: 100%; font-size: 16px; height: 44px; padding: 0 12px; font-variant-numeric: tabular-nums; }
+  .field-sm.in:disabled { opacity: .55; cursor: not-allowed; }
+  .presets { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
+  .presets .btn { height: 44px; padding: 0 14px; }
+  .btn:disabled { opacity: .5; cursor: not-allowed; }
+  .btn:disabled:hover { border-color: var(--line-strong); }
+  .btn-primary:disabled:hover { border-color: var(--accent); filter: none; }
+  .row + .row { margin-top: 14px; }
+  .row input[type=range] { width: 100%; height: 44px; margin: 0; accent-color: var(--accent); }
+  .vol-v { font-variant-numeric: tabular-nums; }
+  .snd-btns { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px; }
+  .msg { min-height: 1.4em; margin-top: 6px; color: var(--warn); }
+
+  /* layar penuh */
+  body.fs .top, body.fs .app-head, body.fs .side, body.fs .keys { display: none; }
+  body.fs .app-grid { display: block; padding: 0; }
+  body.fs .tp { position: fixed; inset: 0; z-index: 10; border: 0; border-radius: 0; display: flex; flex-direction: column; justify-content: center; overflow: auto; padding: 16px; }
+  body.fs .clock { font-size: min(16cqw, 30dvh); }
+  @media (hover: none) and (max-width: 700px) { .keys { display: none; } }
+  @media (max-width: 380px) { .panel { padding: 16px; } }
+</style>
+</head>
+<body>
+
+<header class="wrap top">
+  <a class="back" href="../index.html">← Semua tools</a>
+  <button class="icon-btn" type="button" data-theme-toggle aria-label="Ganti tema terang atau gelap">
+    <svg width="20" height="20" viewBox="-11 -11 22 22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle r="9"/><path d="M0 -9 A9 9 0 0 1 0 9 Z" fill="currentColor"/></svg>
+  </button>
+</header>
+
+<main class="wrap">
+  <div class="app-head">
+    <div>
+      <h1>Timer</h1>
+      <p class="lead">Hitung mundur dengan durasi dan suara pilihan. Tetap akurat saat tab di latar belakang.</p>
+    </div>
+  </div>
+
+  <div class="app-grid">
+    <section class="panel tp" id="tp" aria-labelledby="hTimer">
+      <div class="panel-head"><h2 id="hTimer">Timer</h2></div>
+      <div class="clock" id="clock" role="timer" aria-label="Sisa waktu">
+        <div class="seg"><span id="h">00</span><span class="lab">jam</span></div><span class="sep" aria-hidden="true">:</span>
+        <div class="seg"><span id="m">00</span><span class="lab">menit</span></div><span class="sep" aria-hidden="true">:</span>
+        <div class="seg"><span id="s">00</span><span class="lab">detik</span></div>
+      </div>
+      <div class="bar" id="bar" role="progressbar" aria-label="Progres" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><i id="fill"></i></div>
+      <p class="status" id="status" aria-live="polite"></p>
+      <div class="ctl">
+        <button class="btn btn-primary" id="toggle" type="button">Mulai</button>
+        <button class="btn" id="reset" type="button">Atur ulang</button>
+        <button class="btn" id="full" type="button">Layar penuh</button>
+      </div>
+      <p class="small muted keys">Spasi: mulai/jeda · R: atur ulang · F: layar penuh</p>
+    </section>
+
+    <div class="stack side">
+      <section class="panel">
+        <div class="panel-head"><h2>Durasi</h2></div>
+        <div class="dur">
+          <div><label for="inH">Jam</label><input class="field-sm in" id="inH" type="number" inputmode="numeric" min="0" max="99" step="1"></div>
+          <div><label for="inM">Menit</label><input class="field-sm in" id="inM" type="number" inputmode="numeric" min="0" max="59" step="1"></div>
+          <div><label for="inS">Detik</label><input class="field-sm in" id="inS" type="number" inputmode="numeric" min="0" max="59" step="1"></div>
+        </div>
+        <p class="small msg" id="durMsg"></p>
+        <div class="presets" id="presets"></div>
+        <p class="small muted" id="lockNote" style="margin-top:12px" hidden>Atur ulang dulu untuk mengganti durasi.</p>
+      </section>
+
+      <section class="panel">
+        <div class="panel-head"><h2>Suara</h2></div>
+        <div class="row">
+          <label for="sound">Suara saat selesai</label>
+          <select class="field-sm in" id="sound"></select>
+        </div>
+        <div class="row">
+          <label for="vol">Volume: <span class="vol-v" id="volV"></span></label>
+          <input type="range" id="vol" min="0" max="100" step="1">
+        </div>
+        <div class="row">
+          <label for="rep">Pengulangan</label>
+          <select class="field-sm in" id="rep">
+            <option value="1">1x</option>
+            <option value="3">3x</option>
+            <option value="5">5x</option>
+            <option value="0">Terus-menerus sampai dihentikan</option>
+          </select>
+        </div>
+        <div class="snd-btns">
+          <button class="btn" id="test" type="button">Coba suara</button>
+          <button class="btn btn-primary" id="stopSnd" type="button" hidden>Hentikan suara</button>
+        </div>
+      </section>
+    </div>
+  </div>
+</main>
+
+<script>
+(function () {
+  'use strict';
+  var KEY = 'sagalait-timer', MAX = 359999;
+  var PRESETS = [['5 menit', 300], ['10 menit', 600], ['15 menit', 900], ['25 menit', 1500], ['45 menit', 2700], ['1 jam', 3600], ['3 jam', 10800]];
+  var $ = function (id) { return document.getElementById(id); };
+  var pad = function (n) { return String(n).padStart(2, '0'); };
+
+  var dur = 10800, remaining = dur * 1000, running = false, finished = false, endAt = 0;
+  var sound = 'beep', volume = 70, repeat = 1;
+  var timerId = null, wake = null, ctx = null, master = null, topUp = null, endTimer = null;
+
+  // ---------- suara (Web Audio) ----------
+  function tone(dest, type, f, t, d, peak) {
+    var o = ctx.createOscillator(), g = ctx.createGain();
+    o.type = type; o.frequency.value = f;
+    g.gain.setValueAtTime(0.0001, t);
+    g.gain.linearRampToValueAtTime(peak, t + 0.01);
+    g.gain.exponentialRampToValueAtTime(0.0001, t + d);
+    o.connect(g); g.connect(dest);
+    o.start(t); o.stop(t + d + 0.05);
+  }
+  // tiap fungsi menjadwalkan satu pola mulai dari t dan mengembalikan panjang pola (detik)
+  var SOUNDS = {
+    beep: ['Bip', function (d, t) { tone(d, 'sine', 880, t, 0.35, 0.35); tone(d, 'sine', 880, t + 0.5, 0.35, 0.35); return 1; }],
+    lonceng: ['Lonceng', function (d, t) {
+      [[1, 0.3], [2.76, 0.18], [5.4, 0.1], [8.93, 0.06]].forEach(function (p) { tone(d, 'sine', 523.25 * p[0], t, 2.4 / p[0] + 0.4, p[1]); });
+      return 2.6;
+    }],
+    alarm: ['Alarm', function (d, t) {
+      for (var i = 0; i < 4; i++) tone(d, i % 2 ? 'square' : 'triangle', i % 2 ? 740 : 988, t + i * 0.2, 0.19, 0.5);
+      return 1;
+    }],
+    digital: ['Digital', function (d, t) { for (var i = 0; i < 4; i++) tone(d, 'square', 1500, t + i * 0.1, 0.06, 0.3); return 0.8; }],
+    lembut: ['Lembut', function (d, t) { tone(d, 'sine', 523.25, t, 1.2, 0.4); tone(d, 'sine', 659.25, t + 0.4, 1.5, 0.4); return 2; }],
+    senyap: ['Senyap', null]
+  };
+
+  function ensureAudio() {
+    try {
+      if (!ctx) { var C = window.AudioContext || window.webkitAudioContext; if (C) ctx = new C(); }
+      if (ctx && ctx.state === 'suspended') ctx.resume();
+    } catch (e) { ctx = null; }
+  }
+
+  function stopSound() {
+    clearTimeout(topUp); clearTimeout(endTimer);
+    if (master) { try { master.disconnect(); } catch (e) {} master = null; }
+    $('stopSnd').hidden = true;
+  }
+
+  function play(n) {
+    stopSound();
+    var fn = SOUNDS[sound][1];
+    if (!fn || volume === 0) return;
+    ensureAudio();
+    if (!ctx) return;
+    try {
+      var m = ctx.createGain();
+      m.gain.value = Math.pow(volume / 100, 2);
+      m.connect(ctx.destination);
+      master = m;
+      var t = ctx.currentTime + 0.05, left = n;
+      (function sched() {
+        if (master !== m) return;
+        while (n === 0 ? t < ctx.currentTime + 4 : left > 0) { t += fn(m, t); left--; }
+        if (n === 0) topUp = setTimeout(sched, 1000);
+        else endTimer = setTimeout(function () { if (master === m) stopSound(); }, Math.max(0, t - ctx.currentTime) * 1000 + 300);
+      })();
+      $('stopSnd').hidden = false;
+    } catch (e) { stopSound(); }
+  }
+
+  // ---------- simpan ----------
+  function save() {
+    try { localStorage.setItem(KEY, JSON.stringify({ v: 1, dur: dur, sound: sound, volume: volume, repeat: repeat, running: running, finished: finished, endAt: endAt, remaining: remaining })); }
+    catch (e) {}
+  }
+
+  // ---------- tampilan ----------
+  function human(sec) {
+    var h = Math.floor(sec / 3600), m = Math.floor(sec % 3600 / 60), s = sec % 60, p = [];
+    if (h) p.push(h + ' jam');
+    if (m) p.push(m + ' menit');
+    if (s) p.push(s + ' detik');
+    return p.join(' ');
+  }
+  function hms(ms) {
+    var t = Math.ceil(Math.max(0, ms) / 1000);
+    return [Math.floor(t / 3600), Math.floor(t % 3600 / 60), t % 60];
+  }
+
+  function render() {
+    var a = hms(remaining);
+    $('h').textContent = pad(a[0]); $('m').textContent = pad(a[1]); $('s').textContent = pad(a[2]);
+    var pct = finished ? 100 : Math.min(100, Math.max(0, (dur * 1000 - remaining) / (dur * 1000) * 100));
+    $('fill').style.width = pct + '%';
+    $('bar').setAttribute('aria-valuenow', String(Math.round(pct)));
+    document.title = running ? pad(a[0]) + ':' + pad(a[1]) + ':' + pad(a[2]) + ' · Timer' : 'Timer';
+  }
+
+  function clock(ts) {
+    try { return new Date(ts).toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' }); } catch (e) { return ''; }
+  }
+
+  function renderState() {
+    var paused = !running && !finished && remaining < dur * 1000;
+    var locked = running || paused;
+    $('tp').classList.toggle('done', finished);
+    var st, label;
+    if (finished) { st = 'Waktu habis.'; label = 'Mulai ulang'; }
+    else if (running) { st = 'Berjalan. Berakhir pukul ' + clock(endAt) + '.'; label = 'Jeda'; }
+    else if (paused) { st = 'Dijeda.'; label = 'Lanjutkan'; }
+    else { st = 'Siap dimulai. Durasi ' + human(dur) + '.'; label = 'Mulai'; }
+    $('status').textContent = st;
+    $('toggle').textContent = label;
+    $('reset').disabled = !(running || paused || finished);
+    ['inH', 'inM', 'inS'].forEach(function (id) { $(id).disabled = locked; });
+    Array.prototype.forEach.call($('presets').children, function (b) { b.disabled = locked; });
+    $('lockNote').hidden = !locked;
+  }
+
+  function refresh() { render(); renderState(); save(); }
+
+  function fillInputs() {
+    $('inH').value = Math.floor(dur / 3600); $('inM').value = Math.floor(dur % 3600 / 60); $('inS').value = dur % 60;
+  }
+
+  // ---------- jalan ----------
+  function stopLoop() { if (timerId !== null) { clearInterval(timerId); timerId = null; } }
+
+  function requestWake() {
+    try {
+      if (navigator.wakeLock && !wake) {
+        navigator.wakeLock.request('screen').then(function (l) {
+          wake = l; l.addEventListener('release', function () { wake = null; });
+        }).catch(function () {});
+      }
+    } catch (e) {}
+  }
+  function releaseWake() { try { if (wake) { wake.release(); wake = null; } } catch (e) {} }
+
+  function finish() {
+    running = false; finished = true; remaining = 0;
+    stopLoop(); releaseWake(); refresh();
+    play(repeat);
+    try { if (navigator.vibrate) navigator.vibrate([300, 150, 300, 150, 300]); } catch (e) {}
+  }
+
+  function tick() {
+    if (!running) return;
+    remaining = endAt - Date.now();
+    if (remaining <= 0) finish(); else render();
+  }
+
+  function start() {
+    if (running) return;
+    ensureAudio();
+    stopSound();
+    if (finished) { finished = false; remaining = dur * 1000; }
+    endAt = Date.now() + remaining;
+    running = true;
+    requestWake();
+    stopLoop(); timerId = setInterval(tick, 200);
+    refresh();
+  }
+
+  function pause() {
+    if (!running) return;
+    remaining = Math.max(0, endAt - Date.now());
+    running = false; stopLoop(); releaseWake(); refresh();
+  }
+
+  function doReset() {
+    running = false; finished = false; remaining = dur * 1000; endAt = 0;
+    stopLoop(); releaseWake(); stopSound(); refresh();
+  }
+
+  function toggleRun() { if (running) pause(); else start(); }
+
+  // ---------- durasi ----------
+  function say(t) { $('durMsg').textContent = t; }
+
+  function applyDur(sec) {
+    if (running || (!finished && remaining < dur * 1000)) return;
+    dur = sec; remaining = sec * 1000; finished = false; endAt = 0;
+    stopSound(); fillInputs(); refresh();
+  }
+
+  function clamp(id, max, name) {
+    var el = $(id), raw = el.value.trim(), n = Math.floor(Number(raw)), note = '';
+    if (raw === '' || isNaN(n)) { n = 0; note = name + ' kosong, diisi 0.'; }
+    else if (n < 0) { n = 0; note = name + ' tidak boleh kurang dari 0.'; }
+    else if (n > max) { n = max; note = name + ' paling besar ' + max + '.'; }
+    el.value = n;
+    return [n, note];
+  }
+
+  function fromInputs(id, max, name) {
+    var note = clamp(id, max, name)[1];
+    var v = function (i) { return Number($(i).value); };
+    var sec = v('inH') * 3600 + v('inM') * 60 + v('inS');
+    if (sec < 1) { sec = 1; note = (note ? note + ' ' : '') + 'Durasi minimal 1 detik.'; }
+    say(note);
+    applyDur(sec);
+  }
+
+  // ---------- pasang ----------
+  var sel = $('sound');
+  Object.keys(SOUNDS).forEach(function (k) {
+    var o = document.createElement('option'); o.value = k; o.textContent = SOUNDS[k][0]; sel.appendChild(o);
+  });
+  PRESETS.forEach(function (p) {
+    var b = document.createElement('button');
+    b.type = 'button'; b.className = 'btn btn-sm'; b.textContent = p[0];
+    b.addEventListener('click', function () { say(''); applyDur(p[1]); });
+    $('presets').appendChild(b);
+  });
+
+  [['inH', 99, 'Jam'], ['inM', 59, 'Menit'], ['inS', 59, 'Detik']].forEach(function (a) {
+    $(a[0]).addEventListener('change', function () { fromInputs(a[0], a[1], a[2]); });
+  });
+  $('toggle').addEventListener('click', toggleRun);
+  $('reset').addEventListener('click', doReset);
+  $('stopSnd').addEventListener('click', stopSound);
+  $('test').addEventListener('click', function () { ensureAudio(); play(1); });
+  sel.addEventListener('change', function () { sound = sel.value; save(); });
+  $('vol').addEventListener('input', function () { volume = Number($('vol').value); $('volV').textContent = volume + '%'; save(); });
+  $('rep').addEventListener('change', function () { repeat = Number($('rep').value); save(); });
+
+  // layar penuh: kelas CSS selalu dipasang (iPhone tak punya Fullscreen API), API dipakai bila ada
+  function setFs(on) {
+    document.body.classList.toggle('fs', on);
+    $('full').textContent = on ? 'Keluar layar penuh' : 'Layar penuh';
+  }
+  function toggleFs() {
+    var on = !document.body.classList.contains('fs');
+    setFs(on);
+    try {
+      var p = on ? document.documentElement.requestFullscreen && document.documentElement.requestFullscreen() : document.fullscreenElement && document.exitFullscreen();
+      if (p && p.catch) p.catch(function () {});
+    } catch (e) {}
+  }
+  $('full').addEventListener('click', toggleFs);
+  document.addEventListener('fullscreenchange', function () { if (!document.fullscreenElement) setFs(false); });
+
+  document.addEventListener('keydown', function (e) {
+    if (e.ctrlKey || e.metaKey || e.altKey) return;
+    var t = e.target, tag = t && t.tagName;
+    if (e.key === 'Escape' && document.body.classList.contains('fs')) { setFs(false); return; }
+    if (tag === 'INPUT' || tag === 'SELECT' || tag === 'TEXTAREA') return;
+    if (e.code === 'Space') { if (tag === 'BUTTON') return; e.preventDefault(); toggleRun(); }
+    else if (e.key === 'r' || e.key === 'R') { if (!$('reset').disabled) doReset(); }
+    else if (e.key === 'f' || e.key === 'F') toggleFs();
+  });
+
+  document.addEventListener('visibilitychange', function () {
+    if (document.visibilityState === 'visible') { tick(); if (running) requestWake(); }
+  });
+
+  // ---------- pulihkan ----------
+  try {
+    var s = JSON.parse(localStorage.getItem(KEY));
+    if (s && s.v === 1) {
+      if (s.dur >= 1 && s.dur <= MAX && s.dur % 1 === 0) dur = s.dur;
+      if (SOUNDS[s.sound]) sound = s.sound;
+      if (s.volume >= 0 && s.volume <= 100) volume = Math.round(s.volume);
+      if ([0, 1, 3, 5].indexOf(s.repeat) >= 0) repeat = s.repeat;
+      remaining = dur * 1000;
+      if (s.running && s.endAt > Date.now() && s.endAt - Date.now() <= dur * 1000) {
+        endAt = s.endAt; remaining = endAt - Date.now(); running = true;
+        timerId = setInterval(tick, 200); requestWake();
+      } else if (s.running || s.finished) {
+        finished = true; remaining = 0; // sudah lewat: tanpa suara
+      } else if (s.remaining > 0 && s.remaining <= dur * 1000) {
+        remaining = s.remaining;
+      }
+    }
+  } catch (e) {}
+
+  sel.value = sound; $('vol').value = volume; $('volV').textContent = volume + '%'; $('rep').value = String(repeat);
+  fillInputs();
+  render(); renderState();
+})();
+</script>
+</body>
+</html>
