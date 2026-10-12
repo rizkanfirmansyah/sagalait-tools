@@ -9,17 +9,23 @@
 <link rel="stylesheet" href="../assets/app.css">
 <style>
   .tp { container-type: inline-size; }
+  .tp h2 { display: inline; background: linear-gradient(transparent 60%, var(--mark-title) 0); padding: 0 2px; }
   .clock { display: flex; justify-content: center; align-items: flex-start; font: 700 clamp(30px, 13vw, 90px)/1 var(--mono); font-variant-numeric: tabular-nums; color: var(--ink); padding: 8px 0 4px; }
-  @supports (font-size: 1cqw) { .clock { font-size: clamp(30px, 16cqw, 150px); } }
+  @supports (font-size: 1cqw) { .clock { font-size: clamp(30px, 19cqw, 170px); } }
   .clock .seg { display: flex; flex-direction: column; align-items: center; }
   .clock .lab { font: 500 clamp(11px, 2.6cqw, 14px)/1.4 var(--font); color: var(--muted); margin-top: 6px; }
-  .clock .sep { color: var(--muted); font-weight: 400; padding: 0 .06em; }
+  .clock .sep {
+    flex: none; width: .28em; height: 1em; margin: 0 .02em;
+    background: radial-gradient(circle at 50% 36%, var(--muted) 0 .055em, transparent calc(.055em + 1px)), radial-gradient(circle at 50% 70%, var(--muted) 0 .055em, transparent calc(.055em + 1px));
+  }
   .bar { height: 8px; margin: 18px 0 12px; border: 1px solid var(--muted); border-radius: 5px; background: var(--well); overflow: hidden; }
-  .bar > i { display: block; height: 100%; width: 0; background: var(--mark); }
+  .bar > i { display: block; height: 100%; width: 0; background: var(--accent); }
   .status { text-align: center; color: var(--body); min-height: 1.5em; }
   .ctl { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin-top: 16px; }
   .ctl .btn { flex: 1 1 120px; max-width: 200px; }
-  .keys { text-align: center; margin-top: 12px; }
+  .keys { text-align: center; margin-top: 12px; font-size: 13px; color: var(--muted); }
+  .adds { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin-top: 8px; }
+  .adds .btn { font-size: 14px; }
   .done .clock { color: var(--err); }
   .done .bar { border-color: var(--err); }
   .done .bar > i { background: var(--err); }
@@ -30,8 +36,10 @@
   .dur label, .row label { display: block; font-size: 14px; color: var(--body); margin-bottom: 4px; }
   .field-sm.in { width: 100%; font-size: 16px; height: 44px; padding: 0 12px; font-variant-numeric: tabular-nums; }
   .field-sm.in:disabled { opacity: .55; cursor: not-allowed; }
-  .presets { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
-  .presets .btn { height: 44px; padding: 0 14px; }
+  .presets { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; margin-top: 14px; }
+  .presets .btn { height: 44px; padding: 0 6px; width: 100%; }
+  @media (max-width: 480px) { .presets { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+  @media (min-width: 901px) { .tp { position: sticky; top: 24px; align-self: start; padding: 36px 28px; } }
   .btn:disabled { opacity: .5; cursor: not-allowed; }
   .btn:disabled:hover { border-color: var(--line-strong); }
   .btn-primary:disabled:hover { border-color: var(--accent); filter: none; }
@@ -39,13 +47,37 @@
   .row input[type=range] { width: 100%; height: 44px; margin: 0; accent-color: var(--accent); }
   .vol-v { font-variant-numeric: tabular-nums; }
   .snd-btns { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px; }
+  .chk { display: flex; align-items: center; gap: 10px; min-height: 44px; font-size: 14px; color: var(--body); cursor: pointer; }
+  .chk input { width: 18px; height: 18px; margin: 0; accent-color: var(--accent); }
   .msg { min-height: 1.4em; margin-top: 6px; color: var(--warn); }
+  #notifMsg { min-height: 0; margin-top: 0; }
+  #notifMsg:not(:empty) { margin-top: 6px; }
 
   /* layar penuh */
   body.fs .top, body.fs .app-head, body.fs .side, body.fs .keys { display: none; }
   body.fs .app-grid { display: block; padding: 0; }
-  body.fs .tp { position: fixed; inset: 0; z-index: 10; border: 0; border-radius: 0; display: flex; flex-direction: column; justify-content: center; overflow: auto; padding: 16px; }
-  body.fs .clock { font-size: min(16cqw, 30dvh); }
+  body.fs .tp { position: fixed; top: 0; left: 0; width: 100%; height: 100vh; height: 100dvh; min-height: 100vh; min-height: 100dvh; margin: 0; align-items: stretch; z-index: 10; border: 0; border-radius: 0; background: var(--bg); display: flex; flex-direction: column; justify-content: center; overflow: hidden; padding: 16px 16px 96px; }
+  body.fs .panel-head { display: none; }
+  body.fs .clock { font-size: min(21cqw, 40dvh); padding: 0; }
+  body.fs .clock .lab { font-size: clamp(14px, 3.25cqw, 17.5px); margin-top: 8px; }
+  body.fs .bar { height: 12px; margin: 24px 0 16px; }
+  body.fs .status { font-size: 24px; line-height: 1.3; }
+  body.fs .dock {
+    position: fixed; bottom: max(24px, env(safe-area-inset-bottom)); left: 50%; transform: translateX(-50%); z-index: 20;
+    display: flex; flex-wrap: nowrap; align-items: center; justify-content: center; gap: 6px; padding: 6px;
+    width: max-content; max-width: calc(100vw - 16px);
+    background: var(--panel); background: color-mix(in srgb, var(--panel) 85%, transparent);
+    border: 1px solid var(--line); border-radius: 999px;
+  }
+  body.fs .dock .ctl, body.fs .dock .adds { margin: 0; flex-wrap: nowrap; gap: 6px; }
+  body.fs .dock .btn { flex: 0 1 auto; max-width: none; min-height: 44px; border-radius: 999px; }
+  body.fs.idle .dock { opacity: 0; pointer-events: none; }
+  @media (prefers-reduced-motion: no-preference) { body.fs .dock { transition: opacity .3s; } }
+  @media (max-width: 480px) {
+    body.fs .dock { flex-wrap: wrap; border-radius: 28px; }
+    body.fs .dock .btn { padding: 0 12px; font-size: 14px; }
+    body.fs .tp { padding-bottom: 150px; }
+  }
   @media (hover: none) and (max-width: 700px) { .keys { display: none; } }
   @media (max-width: 380px) { .panel { padding: 16px; } }
 </style>
@@ -69,20 +101,26 @@
 
   <div class="app-grid">
     <section class="panel tp" id="tp" aria-labelledby="hTimer">
-      <div class="panel-head"><h2 id="hTimer">Timer</h2></div>
+      <div class="panel-head"><h2 id="hTimer">Sisa waktu</h2></div>
       <div class="clock" id="clock" role="timer" aria-label="Sisa waktu">
-        <div class="seg"><span id="h">00</span><span class="lab">jam</span></div><span class="sep" aria-hidden="true">:</span>
-        <div class="seg"><span id="m">00</span><span class="lab">menit</span></div><span class="sep" aria-hidden="true">:</span>
+        <div class="seg"><span id="h">00</span><span class="lab">jam</span></div><span class="sep" aria-hidden="true"></span>
+        <div class="seg"><span id="m">00</span><span class="lab">menit</span></div><span class="sep" aria-hidden="true"></span>
         <div class="seg"><span id="s">00</span><span class="lab">detik</span></div>
       </div>
       <div class="bar" id="bar" role="progressbar" aria-label="Progres" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><i id="fill"></i></div>
       <p class="status" id="status" aria-live="polite"></p>
-      <div class="ctl">
-        <button class="btn btn-primary" id="toggle" type="button">Mulai</button>
-        <button class="btn" id="reset" type="button">Atur ulang</button>
-        <button class="btn" id="full" type="button">Layar penuh</button>
+      <div class="dock">
+        <div class="ctl">
+          <button class="btn btn-primary" id="toggle" type="button">Mulai</button>
+          <button class="btn" id="reset" type="button">Atur ulang</button>
+          <button class="btn" id="full" type="button">Layar penuh</button>
+        </div>
+        <div class="adds" id="adds" hidden>
+          <button class="btn" id="add1" type="button">+1 menit</button>
+          <button class="btn" id="add5" type="button">+5 menit</button>
+        </div>
       </div>
-      <p class="small muted keys">Spasi: mulai/jeda · R: atur ulang · F: layar penuh</p>
+      <p class="keys">Spasi: mulai/jeda · R: atur ulang · F: layar penuh</p>
     </section>
 
     <div class="stack side">
@@ -117,6 +155,10 @@
             <option value="0">Terus-menerus sampai dihentikan</option>
           </select>
         </div>
+        <div class="row">
+          <label class="chk"><input type="checkbox" id="notif"> Beri tahu lewat notifikasi browser</label>
+          <p class="small msg" id="notifMsg"></p>
+        </div>
         <div class="snd-btns">
           <button class="btn" id="test" type="button">Coba suara</button>
           <button class="btn btn-primary" id="stopSnd" type="button" hidden>Hentikan suara</button>
@@ -134,8 +176,8 @@
   var $ = function (id) { return document.getElementById(id); };
   var pad = function (n) { return String(n).padStart(2, '0'); };
 
-  var dur = 10800, remaining = dur * 1000, running = false, finished = false, endAt = 0;
-  var sound = 'beep', volume = 70, repeat = 1;
+  var dur = 10800, total = dur * 1000, remaining = total, running = false, finished = false, endAt = 0;
+  var sound = 'beep', volume = 70, repeat = 1, notify = false;
   var timerId = null, wake = null, ctx = null, master = null, topUp = null, endTimer = null;
 
   // ---------- suara (Web Audio) ----------
@@ -201,7 +243,7 @@
 
   // ---------- simpan ----------
   function save() {
-    try { localStorage.setItem(KEY, JSON.stringify({ v: 1, dur: dur, sound: sound, volume: volume, repeat: repeat, running: running, finished: finished, endAt: endAt, remaining: remaining })); }
+    try { localStorage.setItem(KEY, JSON.stringify({ v: 1, dur: dur, sound: sound, volume: volume, repeat: repeat, notify: notify, total: total, running: running, finished: finished, endAt: endAt, remaining: remaining })); }
     catch (e) {}
   }
 
@@ -221,23 +263,24 @@
   function render() {
     var a = hms(remaining);
     $('h').textContent = pad(a[0]); $('m').textContent = pad(a[1]); $('s').textContent = pad(a[2]);
-    var pct = finished ? 100 : Math.min(100, Math.max(0, (dur * 1000 - remaining) / (dur * 1000) * 100));
+    var pct = finished ? 100 : Math.min(100, Math.max(0, (total - remaining) / total * 100));
     $('fill').style.width = pct + '%';
     $('bar').setAttribute('aria-valuenow', String(Math.round(pct)));
     document.title = running ? pad(a[0]) + ':' + pad(a[1]) + ':' + pad(a[2]) + ' · Timer' : 'Timer';
   }
 
   function clock(ts) {
-    try { return new Date(ts).toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' }); } catch (e) { return ''; }
+    var d = new Date(ts);
+    return pad(d.getHours()) + ':' + pad(d.getMinutes());
   }
 
   function renderState() {
-    var paused = !running && !finished && remaining < dur * 1000;
+    var paused = !running && !finished && remaining < total;
     var locked = running || paused;
     $('tp').classList.toggle('done', finished);
     var st, label;
     if (finished) { st = 'Waktu habis.'; label = 'Mulai ulang'; }
-    else if (running) { st = 'Berjalan. Berakhir pukul ' + clock(endAt) + '.'; label = 'Jeda'; }
+    else if (running) { st = 'Berakhir pukul ' + clock(endAt) + '.'; label = 'Jeda'; }
     else if (paused) { st = 'Dijeda.'; label = 'Lanjutkan'; }
     else { st = 'Siap dimulai. Durasi ' + human(dur) + '.'; label = 'Mulai'; }
     $('status').textContent = st;
@@ -246,6 +289,8 @@
     ['inH', 'inM', 'inS'].forEach(function (id) { $(id).disabled = locked; });
     Array.prototype.forEach.call($('presets').children, function (b) { b.disabled = locked; });
     $('lockNote').hidden = !locked;
+    $('adds').hidden = !locked;
+    $('add1').disabled = $('add5').disabled = remaining >= MAX * 1000;
   }
 
   function refresh() { render(); renderState(); save(); }
@@ -268,10 +313,16 @@
   }
   function releaseWake() { try { if (wake) { wake.release(); wake = null; } } catch (e) {} }
 
+  function notifyDone() {
+    try {
+      if (notify && document.visibilityState !== 'visible' && Notification.permission === 'granted') new Notification('Timer', { body: 'Waktu habis' });
+    } catch (e) {}
+  }
+
   function finish() {
     running = false; finished = true; remaining = 0;
     stopLoop(); releaseWake(); refresh();
-    play(repeat);
+    play(repeat); poke(); notifyDone();
     try { if (navigator.vibrate) navigator.vibrate([300, 150, 300, 150, 300]); } catch (e) {}
   }
 
@@ -285,7 +336,7 @@
     if (running) return;
     ensureAudio();
     stopSound();
-    if (finished) { finished = false; remaining = dur * 1000; }
+    if (finished) { finished = false; total = remaining = dur * 1000; }
     endAt = Date.now() + remaining;
     running = true;
     requestWake();
@@ -300,8 +351,18 @@
   }
 
   function doReset() {
-    running = false; finished = false; remaining = dur * 1000; endAt = 0;
+    running = false; finished = false; total = remaining = dur * 1000; endAt = 0;
     stopLoop(); releaseWake(); stopSound(); refresh();
+  }
+
+  // tambah waktu: sisa dan total efektif naik sama besar, jadi bilah bergeser proporsional
+  function addTime(sec) {
+    if (finished || !(running || remaining < total)) return;
+    var x = Math.min(sec * 1000, MAX * 1000 - Math.max(0, remaining));
+    if (x <= 0) return;
+    remaining += x; total += x;
+    if (running) endAt += x;
+    refresh();
   }
 
   function toggleRun() { if (running) pause(); else start(); }
@@ -310,8 +371,8 @@
   function say(t) { $('durMsg').textContent = t; }
 
   function applyDur(sec) {
-    if (running || (!finished && remaining < dur * 1000)) return;
-    dur = sec; remaining = sec * 1000; finished = false; endAt = 0;
+    if (running || (!finished && remaining < total)) return;
+    dur = sec; total = remaining = sec * 1000; finished = false; endAt = 0;
     stopSound(); fillInputs(); refresh();
   }
 
@@ -349,18 +410,51 @@
     $(a[0]).addEventListener('change', function () { fromInputs(a[0], a[1], a[2]); });
   });
   $('toggle').addEventListener('click', toggleRun);
+  $('add1').addEventListener('click', function () { addTime(60); });
+  $('add5').addEventListener('click', function () { addTime(300); });
   $('reset').addEventListener('click', doReset);
   $('stopSnd').addEventListener('click', stopSound);
   $('test').addEventListener('click', function () { ensureAudio(); play(1); });
+  function notifyOff(msg) { notify = false; $('notif').checked = false; $('notifMsg').textContent = msg; save(); }
+  function notifyOn() { notify = true; $('notifMsg').textContent = ''; save(); }
+  $('notif').addEventListener('change', function () {
+    if (!$('notif').checked) { notify = false; $('notifMsg').textContent = ''; save(); return; }
+    try {
+      if (!('Notification' in window)) return notifyOff('Browser ini tidak mendukung notifikasi.');
+      if (Notification.permission === 'granted') return notifyOn();
+      if (Notification.permission === 'denied') return notifyOff('Notifikasi diblokir di pengaturan browser.');
+      Promise.resolve(Notification.requestPermission()).then(function (p) {
+        if (p === 'granted') notifyOn(); else notifyOff('Izin notifikasi tidak diberikan.');
+      }).catch(function () { notifyOff('Izin notifikasi gagal diminta.'); });
+    } catch (e) { notifyOff('Notifikasi tidak tersedia.'); }
+  });
   sel.addEventListener('change', function () { sound = sel.value; save(); });
   $('vol').addEventListener('input', function () { volume = Number($('vol').value); $('volV').textContent = volume + '%'; save(); });
   $('rep').addEventListener('change', function () { repeat = Number($('rep').value); save(); });
 
   // layar penuh: kelas CSS selalu dipasang (iPhone tak punya Fullscreen API), API dipakai bila ada
+  var idleId = null;
+  function fsLabel() {
+    return !document.body.classList.contains('fs') ? 'Layar penuh' : window.matchMedia('(max-width: 480px)').matches ? 'Keluar' : 'Keluar layar penuh';
+  }
+  // bilah tombol: sembunyi setelah 3 detik tanpa aktivitas, kecuali ada fokus keyboard atau timer selesai
+  function poke() {
+    clearTimeout(idleId);
+    document.body.classList.remove('idle');
+    if (!document.body.classList.contains('fs')) return;
+    idleId = setTimeout(function () {
+      if (finished || document.querySelector('.dock :focus-visible')) return poke();
+      document.body.classList.add('idle');
+    }, 3000);
+  }
   function setFs(on) {
     document.body.classList.toggle('fs', on);
-    $('full').textContent = on ? 'Keluar layar penuh' : 'Layar penuh';
+    $('full').textContent = fsLabel();
+    $('full').setAttribute('aria-label', on ? 'Keluar layar penuh' : 'Layar penuh');
+    poke();
   }
+  ['mousemove', 'pointerdown', 'touchstart', 'keydown', 'focusin'].forEach(function (ev) { document.addEventListener(ev, poke, { passive: true }); });
+  window.addEventListener('resize', function () { $('full').textContent = fsLabel(); });
   function toggleFs() {
     var on = !document.body.classList.contains('fs');
     setFs(on);
@@ -394,13 +488,16 @@
       if (SOUNDS[s.sound]) sound = s.sound;
       if (s.volume >= 0 && s.volume <= 100) volume = Math.round(s.volume);
       if ([0, 1, 3, 5].indexOf(s.repeat) >= 0) repeat = s.repeat;
-      remaining = dur * 1000;
-      if (s.running && s.endAt > Date.now() && s.endAt - Date.now() <= dur * 1000) {
+      total = dur * 1000;
+      if (s.total >= total && s.total <= MAX * 1000) total = s.total;
+      remaining = total;
+      try { notify = s.notify === true && Notification.permission === 'granted'; } catch (e) {}
+      if (s.running && s.endAt > Date.now() && s.endAt - Date.now() <= total) {
         endAt = s.endAt; remaining = endAt - Date.now(); running = true;
         timerId = setInterval(tick, 200); requestWake();
       } else if (s.running || s.finished) {
         finished = true; remaining = 0; // sudah lewat: tanpa suara
-      } else if (s.remaining > 0 && s.remaining <= dur * 1000) {
+      } else if (s.remaining > 0 && s.remaining <= total) {
         remaining = s.remaining;
       }
     }
@@ -408,6 +505,7 @@
 
   sel.value = sound; $('vol').value = volume; $('volV').textContent = volume + '%'; $('rep').value = String(repeat);
   fillInputs();
+  $('notif').checked = notify;
   render(); renderState();
 })();
 </script>
