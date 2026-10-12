@@ -1,0 +1,45 @@
+{
+  "site": {
+    "title": "Tools SagalaIT",
+    "tagline": [
+      "{n} tool kecil untuk pekerjaan harian.",
+      "Semua berjalan di browser, data tidak dikirim ke server."
+    ],
+    "footer": "sagalait.cloud"
+  },
+  "groups": [
+    { "id": "php", "name": "PHP dan data" },
+    { "id": "teks", "name": "Teks dan encoding" }
+  ],
+  "tools": [
+    {
+      "id": "serialize-checker",
+      "name": "Serialize Checker",
+      "description": "Cek dan betulkan string serialize",
+      "group": "php",
+      "path": "serialize-checker/",
+      "icon": "a:",
+      "tags": ["php", "serialize", "unserialize", "panjang string"],
+      "favorite": true
+    },
+    {
+      "id": "json-formatter",
+      "name": "JSON Formatter",
+      "description": "Rapikan dan validasi JSON",
+      "group": "php",
+      "path": "json-formatter/",
+      "icon": "{}",
+      "tags": ["json", "format", "minify", "validasi"]
+    },
+    {
+      "id": "hitung-byte",
+      "name": "Hitung Byte",
+      "description": "Panjang string dalam byte dan karakter",
+      "group": "teks",
+      "path": "hitung-byte/",
+      "icon": "B",
+      "tags": ["byte", "strlen", "utf-8", "panjang", "karakter"],
+      "favorite": true
+    }
+  ]
+}

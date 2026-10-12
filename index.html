@@ -1,0 +1,344 @@
+<!doctype html>
+<html lang="id" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tools SagalaIT</title>
+<meta name="description" content="Kumpulan tool kecil untuk pekerjaan harian. Semua berjalan di browser.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%232447D6'/%3E%3Ctext x='16' y='23' font-family='Arial' font-weight='800' font-size='20' text-anchor='middle' fill='%23fff'%3ES%3C/text%3E%3Crect x='7' y='26' width='18' height='3' rx='1.5' fill='%23FFE066'/%3E%3C/svg%3E">
+<script src="assets/theme.js"></script>
+<link rel="stylesheet" href="assets/app.css">
+<style>
+  /* ---------- hero ---------- */
+  .hero { text-align: center; padding-top: clamp(40px, 8vw, 104px); }
+  .title {
+    font-size: clamp(34px, 8.2vw, 104px); font-weight: 800;
+    letter-spacing: -.035em; line-height: 1;
+  }
+  .title span { position: relative; display: inline-block; isolation: isolate; white-space: nowrap; }
+  .title span::before {
+    content: ""; position: absolute; z-index: -1;
+    left: -.13em; right: -.13em; bottom: .24em; height: .29em;
+    background: var(--mark-title); border-radius: .06em; transform: rotate(-1.2deg);
+  }
+  .tagline { margin-top: clamp(18px, 3vw, 28px); font-size: clamp(16px, 2vw, 19px); color: var(--body); }
+  .tagline p + p { margin-top: 2px; }
+
+  .search {
+    display: flex; align-items: center; gap: 12px;
+    max-width: 680px; height: 62px; margin: clamp(24px, 4vw, 36px) auto 0; padding: 0 18px;
+    background: var(--panel); border: 2px solid var(--accent); border-radius: 16px;
+    text-align: left; color: var(--muted);
+  }
+  .search:focus-within { box-shadow: 0 0 0 4px var(--accent-t); }
+  .search input {
+    flex: 1; min-width: 0; height: 100%; border: 0; background: transparent; color: var(--ink);
+    font: inherit; font-size: 18px; outline: none;
+  }
+  .search input::placeholder { color: var(--muted); opacity: 1; }
+  .search input::-webkit-search-cancel-button { display: none; }
+  kbd {
+    font: 14px var(--mono); color: var(--muted);
+    min-width: 28px; height: 28px; display: inline-grid; place-items: center;
+    border: 1px solid var(--line); border-radius: 8px; background: var(--well);
+  }
+  @media (hover: none) { kbd { display: none; } }
+
+  .favs { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 10px; margin-top: 22px; }
+  .favs .label { font-size: 14px; color: var(--muted); }
+  .chip {
+    display: inline-flex; align-items: center; gap: 8px; height: 36px; padding: 0 14px 0 12px;
+    border: 1px solid var(--line); border-radius: 18px; background: var(--panel);
+    color: var(--ink); font-size: 14.5px; font-weight: 500; text-decoration: none;
+  }
+  .chip:hover { border-color: var(--accent); }
+  .chip svg, .star svg { width: 16px; height: 16px; fill: var(--mark); stroke: var(--star); stroke-width: 1.6; stroke-linejoin: round; }
+  :root[data-theme="dark"] .chip svg, :root[data-theme="dark"] .star[aria-pressed="true"] svg { fill: var(--star); }
+
+  /* ---------- daftar tool ---------- */
+  .groups {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 384px));
+    justify-content: center; gap: 40px 48px; margin-top: clamp(40px, 6vw, 72px);
+  }
+  .group h2 {
+    display: flex; align-items: baseline; justify-content: space-between;
+    font-size: 17px; font-weight: 800; letter-spacing: -.01em;
+    padding-bottom: 12px; border-bottom: 2px solid var(--ink);
+  }
+  .group h2 .count { font-size: 13px; font-weight: 400; color: var(--muted); }
+  .group ul { list-style: none; margin: 0; padding: 0; }
+  .row { position: relative; border-bottom: 1px solid var(--line); }
+  .row-link {
+    display: grid; grid-template-columns: 40px minmax(0, 1fr); gap: 16px; align-items: center;
+    padding: 18px 44px 18px 0; color: inherit; text-decoration: none;
+  }
+  .icon {
+    width: 40px; height: 40px; border-radius: 10px; display: grid; place-items: center;
+    background: var(--accent-t); color: var(--link); font: 700 14px var(--mono);
+  }
+  .icon.small { font-size: 12px; }
+  .row-text { display: grid; gap: 2px; min-width: 0; }
+  .name { font-size: 16px; font-weight: 600; }
+  .desc { font-size: 13.5px; color: var(--muted); }
+  .row-link:hover .name { color: var(--link); }
+  .star {
+    position: absolute; right: -6px; top: 50%; transform: translateY(-50%);
+    width: 36px; height: 36px; border: 0; border-radius: 10px; background: transparent;
+    display: grid; place-items: center; cursor: pointer; color: var(--muted);
+  }
+  .star svg { fill: none; stroke: var(--muted); }
+  .star:hover svg { stroke: var(--star); }
+  .star[aria-pressed="true"] svg { fill: var(--mark); stroke: var(--star); }
+  @media (hover: hover) {
+    .star[aria-pressed="false"] { opacity: 0; }
+    .row:hover .star, .row:focus-within .star { opacity: 1; }
+  }
+
+  .notice { text-align: center; color: var(--muted); padding: 48px 0 0; }
+  .notice .btn { margin-top: 16px; }
+  .fail { max-width: 640px; margin: 48px auto 0; text-align: left; }
+  .fail h2 { font-size: 16px; color: var(--err); margin-bottom: 8px; }
+  .fail p + p { margin-top: 10px; }
+  .fail code { font: 13.5px var(--mono); background: var(--well); border: 1px solid var(--line); border-radius: 6px; padding: 1px 6px; }
+
+  footer { text-align: center; color: var(--muted); font-size: 13px; padding: 72px 0 40px; }
+</style>
+</head>
+<body>
+
+<header class="wrap top">
+  <a class="logo" href="./" aria-label="Beranda Tools SagalaIT">S</a>
+  <button class="icon-btn" type="button" data-theme-toggle aria-label="Ganti tema terang atau gelap">
+    <svg width="20" height="20" viewBox="-11 -11 22 22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle r="9"/><path d="M0 -9 A9 9 0 0 1 0 9 Z" fill="currentColor"/></svg>
+  </button>
+</header>
+
+<main class="wrap">
+  <section class="hero">
+    <h1 class="title"><span id="siteTitle">Tools SagalaIT</span></h1>
+    <div class="tagline" id="tagline"></div>
+
+    <form class="search" role="search" id="searchForm" autocomplete="off">
+      <svg width="22" height="22" viewBox="-12 -12 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="-2" cy="-2" r="7"/><path d="M3.5 3.5 L9.5 9.5"/></svg>
+      <input id="q" type="search" placeholder="Cari tool" aria-label="Cari tool" spellcheck="false">
+      <kbd aria-hidden="true">/</kbd>
+    </form>
+
+    <div class="favs" id="favs" hidden>
+      <span class="label">Favorit</span>
+      <span id="favList" style="display:contents"></span>
+    </div>
+  </section>
+
+  <section id="list" aria-live="polite">
+    <p class="notice">Memuat daftar tool…</p>
+  </section>
+  <noscript><p class="notice">Halaman ini membutuhkan JavaScript untuk membaca <code>tools.json</code>.</p></noscript>
+</main>
+
+<footer id="footer"></footer>
+
+<script>
+(function () {
+  'use strict';
+
+  var DATA_URL = 'tools.json';
+  var FAV_KEY = 'sagalait-favorites';
+  var STAR = '<svg viewBox="-12 -12 24 24" aria-hidden="true"><polygon points="0,-10 2.59,-3.56 9.51,-3.09 4.18,1.36 5.88,8.09 0,4.4 -5.88,8.09 -4.18,1.36 -9.51,-3.09 -2.59,-3.56"/></svg>';
+
+  var state = { data: null, favs: [], query: '', first: null };
+  var $ = function (id) { return document.getElementById(id); };
+
+  /* ---------- util ---------- */
+  function h(tag, props, kids) {
+    var n = document.createElement(tag);
+    for (var k in (props || {})) {
+      if (k === 'text') n.textContent = props[k];
+      else if (k === 'class') n.className = props[k];
+      else n.setAttribute(k, props[k]);
+    }
+    (kids || []).forEach(function (c) { if (c) n.appendChild(c); });
+    return n;
+  }
+  function norm(s) {
+    return String(s == null ? '' : s).toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '');
+  }
+  function safeHref(p) {
+    return /^\s*(javascript|data|vbscript):/i.test(p || '') ? '#' : p;
+  }
+
+  /* ---------- favorit (disimpan di browser) ---------- */
+  function loadFavs(tools) {
+    try {
+      var raw = localStorage.getItem(FAV_KEY);
+      if (raw) { var arr = JSON.parse(raw); if (Array.isArray(arr)) return arr; }
+    } catch (e) { /* abaikan */ }
+    return tools.filter(function (t) { return t.favorite; }).map(function (t) { return t.id; });
+  }
+  function saveFavs() {
+    try { localStorage.setItem(FAV_KEY, JSON.stringify(state.favs)); } catch (e) { /* abaikan */ }
+  }
+  function isFav(id) { return state.favs.indexOf(id) !== -1; }
+  function toggleFav(id) {
+    var i = state.favs.indexOf(id);
+    if (i === -1) state.favs.push(id); else state.favs.splice(i, 1);
+    saveFavs();
+    render(id);
+  }
+
+  /* ---------- pencarian ---------- */
+  function matches(tool, terms, groupName) {
+    if (!terms.length) return true;
+    var hay = norm([tool.name, tool.description, (tool.tags || []).join(' '), groupName].join(' '));
+    return terms.every(function (t) { return hay.indexOf(t) !== -1; });
+  }
+
+  /* ---------- tampilan ---------- */
+  function row(tool) {
+    var fav = isFav(tool.id);
+    var icon = h('span', { class: 'icon' + ((tool.icon || '').length > 2 ? ' small' : ''), 'aria-hidden': 'true', text: tool.icon || tool.name.charAt(0) });
+    var text = h('span', { class: 'row-text' }, [
+      h('span', { class: 'name', text: tool.name }),
+      h('span', { class: 'desc', text: tool.description || '' })
+    ]);
+    var a = h('a', { class: 'row-link', href: safeHref(tool.path) }, [icon, text]);
+    var star = h('button', {
+      class: 'star', type: 'button', 'data-id': tool.id, 'aria-pressed': String(fav),
+      'aria-label': (fav ? 'Hapus dari favorit: ' : 'Tambah ke favorit: ') + tool.name
+    });
+    star.innerHTML = STAR;
+    return h('li', { class: 'row' }, [a, star]);
+  }
+
+  function render(focusId) {
+    var data = state.data;
+    var tools = data.tools.filter(function (t) { return !t.hidden; });
+    var terms = norm(state.query).trim().split(/\s+/).filter(Boolean);
+
+    // kelompokkan; tool dengan group tak dikenal masuk "Lainnya"
+    var groups = (data.groups || []).map(function (g) { return { id: g.id, name: g.name, tools: [] }; });
+    var byId = {};
+    groups.forEach(function (g) { byId[g.id] = g; });
+    var other = { id: '_lainnya', name: 'Lainnya', tools: [] };
+    tools.forEach(function (t) { (byId[t.group] || other).tools.push(t); });
+    if (other.tools.length) groups.push(other);
+
+    var list = $('list');
+    list.textContent = '';
+    state.first = null;
+    var total = 0;
+    var wrap = h('div', { class: 'groups' });
+
+    groups.forEach(function (g) {
+      var shown = g.tools.filter(function (t) { return matches(t, terms, g.name); });
+      if (!shown.length) return;
+      total += shown.length;
+      if (!state.first) state.first = shown[0];
+      var ul = h('ul');
+      shown.forEach(function (t) { ul.appendChild(row(t)); });
+      wrap.appendChild(h('section', { class: 'group' }, [
+        h('h2', {}, [h('span', { text: g.name }), h('span', { class: 'count', text: String(shown.length) })]),
+        ul
+      ]));
+    });
+
+    if (total) {
+      list.appendChild(wrap);
+    } else {
+      var clear = h('button', { class: 'btn btn-sm', type: 'button', text: 'Hapus pencarian' });
+      clear.addEventListener('click', function () { $('q').value = ''; state.query = ''; render(); $('q').focus(); });
+      list.appendChild(h('div', { class: 'notice' }, [
+        h('p', { text: 'Tidak ada tool yang cocok dengan “' + state.query.trim() + '”.' }),
+        h('p', { class: 'small', text: 'Coba kata lain, misalnya nama tool atau jenis datanya.' }),
+        clear
+      ]));
+    }
+
+    // favorit (peluncur cepat)
+    var favTools = tools.filter(function (t) { return isFav(t.id); });
+    var favBox = $('favList');
+    favBox.textContent = '';
+    favTools.forEach(function (t) {
+      var a = h('a', { class: 'chip', href: safeHref(t.path) });
+      a.innerHTML = STAR;
+      a.appendChild(document.createTextNode(t.name));
+      favBox.appendChild(a);
+    });
+    $('favs').hidden = !favTools.length;
+
+    if (focusId) {
+      var btn = list.querySelector('.star[data-id="' + focusId.replace(/"/g, '') + '"]');
+      if (btn) btn.focus();
+    }
+  }
+
+  function init(data) {
+    if (!data || !Array.isArray(data.tools)) throw new Error('Format tools.json salah: harus punya array "tools".');
+    state.data = data;
+    var site = data.site || {};
+    var visible = data.tools.filter(function (t) { return !t.hidden; });
+
+    if (site.title) { $('siteTitle').textContent = site.title; document.title = site.title; }
+    var tl = $('tagline');
+    (site.tagline || []).forEach(function (line) {
+      tl.appendChild(h('p', { text: String(line).replace('{n}', visible.length) }));
+    });
+    $('footer').textContent = site.footer || '';
+
+    state.favs = loadFavs(visible);
+    render();
+  }
+
+  function fail(err) {
+    var onFile = location.protocol === 'file:';
+    var kids = [
+      h('h2', { text: 'Tidak bisa memuat ' + DATA_URL }),
+      h('p', { text: String(err && err.message ? err.message : err) })
+    ];
+    if (onFile) {
+      var p = h('p');
+      p.appendChild(document.createTextNode('Halaman ini dibuka langsung dari file, dan browser memblokir pembacaan JSON dengan cara itu. Jalankan server lokal di folder ini, lalu buka alamatnya: '));
+      p.appendChild(h('code', { text: 'php -S localhost:8000' }));
+      p.appendChild(document.createTextNode(' atau '));
+      p.appendChild(h('code', { text: 'python3 -m http.server 8000' }));
+      kids.push(p);
+    }
+    $('list').textContent = '';
+    $('list').appendChild(h('div', { class: 'panel fail' }, kids));
+  }
+
+  /* ---------- peristiwa ---------- */
+  $('searchForm').addEventListener('submit', function (e) {
+    e.preventDefault();
+    if (state.first) location.href = safeHref(state.first.path);
+  });
+  $('q').addEventListener('input', function (e) {
+    state.query = e.target.value;
+    if (state.data) render();
+  });
+  $('q').addEventListener('keydown', function (e) {
+    if (e.key === 'Escape' && e.target.value) { e.target.value = ''; state.query = ''; render(); }
+  });
+  $('list').addEventListener('click', function (e) {
+    var b = e.target.closest && e.target.closest('.star');
+    if (b) toggleFav(b.getAttribute('data-id'));
+  });
+  document.addEventListener('keydown', function (e) {
+    var t = e.target, typing = t && (t.tagName === 'INPUT' || t.tagName === 'TEXTAREA' || t.isContentEditable);
+    if (e.key === '/' && !typing && !e.ctrlKey && !e.metaKey && !e.altKey) { e.preventDefault(); $('q').focus(); }
+  });
+
+  // Contoh pencarian hanya muat di layar lebar; di ponsel dipersingkat.
+  if (window.matchMedia && matchMedia('(min-width: 600px)').matches) {
+    $('q').placeholder = 'Cari tool, misalnya serialize atau JSON';
+  }
+
+  /* ---------- mulai ---------- */
+  fetch(DATA_URL, { cache: 'no-cache' })
+    .then(function (r) { if (!r.ok) throw new Error('Server menjawab ' + r.status + ' untuk ' + DATA_URL + '.'); return r.json(); })
+    .then(init)
+    .catch(fail);
+})();
+</script>
+</body>
+</html>

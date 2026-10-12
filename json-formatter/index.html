@@ -1,0 +1,267 @@
+<!doctype html>
+<html lang="id" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>JSON Formatter · Tools SagalaIT</title>
+<script src="../assets/theme.js"></script>
+<link rel="stylesheet" href="../assets/app.css">
+<style>
+  .opts { display: flex; flex-wrap: wrap; gap: 12px 20px; align-items: center; margin-bottom: 14px; font-size: 14px; }
+  .opts label { display: inline-flex; align-items: center; gap: 8px; color: var(--body); cursor: pointer; }
+  .opts input[type="radio"], .opts input[type="checkbox"] { accent-color: var(--accent); width: 16px; height: 16px; margin: 0; }
+  .seg { display: inline-flex; gap: 16px; }
+  .field.tall { min-height: 340px; }
+  .errbox { margin-top: 12px; }
+  .errbox pre { margin: 10px 0 0; padding: 10px 12px; background: var(--well); border: 1px solid var(--line); border-radius: 10px; font: 13px/1.5 var(--mono); overflow: auto; color: var(--ink); }
+  .errbox pre b { color: var(--err); font-weight: 400; }
+</style>
+</head>
+<body>
+
+<header class="wrap top">
+  <a class="back" href="../index.html">← Semua tools</a>
+  <button class="icon-btn" type="button" data-theme-toggle aria-label="Ganti tema terang atau gelap">
+    <svg width="20" height="20" viewBox="-11 -11 22 22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle r="9"/><path d="M0 -9 A9 9 0 0 1 0 9 Z" fill="currentColor"/></svg>
+  </button>
+</header>
+
+<main class="wrap">
+  <div class="app-head">
+    <div>
+      <h1>JSON Formatter</h1>
+      <p class="lead">Rapikan, padatkan, dan validasi JSON. Kalau ada error, posisi baris dan kolomnya ditunjukkan.</p>
+    </div>
+    <div class="actions">
+      <button class="btn" id="btnSample" type="button">Contoh</button>
+      <button class="btn" id="btnClear" type="button">Bersihkan</button>
+    </div>
+  </div>
+
+  <div class="app-grid">
+    <section class="panel">
+      <div class="panel-head"><h2>Masukan</h2><span class="small muted" id="inNote"></span></div>
+      <textarea id="input" class="field tall" spellcheck="false" placeholder='Tempel JSON di sini, misalnya {"nama":"Sagala","tool":[1,2,3]}'></textarea>
+    </section>
+
+    <section class="panel">
+      <div class="panel-head"><h2>Hasil</h2><span class="small muted" id="outNote"></span></div>
+      <div class="opts">
+        <span class="seg" role="radiogroup" aria-label="Mode">
+          <label><input type="radio" name="mode" value="format" checked> Rapikan</label>
+          <label><input type="radio" name="mode" value="min"> Padatkan</label>
+        </span>
+        <label>Indentasi
+          <select id="indent" class="field-sm">
+            <option value="2" selected>2 spasi</option>
+            <option value="4">4 spasi</option>
+            <option value="tab">Tab</option>
+          </select>
+        </label>
+        <label><input type="checkbox" id="sort"> Urutkan key</label>
+      </div>
+      <div id="status"></div>
+      <div id="outWrap">
+        <textarea id="output" class="field tall" readonly spellcheck="false" aria-label="Hasil" placeholder="Hasil muncul di sini"></textarea>
+        <div class="actions" style="margin-top:12px">
+          <button class="btn btn-sm" id="btnCopy" type="button">Salin</button>
+          <button class="btn btn-sm btn-primary" id="btnDownload" type="button">Unduh .json</button>
+        </div>
+      </div>
+    </section>
+  </div>
+</main>
+
+<script>
+(function () {
+  'use strict';
+  var $ = function (id) { return document.getElementById(id); };
+  var esc = function (t) { return String(t).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); };
+  var fmt = function (n) { return n.toLocaleString('id-ID'); };
+  var bytesOf = function (s) { return new TextEncoder().encode(s).length; };
+  var SAMPLE = '{"nama":"Sagala","aktif":true,"tool":[{"id":"serialize-checker","favorit":true},{"id":"hitung-byte","favorit":false}],"versi":1.5,"catatan":null}';
+
+  function sortKeys(v) {
+    if (Array.isArray(v)) return v.map(sortKeys);
+    if (v && typeof v === 'object') {
+      var o = {};
+      Object.keys(v).sort().forEach(function (k) { o[k] = sortKeys(v[k]); });
+      return o;
+    }
+    return v;
+  }
+
+  // Pencari posisi error buatan sendiri. Pesan JSON.parse berbeda di tiap browser
+  // (Safari bahkan tanpa posisi), jadi posisi dan pesan diambil dari sini agar konsisten.
+  function locate(text) {
+    var i = 0, n = text.length;
+    var NUM = /-?(0|[1-9]\d*)(\.\d+)?([eE][+-]?\d+)?/y;
+    function fail(msg) { throw { pos: i, msg: msg }; }
+    function ws() { while (i < n && ' \t\n\r'.indexOf(text.charAt(i)) !== -1) i++; }
+    function lit(word) {
+      if (text.substr(i, word.length) === word) { i += word.length; return true; }
+      return false;
+    }
+    function str() {
+      i++;
+      for (;;) {
+        if (i >= n) fail('String tidak ditutup dengan tanda kutip ganda.');
+        var c = text.charAt(i);
+        if (c === '"') { i++; return; }
+        if (c === '\\') {
+          i++;
+          var e = text.charAt(i);
+          if ('"\\/bfnrt'.indexOf(e) !== -1 && e !== '') i++;
+          else if (e === 'u') {
+            if (!/^[0-9a-fA-F]{4}$/.test(text.substr(i + 1, 4))) fail('Escape \\u harus diikuti 4 digit hex.');
+            i += 5;
+          } else fail('Escape setelah backslash tidak valid.');
+          continue;
+        }
+        if (c < ' ') fail('Baris baru atau tab di dalam string harus ditulis sebagai \\n atau \\t.');
+        i++;
+      }
+    }
+    function val() {
+      ws();
+      var c = text.charAt(i);
+      if (i >= n) fail('Data berakhir tiba-tiba, ada bagian yang belum ditutup atau belum diisi.');
+      if (c === '{') return obj();
+      if (c === '[') return arr();
+      if (c === '"') return str();
+      if (c === '-' || (c >= '0' && c <= '9')) {
+        NUM.lastIndex = i;
+        var m = NUM.exec(text);
+        if (!m) fail('Angka tidak valid.');
+        i += m[0].length; return;
+      }
+      if (lit('true') || lit('false') || lit('null')) return;
+      fail('Karakter tidak dikenali: "' + c + '". Nilai JSON harus berupa objek, array, string, angka, true, false, atau null.');
+    }
+    function obj() {
+      i++; ws();
+      if (text.charAt(i) === '}') { i++; return; }
+      for (;;) {
+        ws();
+        if (text.charAt(i) !== '"') fail('Nama key harus diapit tanda kutip ganda.');
+        str(); ws();
+        if (text.charAt(i) !== ':') fail('Setelah nama key harus ada tanda titik dua (:).');
+        i++; val(); ws();
+        var c = text.charAt(i);
+        if (c === ',') { i++; continue; }
+        if (c === '}') { i++; return; }
+        fail('Setelah nilai harus ada koma (,) atau penutup objek (}).');
+      }
+    }
+    function arr() {
+      i++; ws();
+      if (text.charAt(i) === ']') { i++; return; }
+      for (;;) {
+        val(); ws();
+        var c = text.charAt(i);
+        if (c === ',') { i++; continue; }
+        if (c === ']') { i++; return; }
+        fail('Setelah nilai harus ada koma (,) atau penutup array (]).');
+      }
+    }
+    try {
+      val(); ws();
+      if (i < n) fail('Ada data setelah akhir JSON.');
+      return null;
+    } catch (e) {
+      if (e && typeof e.pos === 'number') {
+        var before = text.slice(0, e.pos);
+        return { pos: e.pos, msg: e.msg, line: before.split('\n').length, col: e.pos - before.lastIndexOf('\n') };
+      }
+      throw e;
+    }
+  }
+
+  function hintFor(text, pos) {
+    var t = text.trim();
+    if (/^[aisbdNO]:/.test(t)) return 'Ini terlihat seperti string serialize PHP, bukan JSON. Coba <a href="../serialize-checker/index.html">Serialize Checker</a>.';
+    if (pos === null) return '';
+    var prev = text.slice(0, pos).replace(/\s+$/, '').slice(-1), cur = text.charAt(pos);
+    if ((cur === '}' || cur === ']') && prev === ',') return 'Ada koma di akhir (trailing comma). JSON tidak mengizinkannya.';
+    if (cur === "'" || prev === "'") return 'JSON memakai tanda kutip ganda ("), bukan tunggal (\').';
+    if (/[A-Za-z_]/.test(cur) && (prev === '{' || prev === ',')) return 'Nama key harus diapit tanda kutip ganda.';
+    if (cur === '/' ) return 'JSON tidak mendukung komentar.';
+    return '';
+  }
+
+  function describe(v) {
+    if (Array.isArray(v)) return 'Array dengan ' + fmt(v.length) + ' item';
+    if (v && typeof v === 'object') return 'Objek dengan ' + fmt(Object.keys(v).length) + ' key';
+    return 'Nilai ' + (v === null ? 'null' : typeof v);
+  }
+
+  function render() {
+    var text = $('input').value;
+    var out = $('output'), status = $('status');
+    $('outWrap').hidden = false;
+    $('inNote').textContent = text ? fmt(bytesOf(text)) + ' byte' : '';
+    if (!text.trim()) { out.value = ''; status.innerHTML = ''; $('outNote').textContent = ''; return; }
+
+    var value;
+    try {
+      value = JSON.parse(text);
+    } catch (e) {
+      var info = locate(text) || { pos: null, msg: String(e && e.message ? e.message : e), line: null, col: null };
+      out.value = '';
+      $('outWrap').hidden = true;
+      $('outNote').textContent = '';
+      var where = info.line !== null ? 'baris ' + info.line + ', kolom ' + info.col : 'posisi tidak diketahui';
+      var snippet = '';
+      if (info.line !== null) {
+        var line = text.split('\n')[info.line - 1] || '';
+        var start = Math.max(0, info.col - 41);
+        var shown = line.slice(start, start + 100);
+        var caret = Math.max(0, info.col - 1 - start);
+        snippet = '<pre>' + esc(shown.slice(0, caret)) + '<b>' + esc(shown.charAt(caret) || '⏎') + '</b>' + esc(shown.slice(caret + 1)) +
+                  '\n' + ' '.repeat(caret) + '<b>^</b></pre>';
+      }
+      var hint = hintFor(text, info.pos);
+      status.innerHTML =
+        '<div class="banner bad"><span class="dot">!</span><span>JSON tidak valid</span><span class="aside">' + where + '</span></div>' +
+        '<div class="errbox"><p style="font-size:14.5px">' + esc(info.msg) + '</p>' + snippet +
+        (hint ? '<p style="margin-top:10px;font-size:14.5px">' + hint + '</p>' : '') + '</div>' +
+        '<div style="height:12px"></div>';
+      return;
+    }
+
+    var mode = document.querySelector('input[name="mode"]:checked').value;
+    var indentSel = $('indent').value;
+    var indent = indentSel === 'tab' ? '\t' : +indentSel;
+    if ($('sort').checked) value = sortKeys(value);
+    var result = mode === 'min' ? JSON.stringify(value) : JSON.stringify(value, null, indent);
+    out.value = result === undefined ? '' : result;
+
+    var warn = /[:\[,\s]-?\d{16,}(?=[\s,\]}]|$)/.test(text)
+      ? '<p class="small" style="margin:0 0 12px;color:var(--warn)">Ada angka 16 digit atau lebih. JavaScript bisa membulatkannya, jadi ID besar bisa berubah di hasil.</p>' : '';
+    status.innerHTML =
+      '<div class="banner ok" style="margin-bottom:12px"><span class="dot">✓</span><span>JSON valid</span><span class="aside">' + describe(value) + '</span></div>' + warn;
+    $('outNote').textContent = fmt(bytesOf(out.value)) + ' byte';
+  }
+
+  var timer = null;
+  function later() { clearTimeout(timer); timer = setTimeout(render, 150); }
+  $('input').addEventListener('input', later);
+  document.querySelectorAll('input[name="mode"], #indent, #sort').forEach(function (el) { el.addEventListener('change', render); });
+  $('btnSample').onclick = function () { $('input').value = SAMPLE; render(); };
+  $('btnClear').onclick = function () { $('input').value = ''; render(); $('input').focus(); };
+  $('btnCopy').onclick = function () {
+    var b = $('btnCopy'), v = $('output').value;
+    var done = function () { b.textContent = 'Tersalin'; setTimeout(function () { b.textContent = 'Salin'; }, 1500); };
+    if (navigator.clipboard) navigator.clipboard.writeText(v).then(done, function () { $('output').select(); document.execCommand('copy'); done(); });
+    else { $('output').select(); document.execCommand('copy'); done(); }
+  };
+  $('btnDownload').onclick = function () {
+    var a = document.createElement('a');
+    a.href = URL.createObjectURL(new Blob([$('output').value], { type: 'application/json' }));
+    a.download = 'hasil.json'; a.click(); URL.revokeObjectURL(a.href);
+  };
+  render();
+})();
+</script>
+</body>
+</html>
