@@ -1,0 +1,33 @@
+/* Gaya khusus Nginx generator; hanya memakai token dari assets/app.css */
+.lbl { display: block; font-size: 14px; font-weight: 600; margin: 16px 0 6px; color: var(--ink); }
+.panel > .lbl:first-of-type { margin-top: 0; }
+.in {
+  width: 100%; display: block; font: 16px/1.4 var(--font); height: 44px; padding: 0 12px;
+  border: 1px solid var(--line-strong); border-radius: 10px; background: var(--well); color: var(--ink);
+}
+.in:focus { outline: 3px solid var(--accent-t); border-color: var(--accent); }
+.in::placeholder, .field::placeholder { color: var(--muted); opacity: .8; }
+textarea.field { font-size: 16px; }
+@media (min-width: 700px) { textarea.field { font-size: 13px; } .in { font-size: 14.5px; } }
+.field.sm { min-height: 76px; }
+.hint { font-size: 13px; color: var(--muted); margin-top: 6px; }
+.chk { display: flex; align-items: center; gap: 10px; min-height: 44px; font-size: 14.5px; cursor: pointer; }
+.chk input { width: 20px; height: 20px; flex: none; accent-color: var(--accent); margin: 0; }
+.two { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 12px; }
+.loc { border: 1px solid var(--line); border-radius: 12px; padding: 4px 14px 14px; background: var(--well); }
+.loc .lbl:first-child { margin-top: 12px; }
+.loc .head { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-top: 8px; }
+.loc .head span { font-size: 13px; font-weight: 600; color: var(--muted); }
+.conf { white-space: pre; word-break: normal; max-height: 520px; tab-size: 4; }
+.tbl-wrap { overflow-x: auto; margin-top: 12px; }
+.tbl { width: 100%; border-collapse: collapse; font-size: 13.5px; }
+.tbl th, .tbl td { text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--line); vertical-align: top; }
+.tbl th { color: var(--muted); font-weight: 600; font-size: 13px; }
+.tbl td.m { font-family: var(--mono); overflow-wrap: anywhere; min-width: 130px; }
+.tbl td.bad { color: var(--warn); }
+.tbl-cap { font-size: 13.5px; font-weight: 600; margin-top: 16px; overflow-wrap: anywhere; }
+.issue p { font-size: 14px; color: var(--body); margin-top: 8px; overflow-wrap: anywhere; }
+.issue .ttl { font-weight: 600; font-size: 14.5px; margin-top: 8px; }
+.note code, .hint code { font: 12.5px var(--mono); }
+@media (max-width: 700px) { .btn-sm, .icon-btn { min-height: 44px; min-width: 44px; } }
+.back { display: inline-flex; align-items: center; min-height: 44px; }

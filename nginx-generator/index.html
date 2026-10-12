@@ -1,0 +1,196 @@
+<!doctype html>
+<html lang="id" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Nginx generator · Tools SagalaIT</title>
+<link rel="icon" href="data:,">
+<script src="../assets/theme.js"></script>
+<link rel="stylesheet" href="../assets/app.css">
+<link rel="stylesheet" href="app.css">
+</head>
+<body>
+
+<header class="wrap top">
+  <a class="back" href="../index.html">← Semua tools</a>
+  <button class="icon-btn" type="button" data-theme-toggle aria-label="Ganti tema terang atau gelap">
+    <svg width="20" height="20" viewBox="-11 -11 22 22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle r="9"/><path d="M0 -9 A9 9 0 0 1 0 9 Z" fill="currentColor"/></svg>
+  </button>
+</header>
+
+<main class="wrap">
+  <div class="app-head">
+    <div>
+      <h1>Nginx generator</h1>
+      <p class="lead">Buat satu berkas server block untuk situs statis, reverse proxy, PHP-FPM, atau pengalihan, lengkap dengan perintah pemasangannya. Pratinjau pemetaan proxy_pass membantu mencegah jebakan garis miring.</p>
+    </div>
+    <div class="actions">
+      <button class="btn" id="btnReset" type="button">Atur ulang</button>
+    </div>
+  </div>
+
+  <div class="app-grid">
+    <form class="stack" id="form" autocomplete="off" onsubmit="return false">
+      <section class="panel">
+        <div class="panel-head"><h2>Jenis konfigurasi</h2></div>
+        <label class="lbl" for="mode">Mode</label>
+        <select class="in" id="mode" data-k="mode">
+          <option value="static">Situs statis</option>
+          <option value="proxy">Reverse proxy</option>
+          <option value="php">PHP-FPM</option>
+          <option value="redirect">Pengalihan</option>
+        </select>
+        <label class="lbl" for="names">server_name</label>
+        <input class="in" id="names" data-k="names" type="text" spellcheck="false" autocapitalize="none" placeholder="contoh.com">
+        <p class="hint">Satu atau banyak nama dipisah spasi. Tanda * didukung di awal, misalnya *.contoh.com.</p>
+      </section>
+
+      <section class="panel" data-mode="static php">
+        <div class="panel-head"><h2 id="dirTitle">Direktori</h2></div>
+        <label class="lbl" for="root">Root</label>
+        <input class="in" id="root" data-k="root" type="text" spellcheck="false" autocapitalize="none" placeholder="/var/www/contoh">
+        <div data-mode="static">
+          <label class="lbl" for="index">Berkas index</label>
+          <input class="in" id="index" data-k="index" type="text" spellcheck="false" autocapitalize="none">
+          <label class="chk"><input type="checkbox" data-k="spa"> Mode SPA (arahkan semua ke /index.html)</label>
+          <label class="chk"><input type="checkbox" data-k="gzip"> Aktifkan gzip</label>
+          <label class="chk"><input type="checkbox" data-k="cache"> Cache aset statis (expires)</label>
+          <div data-sub="cache">
+            <label class="lbl" for="cacheDur">Lama cache</label>
+            <select class="in" id="cacheDur" data-k="cacheDur"><option value="7d">7 hari</option><option value="30d">30 hari</option><option value="365d">1 tahun</option></select>
+          </div>
+        </div>
+        <div data-mode="php">
+          <label class="lbl" for="sockType">Koneksi PHP-FPM</label>
+          <select class="in" id="sockType" data-k="sockType"><option value="unix">Soket Unix</option><option value="tcp">TCP</option></select>
+          <label class="lbl" for="sock">Alamat</label>
+          <input class="in" id="sock" data-k="sock" type="text" spellcheck="false" autocapitalize="none">
+          <label class="chk"><input type="checkbox" data-k="laravel"> Front controller Laravel (/index.php?$query_string)</label>
+        </div>
+      </section>
+
+      <section class="panel" data-mode="proxy">
+        <div class="panel-head"><h2>Location dan tujuan</h2><button class="btn btn-sm" id="addLoc" type="button">Tambah location</button></div>
+        <div id="locs" class="stack"></div>
+        <p class="hint">Location boleh memakai pengubah, misalnya <code>^~ /static/</code> atau <code>~ ^/ws</code>. Tujuan: <code>http://host:port</code> atau <code>http://host:port/path/</code>.</p>
+        <label class="chk"><input type="checkbox" data-k="fwdHost"> Teruskan Host</label>
+        <label class="chk"><input type="checkbox" data-k="fwdHdr"> Header X-Real-IP, X-Forwarded-For, X-Forwarded-Proto</label>
+        <label class="chk"><input type="checkbox" data-k="http11"> HTTP/1.1 ke backend</label>
+        <label class="chk"><input type="checkbox" data-k="ws"> Dukungan WebSocket</label>
+        <label class="chk"><input type="checkbox" data-k="autoRedirect"> proxy_redirect otomatis bila tujuan berpath</label>
+        <label class="lbl" for="timeout">proxy_read_timeout (detik, kosong = bawaan 60)</label>
+        <input class="in" id="timeout" data-k="timeout" type="text" inputmode="numeric" placeholder="300">
+      </section>
+
+      <section class="panel" data-mode="proxy php">
+        <label class="lbl" for="maxBody" style="margin-top:0">client_max_body_size (kosong = bawaan 1m)</label>
+        <input class="in" id="maxBody" data-k="maxBody" type="text" spellcheck="false" placeholder="50m">
+      </section>
+
+      <section class="panel" data-mode="redirect">
+        <div class="panel-head"><h2>Pengalihan</h2></div>
+        <label class="lbl" for="kind">Jenis</label>
+        <select class="in" id="kind" data-k="kind">
+          <option value="http2https">http ke https</option>
+          <option value="www2non">www ke non-www</option>
+          <option value="non2www">non-www ke www</option>
+          <option value="old2new">Domain lama ke domain baru</option>
+        </select>
+        <div data-kind="old2new">
+          <label class="lbl" for="newDomain">Domain baru</label>
+          <input class="in" id="newDomain" data-k="newDomain" type="text" spellcheck="false" autocapitalize="none" placeholder="baru.com">
+        </div>
+        <div data-kind="www2non non2www old2new">
+          <label class="lbl" for="code">Kode</label>
+          <select class="in" id="code" data-k="code"><option value="301">301 permanen</option><option value="302">302 sementara</option></select>
+        </div>
+        <p class="hint" data-kind="www2non">server_name diisi alamat yang dialihkan, misalnya www.contoh.com.</p>
+        <p class="hint" data-kind="non2www">server_name diisi alamat yang dialihkan, misalnya contoh.com.</p>
+      </section>
+
+      <section class="panel">
+        <div class="panel-head"><h2>Opsi umum</h2></div>
+        <label class="chk" data-kind-not="http2https"><input type="checkbox" data-k="https"> HTTPS (sertifikat Let's Encrypt)</label>
+        <div data-sub="https" data-kind-not="http2https">
+          <label class="chk"><input type="checkbox" data-k="http2"> http2</label>
+          <label class="chk" data-mode="static proxy php"><input type="checkbox" data-k="hsts"> HSTS (1 tahun)</label>
+          <p class="hint" data-mode="static proxy php">HSTS sulit dibatalkan: browser menolak HTTP selama setahun. Aktifkan setelah HTTPS stabil.</p>
+        </div>
+        <div data-notsub="https" data-kind-not="http2https">
+          <label class="lbl" for="port">Port</label>
+          <input class="in" id="port" data-k="port" type="text" inputmode="numeric">
+        </div>
+        <label class="chk"><input type="checkbox" data-k="ipv6"> Dengarkan IPv6 juga</label>
+        <label class="chk"><input type="checkbox" data-k="logs"> access_log dan error_log per situs</label>
+        <div data-mode="static proxy php">
+          <label class="chk"><input type="checkbox" data-k="sec"> Header keamanan (nosniff, X-Frame-Options, Referrer-Policy)</label>
+          <label class="chk"><input type="checkbox" data-k="auth"> Basic auth</label>
+          <div data-sub="auth">
+            <label class="lbl" for="authUser">Nama pengguna (untuk perintah htpasswd; kata sandi tidak disimpan)</label>
+            <input class="in" id="authUser" data-k="authUser" type="text" spellcheck="false" autocapitalize="none">
+          </div>
+          <label class="chk"><input type="checkbox" data-k="ipOn"> Batasi akses ke IP tertentu</label>
+          <div data-sub="ipOn">
+            <label class="lbl" for="ips">IP atau CIDR yang diizinkan (spasi atau baris baru)</label>
+            <textarea class="field sm" id="ips" data-k="ips" spellcheck="false" placeholder="192.168.1.0/24"></textarea>
+            <p class="hint">Selain itu ditolak (deny all).</p>
+          </div>
+          <label class="chk"><input type="checkbox" data-k="limit"> Batasi laju permintaan (limit_req)</label>
+          <div data-sub="limit" class="two">
+            <div><label class="lbl" for="rate">Permintaan per detik</label><input class="in" id="rate" data-k="rate" type="text" inputmode="numeric"></div>
+            <div><label class="lbl" for="burst">Burst</label><input class="in" id="burst" data-k="burst" type="text" inputmode="numeric"></div>
+          </div>
+        </div>
+        <label class="chk"><input type="checkbox" data-k="realIp"> Di belakang proxy lain (real_ip)</label>
+        <div data-sub="realIp">
+          <label class="lbl" for="realFrom">set_real_ip_from (IP atau CIDR proxy tepercaya)</label>
+          <textarea class="field sm" id="realFrom" data-k="realFrom" spellcheck="false" placeholder="10.0.0.1"></textarea>
+          <label class="lbl" for="realHdr">real_ip_header</label>
+          <select class="in" id="realHdr" data-k="realHdr"><option>X-Forwarded-For</option><option>X-Real-IP</option></select>
+        </div>
+      </section>
+    </form>
+
+    <div class="stack" id="resultCol">
+      <div class="panel empty" id="empty">
+        <p>Belum ada konfigurasi.</p>
+        <p class="small">Pilih mode, lalu isi server_name dan kolom yang diminta.</p>
+        <button class="btn btn-sm" id="btnSample" type="button">Coba dengan contoh</button>
+      </div>
+      <div id="out" class="stack" hidden>
+        <div id="errors" class="stack"></div>
+        <div id="good" class="stack">
+          <div id="issues" class="stack"></div>
+          <section class="panel" id="mapPanel" hidden>
+            <div class="panel-head"><h2>Pratinjau pemetaan URL</h2></div>
+            <label class="lbl" for="samples" style="margin-top:0">Path contoh (satu per baris)</label>
+            <textarea class="field sm" id="samples" data-k="samples" spellcheck="false"></textarea>
+            <div id="maps"></div>
+            <p class="hint">Dihitung dengan aturan dokumentasi proxy_pass untuk location prefix. nginx juga menormalkan URI (decode %, gabung //) sebelum menggantinya; hal itu tidak disimulasikan.</p>
+          </section>
+          <section class="panel">
+            <div class="panel-head"><h2 id="confTitle">Konfigurasi</h2>
+              <div class="actions">
+                <button class="btn btn-sm" id="btnCopy" type="button">Salin</button>
+                <button class="btn btn-sm btn-primary" id="btnDownload" type="button">Unduh</button>
+              </div>
+            </div>
+            <pre class="src conf" id="conf" tabindex="0" aria-label="Isi konfigurasi nginx"></pre>
+          </section>
+          <section class="panel">
+            <div class="panel-head"><h2>Cara memasang</h2>
+              <div class="actions"><button class="btn btn-sm" id="btnCopyInst" type="button">Salin</button></div>
+            </div>
+            <pre class="src conf" id="inst" tabindex="0" aria-label="Perintah pemasangan"></pre>
+          </section>
+          <p class="small muted note"><mark class="hl">Catatan:</mark> konfigurasi ini dibuat dari isian form dan belum dijalankan di server Anda. Jalankan <code>sudo nginx -t</code> sebelum reload, dan periksa jalur sertifikat, root, serta soket PHP-FPM. Isian form tersimpan di tautan dan browser ini, tanpa kata sandi.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<script src="core.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
