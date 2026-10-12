@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="id" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="referrer" content="no-referrer">
+<title>JWT · Tools SagalaIT</title>
+<script src="../assets/theme.js"></script>
+<link rel="icon" href="data:,">
+<link rel="stylesheet" href="../assets/app.css">
+<link rel="stylesheet" href="app.css">
+</head>
+<body>
+
+<header class="wrap top">
+  <a class="back" href="../index.html">← Semua tools</a>
+  <button class="icon-btn" type="button" data-theme-toggle aria-label="Ganti tema terang atau gelap">
+    <svg width="20" height="20" viewBox="-11 -11 22 22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle r="9"/><path d="M0 -9 A9 9 0 0 1 0 9 Z" fill="currentColor"/></svg>
+  </button>
+</header>
+
+<main class="wrap">
+  <div class="app-head">
+    <div>
+      <h1>JWT</h1>
+      <p class="lead">Baca isi token JWT: header, payload, klaim dengan waktu Asia/Jakarta, dan status masa berlaku. Tanda tangan bisa diperiksa bila kamu punya secret atau kunci publik.</p>
+    </div>
+    <div class="actions">
+      <button class="btn" id="btnSample" type="button">Contoh</button>
+      <button class="btn" id="btnClear" type="button">Bersihkan</button>
+    </div>
+  </div>
+
+  <div class="app-grid">
+    <div class="stack">
+      <section class="panel">
+        <div class="panel-head"><h2><label for="input">Token</label></h2><span class="small muted" id="inNote"></span></div>
+        <textarea id="input" class="field tall" autocomplete="off" spellcheck="false" autocapitalize="off" autocorrect="off" placeholder="Tempel token di sini, misalnya eyJhbGciOi..."></textarea>
+        <p class="small muted note">Token adalah kredensial. Semua diproses di browser ini; token tidak dikirim, tidak disimpan, dan tidak masuk ke URL.</p>
+        <p class="small muted note" id="cleanNote" hidden></p>
+      </section>
+
+      <section class="panel" id="partsPanel" hidden>
+        <div class="panel-head"><h2>Bagian token</h2></div>
+        <div class="parts" id="parts" aria-label="Token berwarna per bagian"></div>
+        <ul class="legend small" aria-hidden="true">
+          <li><span class="sw sw-h"></span> header</li>
+          <li><span class="sw sw-p"></span> payload</li>
+          <li><span class="sw sw-s"></span> tanda tangan</li>
+        </ul>
+      </section>
+
+      <details class="panel" id="verPanel" hidden>
+        <summary>Periksa tanda tangan (opsional)</summary>
+        <div class="det-body">
+          <p class="small muted" id="verInfo"></p>
+          <div id="verHS" hidden>
+            <label class="lbl" for="secret">Secret</label>
+            <input id="secret" class="field-in" type="password" autocomplete="off" spellcheck="false" autocapitalize="off">
+            <label class="chk"><input type="checkbox" id="secretB64"> Secret dalam base64 atau base64url</label>
+          </div>
+          <div id="verPK" hidden>
+            <label class="lbl" for="pubkey">Kunci publik (PEM)</label>
+            <textarea id="pubkey" class="field" autocomplete="off" spellcheck="false" autocapitalize="off" placeholder="-----BEGIN PUBLIC KEY-----"></textarea>
+          </div>
+          <div class="actions" style="margin-top:12px">
+            <button class="btn btn-sm btn-primary" id="btnVerify" type="button">Periksa tanda tangan</button>
+          </div>
+          <div id="verResult" role="status"></div>
+          <p class="small muted note">Secret dan kunci tidak disimpan dan hilang saat Bersihkan.</p>
+        </div>
+      </details>
+
+      <details class="panel" id="genPanel">
+        <summary>Buat token HS256 (untuk pengujian)</summary>
+        <div class="det-body">
+          <p class="small genwarn">Untuk menguji saja. Jangan pakai secret produksi di sini dan jangan pakai hasilnya sebagai kredensial asli.</p>
+          <label class="lbl" for="genHeader">Header (JSON)</label>
+          <textarea id="genHeader" class="field" spellcheck="false" autocomplete="off" autocapitalize="off">{"alg":"HS256","typ":"JWT"}</textarea>
+          <label class="lbl" for="genPayload">Payload (JSON)</label>
+          <textarea id="genPayload" class="field" spellcheck="false" autocomplete="off" autocapitalize="off">{"sub":"1234","name":"Uji"}</textarea>
+          <label class="lbl" for="genSecret">Secret</label>
+          <input id="genSecret" class="field-in" type="password" autocomplete="off" spellcheck="false" autocapitalize="off">
+          <div class="actions" style="margin-top:12px">
+            <button class="btn btn-sm btn-primary" id="btnGen" type="button">Buat token</button>
+          </div>
+          <div id="genOut" hidden>
+            <pre class="src" id="genToken" style="margin-top:12px"></pre>
+            <div class="actions" style="margin-top:12px">
+              <button class="btn btn-sm" id="btnGenCopy" type="button">Salin</button>
+              <button class="btn btn-sm" id="btnGenUse" type="button">Baca di sini</button>
+            </div>
+          </div>
+          <div id="genErr" role="status"></div>
+        </div>
+      </details>
+    </div>
+
+    <div class="stack" id="results">
+      <section class="panel empty" id="empty">
+        <p>Tempel token di kolom kiri, hasilnya muncul di sini.</p>
+        <button class="btn btn-primary" id="btnSample2" type="button">Coba dengan contoh</button>
+      </section>
+      <div id="errBox" role="alert"></div>
+      <div id="status" role="status"></div>
+      <div id="warns"></div>
+      <section class="panel" id="hdrPanel" hidden>
+        <div class="panel-head"><h2>Header</h2><button class="btn btn-sm" id="btnCopyH" type="button">Salin</button></div>
+        <pre class="src" id="hdrOut"></pre>
+      </section>
+      <section class="panel" id="payPanel" hidden>
+        <div class="panel-head"><h2>Payload</h2><button class="btn btn-sm" id="btnCopyP" type="button">Salin</button></div>
+        <pre class="src" id="payOut"></pre>
+      </section>
+      <section class="panel" id="claimPanel" hidden>
+        <div class="panel-head"><h2>Klaim terdaftar</h2><span class="small muted">Waktu: Asia/Jakarta (WIB)</span></div>
+        <dl class="kv claims" id="claims"></dl>
+      </section>
+    </div>
+  </div>
+</main>
+
+<script src="app.js"></script>
+</body>
+</html>
