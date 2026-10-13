@@ -13,7 +13,8 @@
     { "id": "waktu", "name": "Waktu dan fokus" },
     { "id": "server", "name": "Server dan jaringan" },
     { "id": "db", "name": "Database" },
-    { "id": "dev", "name": "Developer" }
+    { "id": "dev", "name": "Developer" },
+    { "id": "harian", "name": "Sehari-hari" }
   ],
   "tools": [
     {
@@ -103,6 +104,16 @@
       "path": "firewall/",
       "icon": "fw",
       "tags": ["firewall", "mikrotik", "routeros", "nftables", "iptables", "nat", "port forward"],
+      "favorite": false
+    },
+    {
+      "id": "roda-acak",
+      "name": "Roda acak",
+      "description": "Pilih acak dengan roda, bola undian, atau kartu menyala; bisa juga bagi grup",
+      "group": "harian",
+      "path": "roda-acak/",
+      "icon": "spin",
+      "tags": ["roda","spin","acak","random","undian","kelompok","grup","giliran","picker","pot"],
       "favorite": false
     }
   ]

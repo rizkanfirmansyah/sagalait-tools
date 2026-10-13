@@ -1,0 +1,176 @@
+<!doctype html>
+<html lang="id" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Roda acak · Tools SagalaIT</title>
+<link rel="icon" href="data:,">
+<script src="../assets/theme.js"></script>
+<link rel="stylesheet" href="../assets/app.css">
+<link rel="stylesheet" href="app.css">
+</head>
+<body>
+
+<header class="wrap top">
+  <a class="back" href="../index.html">← Semua tools</a>
+  <button class="icon-btn" type="button" data-theme-toggle aria-label="Ganti tema terang atau gelap">
+    <svg width="20" height="20" viewBox="-11 -11 22 22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle r="9"/><path d="M0 -9 A9 9 0 0 1 0 9 Z" fill="currentColor"/></svg>
+  </button>
+</header>
+
+<main class="wrap">
+  <div class="app-head">
+    <div>
+      <h1>Roda acak</h1>
+      <p class="lead" id="lead">Atur dulu pilihan dan caranya, lalu mulai undian.</p>
+    </div>
+    <div class="actions">
+      <div class="steps" role="group" aria-label="Langkah">
+        <button class="step" id="stepSetup" type="button" aria-current="step">1 Siapkan</button>
+        <button class="step" id="stepStage" type="button" disabled>2 Undi</button>
+      </div>
+      <span id="stageActions" hidden>
+        <button class="btn" id="btnBack" type="button">Ubah pengaturan</button>
+        <button class="btn" id="btnFull" type="button">Layar penuh</button>
+      </span>
+    </div>
+  </div>
+
+  <!-- layar 1: siapkan -->
+  <section id="screenSetup" class="app-grid">
+    <div class="panel">
+      <div class="panel-head"><h2>Daftar pilihan</h2><span class="small muted" id="count">0 pilihan</span></div>
+      <label class="vh" for="list">Daftar pilihan, satu per baris</label>
+      <textarea id="list" class="field list-field" spellcheck="false" autocomplete="off" placeholder="Tulis satu pilihan per baris"></textarea>
+      <div class="btn-row">
+        <button class="btn" id="btnDedupe" type="button">Hapus duplikat</button>
+        <button class="btn" id="btnSample" type="button">Coba dengan contoh</button>
+        <button class="btn" id="btnClear" type="button">Bersihkan</button>
+      </div>
+      <div class="warn-note" id="listWarn" aria-live="polite"></div>
+      <p class="hint" id="listHint">Tulis satu pilihan per baris. Tambah <code>x3</code> di belakang nama agar peluangnya tiga kali lipat.</p>
+    </div>
+
+    <div class="panel">
+      <fieldset class="choices" id="goals" aria-label="Tujuan" style="margin-bottom:22px">
+        <legend class="lbl">Tujuan</legend>
+        <label class="choice"><input type="radio" name="goal" value="satu"><span class="box"><b>Pilih satu</b><small>Satu jawaban besar, tanpa daftar hasil.</small></span></label>
+        <label class="choice"><input type="radio" name="goal" value="urut"><span class="box"><b>Berurutan</b><small>Pemenang keluar dari roda, masuk ke daftar.</small></span></label>
+        <label class="choice"><input type="radio" name="goal" value="grup"><span class="box"><b>Bagi grup</b><small>Undian grup dengan pot dan urutan isi.</small></span></label>
+      </fieldset>
+
+      <fieldset class="choices views" id="views" aria-label="Tampilan">
+        <legend class="lbl">Tampilan</legend>
+      </fieldset>
+
+      <div class="lbl" id="lblSpeed">Kecepatan</div>
+      <div class="seg" role="radiogroup" aria-labelledby="lblSpeed">
+        <label><input type="radio" name="speed" value="cepat"><span>Cepat</span></label>
+        <label><input type="radio" name="speed" value="normal"><span>Normal</span></label>
+        <label><input type="radio" name="speed" value="dramatis"><span>Dramatis</span></label>
+      </div>
+
+      <div class="grp-opts" id="grpOpts" hidden>
+        <div class="grid2">
+          <div><label for="gCount">Jumlah grup (2 sampai 16)</label><input class="field-sm" id="gCount" type="number" min="2" max="16" step="1" inputmode="numeric" style="width:100%"></div>
+          <div><label for="gFill">Cara mengisi grup</label>
+            <select class="field-sm" id="gFill" style="width:100%">
+              <option value="bergilir">Bergilir (A, B, C)</option>
+              <option value="penuh">Isi penuh dulu</option>
+              <option value="diundi">Grup diundi (2 langkah)</option>
+            </select></div>
+        </div>
+        <div class="lbl" style="font-size:14px">Nama grup</div>
+        <div class="grp-names" id="gNames"></div>
+        <p class="hint" style="margin-top:0">Pot ditulis dengan baris judul berawalan <code>#</code>, misalnya <code># Pot 1</code>, lalu pesertanya di bawah. Tanpa baris <code>#</code>, semua peserta masuk satu pot.</p>
+      </div>
+
+      <div class="row-sw" id="rowRemove"><label for="swRemove">Keluarkan pemenang dari roda</label><input type="checkbox" role="switch" id="swRemove"></div>
+      <div class="row-sw"><label for="swTick">Suara tik saat berputar</label><input type="checkbox" role="switch" id="swTick"></div>
+
+      <div class="set-row">
+        <label class="lbl" for="saveName" style="margin:0">Daftar tersimpan</label>
+        <div class="inline">
+          <select class="field-sm grow" id="savedSel" aria-label="Pilih daftar tersimpan"><option value="">(belum ada)</option></select>
+          <button class="btn btn-sm" id="btnLoad" type="button" style="height:44px">Muat</button>
+          <button class="btn btn-sm" id="btnDelSaved" type="button" style="height:44px">Hapus</button>
+        </div>
+        <div class="inline">
+          <input class="field-sm grow" id="saveName" type="text" placeholder="Nama daftar" autocomplete="off" maxlength="40">
+          <button class="btn btn-sm" id="btnSave" type="button" style="height:44px">Simpan daftar</button>
+        </div>
+        <p class="small muted" id="saveMsg" aria-live="polite" style="min-height:1.2em"></p>
+      </div>
+
+      <details class="adv">
+        <summary>Lanjutan: kunci dengan benih</summary>
+        <p class="hint" style="margin-top:0">Dengan benih, undian yang sama bisa diputar ulang persis. Kosongkan untuk acak sungguhan (<code>crypto</code>).</p>
+        <div class="inline" style="display:flex;gap:8px;flex-wrap:wrap">
+          <input class="field-sm" id="seed" type="text" placeholder="Benih (opsional)" autocomplete="off" spellcheck="false" style="flex:1 1 180px;font-size:16px;height:44px">
+          <button class="btn btn-sm" id="btnSeedNew" type="button" style="height:44px">Buat benih</button>
+          <button class="btn btn-sm" id="btnSeedCopy" type="button" style="height:44px">Salin</button>
+        </div>
+      </details>
+
+      <div class="start-bar">
+        <span class="small muted">Pengaturan tersimpan di browser ini.</span>
+        <button class="btn btn-primary" id="btnStart" type="button">Mulai undian</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- layar 2a: panggung pilih satu / berurutan -->
+  <section id="screenStage" class="stage-grid" hidden>
+    <div class="panel stage-panel" id="stagePanel">
+      <div class="stage-top"><button class="btn btn-sm" id="btnSkip" type="button" style="height:44px" disabled>Lewati animasi</button></div>
+      <div class="stage-view" id="stageView"></div>
+      <p class="stage-cap" id="stageCap"></p>
+      <div class="stage-ctl" id="stageCtl">
+        <button class="btn btn-primary" id="btnSpin" type="button">Putar</button>
+        <button class="btn fs-only" id="btnFsExit" type="button">Keluar layar penuh</button>
+      </div>
+    </div>
+    <div class="panel side" id="resPanel"></div>
+  </section>
+
+  <!-- layar 2b: undian grup -->
+  <section id="screenGroup" class="grp-grid" hidden>
+    <div class="panel side pot-panel pot" id="potPanel"></div>
+    <div class="panel stage-panel" id="gStage">
+      <div class="stage-top"><button class="btn btn-sm" id="btnGSkip" type="button" style="height:44px" disabled>Lewati animasi</button></div>
+      <div class="step-box"><p class="step-h" id="g1h">Langkah 1</p><div class="stage-view" id="g1view"></div></div>
+      <div class="step-box" id="g2box"><p class="step-h" id="g2h">Langkah 2 · Grup tujuan</p><div class="stage-view" id="g2view"></div></div>
+      <p class="stage-cap" id="gCap"></p>
+      <div class="stage-ctl" id="gCtl">
+        <button class="btn btn-primary" id="btnNext" type="button">Undi berikutnya (Spasi)</button>
+        <button class="btn fs-only" id="btnGFsExit" type="button">Keluar layar penuh</button>
+      </div>
+      <div class="final-btns" id="finalBtns" hidden>
+        <button class="btn" id="btnGCopy" type="button">Salin semua</button>
+        <button class="btn" id="btnGTxt" type="button">Unduh .txt</button>
+        <button class="btn" id="btnGPng" type="button">Simpan sebagai gambar PNG</button>
+        <button class="btn" id="btnGAgain" type="button">Acak ulang</button>
+      </div>
+    </div>
+    <div class="side board" id="board"></div>
+  </section>
+</main>
+
+<dialog class="pop" id="ballDlg" aria-labelledby="ballName">
+  <div class="ball-big" id="ballNum" aria-hidden="true">0</div>
+  <p class="muted" style="margin-top:8px">Bola terpilih</p>
+  <p class="out-big"><mark id="ballName"></mark></p>
+  <div class="btn-row">
+    <button class="btn btn-primary" id="ballRemove" type="button">Keluarkan dari undian</button>
+    <button class="btn" id="ballKeep" type="button">Biarkan di tabung</button>
+  </div>
+</dialog>
+<div class="vh" id="live" aria-live="polite"></div>
+
+<script src="engine.js"></script>
+<script src="presenters/roda.js"></script>
+<script src="presenters/bola.js"></script>
+<script src="presenters/kartu.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

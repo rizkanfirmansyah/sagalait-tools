@@ -18,6 +18,7 @@ cron/                 app 6
 nginx-generator/      app 7
 db-viewer/            app 8
 firewall/             app 9
+roda-acak/            app 10
 ```
 
 ## Menjalankan di lokal
