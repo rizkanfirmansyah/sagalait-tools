@@ -9,12 +9,14 @@
     var canvas = document.createElement('canvas'), cap = document.createElement('p');
     canvas.className = 'ball-canvas'; canvas.setAttribute('role', 'img'); canvas.setAttribute('aria-label', 'Tabung bola undian');
     cap.className = 'small muted ball-note';
-    container.appendChild(cap); container.appendChild(canvas);
+    if (options.fill) container.style.position = 'relative'; else container.appendChild(cap);
+    container.appendChild(canvas);
     var items = [], balls = [], W = 320, H = 300, cx = 0, cy = 0, R = 100, rr = 10, mode = 'fisika', degraded = false;
     var raf = 0, finish = null, disposed = false, exitBall = null, fps = 60, lastNow = 0, accT = 0, accN = 0, tArt = 0;
 
     function geometry() {
-      W = Math.round(Roda.fitSize(container, options.maxSize || 600, 0.92)); H = Math.round(W * 0.92);
+      W = options.fill ? Math.round(Math.max(200, Math.min(container.clientWidth || 320, (container.clientHeight || 320) / 0.92, options.maxSize || 900))) : Math.round(Roda.fitSize(container, options.maxSize || 600, 0.92));
+      H = Math.round(W * 0.92);
       R = Math.min(W * 0.4, H * 0.4); cx = W / 2; cy = H * 0.44;
       rr = Math.max(3, Math.min(R * 0.16, R * Math.sqrt(0.42 / Math.max(1, items.length))));
     }
@@ -77,6 +79,7 @@
       var dpr = window.devicePixelRatio || 1, c = Roda.colors();
       if (canvas.width !== Math.round(W * dpr) || canvas.height !== Math.round(H * dpr)) { canvas.width = Math.round(W * dpr); canvas.height = Math.round(H * dpr); }
       canvas.style.width = W + 'px'; canvas.style.height = H + 'px';
+      if (options.fill) { canvas.style.position = 'absolute'; canvas.style.left = Math.max(0, ((container.clientWidth || W) - W) / 2) + 'px'; canvas.style.top = Math.max(0, ((container.clientHeight || H) - H) / 2) + 'px'; }
       var ctx = canvas.getContext('2d');
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.clearRect(0, 0, W, H);
       // corong
@@ -100,7 +103,7 @@
     }
 
     function setItems(list) {
-      items = list.slice(); cap.textContent = items.length + ' bola · bola bernomor, nama muncul saat terpilih';
+      items = list.slice(); if (!options.fill) cap.textContent = items.length + ' bola · bola bernomor, nama muncul saat terpilih';
       setupBalls(); draw();
     }
 

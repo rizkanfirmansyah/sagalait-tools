@@ -4,7 +4,7 @@
 
   function create(container, options) {
     var wrap = document.createElement('div'), list = document.createElement('ul'), bar = document.createElement('div'), fill = document.createElement('div'), note = document.createElement('p');
-    wrap.className = 'kartu-wrap'; list.className = 'kartu-grid'; list.setAttribute('role', 'list');
+    wrap.className = 'kartu-wrap' + (options && options.skin ? ' ' + options.skin : '') + (options && options.fill ? ' fill' : ''); list.className = 'kartu-grid'; list.setAttribute('role', 'list');
     bar.className = 'kartu-bar'; bar.setAttribute('aria-hidden', 'true'); fill.className = 'kartu-fill'; bar.appendChild(fill);
     note.className = 'small muted kartu-note';
     wrap.appendChild(list); wrap.appendChild(bar); wrap.appendChild(note); container.appendChild(wrap);
@@ -22,7 +22,9 @@
       items = list_.slice(); list.textContent = ''; cards = []; lamp = -1; fill.style.width = '0%'; note.textContent = '';
       items.forEach(function (it, i) {
         var li = document.createElement('li'), t = document.createElement('span'), l = document.createElement('span');
-        li.className = 'kartu' + (it.done ? ' done' : ''); li.dataset.i = i;
+        li.className = 'kartu' + (it.done ? ' done' : '') + (it.off ? ' off' : ''); li.dataset.i = i;
+        if (it.c != null) li.style.setProperty('--gc', 'var(--wheel-' + ((it.c % 8) + 1) + ')');
+        if (it.title) li.title = it.title;
         t.className = 'kartu-tag';
         t.textContent = it.done ? '✓ Terpilih #' + it.done : '';
         l.className = 'kartu-label'; l.textContent = it.label;
@@ -34,7 +36,7 @@
       o = o || {};
       if (finish) finish();
       var elig = [], i;
-      items.forEach(function (it, k) { if (!it.done) elig.push(k); });
+      items.forEach(function (it, k) { if (!it.done && !it.off) elig.push(k); });
       var E = elig.length, posW = elig.indexOf(winnerIndex), s0 = Math.floor(Math.random() * E);
       var cycles = { cepat: 2, normal: 3, dramatis: 5 }[o.speed] || 3;
       var L = cycles * E + (((posW - s0) % E) + E) % E;

@@ -18,7 +18,7 @@
   </button>
 </header>
 
-<main class="wrap">
+<main class="wrap" id="main">
   <div class="app-head">
     <div>
       <h1>Roda acak</h1>
@@ -48,11 +48,12 @@
         <button class="btn" id="btnClear" type="button">Bersihkan</button>
       </div>
       <div class="warn-note" id="listWarn" aria-live="polite"></div>
-      <p class="hint" id="listHint">Tulis satu pilihan per baris. Tambah <code>x3</code> di belakang nama agar peluangnya tiga kali lipat.</p>
+      <p class="hint" id="listHint"></p>
+      <pre class="src hint-code" id="listEx" hidden></pre>
     </div>
 
     <div class="panel">
-      <fieldset class="choices" id="goals" aria-label="Tujuan" style="margin-bottom:22px">
+      <fieldset class="choices" id="goals" aria-label="Tujuan">
         <legend class="lbl">Tujuan</legend>
         <label class="choice"><input type="radio" name="goal" value="satu"><span class="box"><b>Pilih satu</b><small>Satu jawaban besar, tanpa daftar hasil.</small></span></label>
         <label class="choice"><input type="radio" name="goal" value="urut"><span class="box"><b>Berurutan</b><small>Pemenang keluar dari roda, masuk ke daftar.</small></span></label>
@@ -82,7 +83,6 @@
         </div>
         <div class="lbl" style="font-size:14px">Nama grup</div>
         <div class="grp-names" id="gNames"></div>
-        <p class="hint" style="margin-top:0">Pot ditulis dengan baris judul berawalan <code>#</code>, misalnya <code># Pot 1</code>, lalu pesertanya di bawah. Tanpa baris <code>#</code>, semua peserta masuk satu pot.</p>
       </div>
 
       <div class="row-sw" id="rowRemove"><label for="swRemove">Keluarkan pemenang dari roda</label><input type="checkbox" role="switch" id="swRemove"></div>
@@ -112,9 +112,13 @@
         </div>
       </details>
 
-      <div class="start-bar">
-        <span class="small muted">Pengaturan tersimpan di browser ini.</span>
-        <button class="btn btn-primary" id="btnStart" type="button">Mulai undian</button>
+      <div class="start-wrap">
+        <p class="start-sum" id="startSum" aria-live="polite"></p>
+        <div class="start-bar">
+          <span class="small muted">Pengaturan tersimpan di browser ini.</span>
+          <button class="btn btn-primary" id="btnStart" type="button">Mulai undian</button>
+        </div>
+        <p class="start-why" id="startWhy" role="status"></p>
       </div>
     </div>
   </section>
@@ -122,37 +126,60 @@
   <!-- layar 2a: panggung pilih satu / berurutan -->
   <section id="screenStage" class="stage-grid" hidden>
     <div class="panel stage-panel" id="stagePanel">
-      <div class="stage-top"><button class="btn btn-sm" id="btnSkip" type="button" style="height:44px" disabled>Lewati animasi</button></div>
+      <div class="prog" id="sProg" hidden><span id="sProgTxt"></span><div class="pbar" aria-hidden="true"><i id="sProgBar"></i></div></div>
       <div class="stage-view" id="stageView"></div>
       <p class="stage-cap" id="stageCap"></p>
       <div class="stage-ctl" id="stageCtl">
-        <button class="btn btn-primary" id="btnSpin" type="button">Putar</button>
-        <button class="btn fs-only" id="btnFsExit" type="button">Keluar layar penuh</button>
+        <button class="btn btn-primary btn-main" id="btnSpin" type="button">Putar</button>
+        <button class="btn btn-sm btn-2nd" id="btnSkip" type="button" disabled>Lewati animasi</button>
+        <button class="btn btn-sm btn-2nd fs-only" id="btnFsExit" type="button">Keluar layar penuh</button>
       </div>
+      <p class="keys">Spasi: putar · F: layar penuh · Esc: keluar · Z: batalkan</p>
     </div>
-    <div class="panel side" id="resPanel"></div>
+    <div class="panel side-res" id="resPanel"></div>
   </section>
 
   <!-- layar 2b: undian grup -->
   <section id="screenGroup" class="grp-grid" hidden>
-    <div class="panel side pot-panel pot" id="potPanel"></div>
-    <div class="panel stage-panel" id="gStage">
-      <div class="stage-top"><button class="btn btn-sm" id="btnGSkip" type="button" style="height:44px" disabled>Lewati animasi</button></div>
-      <div class="step-box"><p class="step-h" id="g1h">Langkah 1</p><div class="stage-view" id="g1view"></div></div>
-      <div class="step-box" id="g2box"><p class="step-h" id="g2h">Langkah 2 · Grup tujuan</p><div class="stage-view" id="g2view"></div></div>
-      <p class="stage-cap" id="gCap"></p>
+    <details class="panel pot-panel" id="potBox" open>
+      <summary id="potSum">Pot</summary>
+      <div class="pot" id="potPanel"></div>
+    </details>
+
+    <div class="panel gstage" id="gStage">
+      <div class="g-live" id="gLive">
+        <div class="prog"><span id="gProgTxt"></span><div class="pbar" aria-hidden="true"><i id="gProgBar"></i></div></div>
+        <p class="step-h" id="g1h">Langkah 1</p>
+        <div class="g-view" id="g1view"></div>
+        <div class="who" aria-live="off"><span class="small muted" id="whoLbl">Terpilih</span><p class="who-name" id="gWho"><mark>…</mark></p></div>
+        <p class="step-h" id="g2h">Langkah 2 · Grup tujuan</p>
+        <div class="g-view2" id="g2view"></div>
+      </div>
+
+      <div class="g-done" id="gDone" hidden>
+        <p class="done-st"><span class="ok-ic" aria-hidden="true">✓</span> <span id="doneTxt">Undian selesai.</span></p>
+        <h2 class="done-h"><mark>Hasil undian</mark></h2>
+        <div class="done-grid" id="doneGrid"></div>
+        <div class="final-btns">
+          <button class="btn" id="btnGCopy" type="button">Salin semua</button>
+          <button class="btn" id="btnGTxt" type="button">Unduh .txt</button>
+          <button class="btn" id="btnGPng" type="button">Simpan sebagai gambar PNG</button>
+          <button class="btn" id="btnGAgain" type="button">Acak ulang</button>
+          <button class="btn" id="btnGNew" type="button">Undian baru</button>
+          <button class="btn btn-sm btn-2nd" id="btnGUndoDone" type="button">Batalkan terakhir</button>
+        </div>
+      </div>
+
       <div class="stage-ctl" id="gCtl">
-        <button class="btn btn-primary" id="btnNext" type="button">Undi berikutnya (Spasi)</button>
-        <button class="btn fs-only" id="btnGFsExit" type="button">Keluar layar penuh</button>
+        <button class="btn btn-primary btn-main" id="btnNext" type="button">Undi berikutnya</button>
+        <button class="btn btn-sm btn-2nd" id="btnGSkip" type="button" disabled>Lewati animasi</button>
+        <button class="btn btn-sm btn-2nd" id="btnGUndo" type="button">Batalkan terakhir</button>
+        <button class="btn btn-sm btn-2nd fs-only" id="btnGFsExit" type="button">Keluar layar penuh</button>
       </div>
-      <div class="final-btns" id="finalBtns" hidden>
-        <button class="btn" id="btnGCopy" type="button">Salin semua</button>
-        <button class="btn" id="btnGTxt" type="button">Unduh .txt</button>
-        <button class="btn" id="btnGPng" type="button">Simpan sebagai gambar PNG</button>
-        <button class="btn" id="btnGAgain" type="button">Acak ulang</button>
-      </div>
+      <p class="keys">Spasi: undi berikutnya · F: layar penuh · Esc: keluar · Z: batalkan</p>
     </div>
-    <div class="side board" id="board"></div>
+
+    <div class="board" id="board" aria-label="Papan grup"></div>
   </section>
 </main>
 
@@ -163,6 +190,15 @@
   <div class="btn-row">
     <button class="btn btn-primary" id="ballRemove" type="button">Keluarkan dari undian</button>
     <button class="btn" id="ballKeep" type="button">Biarkan di tabung</button>
+  </div>
+</dialog>
+
+<dialog class="pop pngdlg" id="pngDlg" aria-labelledby="pngTitle">
+  <h2 id="pngTitle" style="font-size:18px;margin-bottom:12px">Pratinjau gambar</h2>
+  <img id="pngImg" alt="Pratinjau gambar hasil undian grup">
+  <div class="btn-row">
+    <button class="btn btn-primary" id="pngSave" type="button">Unduh</button>
+    <button class="btn" id="pngClose" type="button">Tutup</button>
   </div>
 </dialog>
 <div class="vh" id="live" aria-live="polite"></div>

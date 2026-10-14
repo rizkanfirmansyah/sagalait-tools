@@ -9,6 +9,7 @@
     canvas.className = 'wheel-canvas';
     canvas.setAttribute('role', 'img');
     canvas.setAttribute('aria-label', 'Roda pilihan');
+    if (options.fill) container.style.position = 'relative';
     container.appendChild(canvas);
     var items = [], bounds = [], colorIdx = [], theta = 0, highlight = -1, raf = 0, finish = null, disposed = false;
 
@@ -36,9 +37,10 @@
 
     function draw() {
       if (disposed) return;
-      var size = Roda.fitSize(container, options.maxSize || 560), dpr = window.devicePixelRatio || 1, c = Roda.colors();
+      var size = options.fill ? Math.max(160, Math.min(container.clientWidth || 320, container.clientHeight || 320, options.maxSize || 900)) : Roda.fitSize(container, options.maxSize || 560), dpr = window.devicePixelRatio || 1, c = Roda.colors();
       if (canvas.width !== Math.round(size * dpr) || canvas.height !== Math.round(size * dpr)) { canvas.width = Math.round(size * dpr); canvas.height = Math.round(size * dpr); }
       canvas.style.width = size + 'px'; canvas.style.height = size + 'px';
+      if (options.fill) { canvas.style.position = 'absolute'; canvas.style.left = Math.max(0, ((container.clientWidth || size) - size) / 2) + 'px'; canvas.style.top = Math.max(0, ((container.clientHeight || size) - size) / 2) + 'px'; }
       var ctx = canvas.getContext('2d');
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
       ctx.clearRect(0, 0, size, size);
