@@ -8,12 +8,12 @@
 
   var SAMPLE_LIST = 'Warung Sate Pak Eko\nBakso Mang Ujang\nNasi Padang Sederhana\nMie Ayam Tumini\nSop Buntut Bu Rini\nGudeg Yu Djum\nSoto Betawi\nAyam Geprek Mbak Sari\nPecel Lele Cak Ron';
   var SAMPLE_POTS = '# Pot 1\nElang FC\nHarimau SC\nRajawali United\nBanteng Jaya\n# Pot 2\nKomodo FC\nMacan Tutul\nBadak Perkasa\nCenderawasih SC\n# Pot 3\nWalet Putih\nKasuari FC\nAnoa United\nTapir SC\n# Pot 4\nOrangutan FC\nMaleo SC\nPenyu Hijau\nRusa Timur';
-  var EX_POTS = '# Pot 1\nElang FC\nHarimau SC\n# Pot 2\nKomodo FC\nMacan Tutul';
-  var EX_LIST = 'Warung Sate Pak Eko\nBakso Mang Ujang x3\nSoto Betawi';
+  var SAMPLE_PEOPLE = SAMPLE_POTS.split('\n').filter(function (l) { return l.charAt(0) !== '#'; }).join('\n');
+  var FILL_DESC = { bergilir: 'Peserta dibagi bergiliran: A, B, C, lalu kembali ke A.', penuh: 'Satu grup diisi sampai penuh, baru grup berikutnya.', diundi: 'Peserta diundi dulu, lalu grup tujuannya ikut diundi.' };
   var VERBS = { roda: ['Putar', 'memutar'], bola: ['Kocok', 'mengocok'], kartu: ['Nyalakan', 'menyalakan'] };
-  var FILLS = { bergilir: 'bergilir', penuh: 'isi penuh dulu', diundi: 'grup diundi' };
+  var FILLS = { bergilir: 'bergilir', penuh: 'satu grup dulu', diundi: 'grup ikut diundi' };
 
-  var st = { text: '', goal: 'urut', view: 'roda', speed: 'normal', remove: true, tick: false, gCount: 4, gNames: [], gFill: 'bergilir',
+  var st = { text: '', goal: 'urut', view: 'roda', speed: 'normal', remove: true, tick: false, gList: ['Grup A', 'Grup B'], usePots: false, pots: [{ name: 'Pot 1', text: '' }], gFill: 'bergilir',
     seed: '', saved: {}, screen: 'setup', session: null, plan: null, planStep: 0 };
   var sess = null, src = null, presenter = null, p1 = null, p2 = null, busy = false, run = 0, actx = null, pending = null;
   var skipping = false, flyAnim = null, idleId = null, pngUrl = null, pngBlob = null;
@@ -45,6 +45,33 @@
   function gcol(i) { return 'var(--wheel-' + ((i % 8) + 1) + ')'; }
   function shortName(n) { return n.replace(/^Grup\s+/i, ''); }
 
+  // ---------- nama grup, pot, dan data pengaturan ----------
+  function cleanName(s) { return String(s == null ? '' : s).replace(/\s+/g, ' ').trim().slice(0, 30); }
+  function defaultName(i) { return 'Grup ' + (i < 26 ? String.fromCharCode(65 + i) : i + 1); }
+  function nextName() {
+    var used = {}; st.gList.forEach(function (n) { used[n.toLowerCase()] = 1; });
+    for (var i = 0; i < 200; i++) { var n = defaultName(i); if (!used[n.toLowerCase()]) return n; }
+    return 'Grup';
+  }
+  function hasHash(t) { return /^\s*#/m.test(String(t)); }
+  function stripHash(t) { return String(t).split(/\r\n|\r|\n/).filter(function (l) { return !/^\s*#/.test(l); }).join('\n'); }
+  function potNameOf(p, i) { return String(p.name || '').replace(/^\s*#+\s*/, '').replace(/\s+/g, ' ').trim().slice(0, 30) || 'Pot ' + (i + 1); }
+  function potsToText() { return st.pots.map(function (p, i) { return '# ' + potNameOf(p, i) + '\n' + stripHash(p.text); }).join('\n'); }
+  function potsFromText(t) {
+    var pp = E.parsePots(t);
+    st.pots = pp.pots.map(function (p) { return { name: p.name, text: p.items.map(function (i) { return i.label; }).join('\n') }; });
+    if (!st.pots.length) st.pots = [{ name: 'Pot 1', text: '' }];
+    st.usePots = true;
+  }
+  // adaptor: apa pun bentuk isian, mesin selalu menerima daftar pot yang sama seperti sebelumnya
+  function parsedPeople() { return st.usePots ? E.parsePots(potsToText()) : E.parsePots(stripHash(st.text)); }
+  function peopleCount(pp) { var n = 0; pp.pots.forEach(function (p) { n += p.items.length; }); return n; }
+  function currentText() { return st.goal === 'grup' && st.usePots ? potsToText() : st.text; }
+  function setText(t) {
+    if (st.goal === 'grup' && hasHash(t)) { potsFromText(t); return; }
+    st.text = t; if (st.goal === 'grup') st.usePots = false;
+  }
+
   // ---------- penyimpanan ----------
   function save() {
     try {
@@ -58,14 +85,31 @@
       if (!o || o.v !== 1) return;
       ['text', 'goal', 'view', 'speed', 'seed', 'gFill', 'screen'].forEach(function (k) { if (typeof o[k] === 'string') st[k] = o[k]; });
       ['remove', 'tick'].forEach(function (k) { if (typeof o[k] === 'boolean') st[k] = o[k]; });
-      if (o.gCount >= 2 && o.gCount <= 16) st.gCount = o.gCount | 0;
-      if (Array.isArray(o.gNames)) st.gNames = o.gNames.map(String).slice(0, 16);
+      // grup: daftar baru, atau migrasi dari jumlah dan nama lama
+      if (Array.isArray(o.gList)) {
+        var seen = {}; st.gList = [];
+        o.gList.forEach(function (n) { n = cleanName(n); if (n && !seen[n.toLowerCase()] && st.gList.length < 16) { seen[n.toLowerCase()] = 1; st.gList.push(n); } });
+      } else if (o.gCount >= 2 && o.gCount <= 16) {
+        st.gList = [];
+        for (var i = 0; i < o.gCount; i++) {
+          var nm = cleanName(Array.isArray(o.gNames) ? o.gNames[i] : ''), dn = defaultName(i);
+          if (!nm || st.gList.indexOf(nm) >= 0) nm = dn;
+          st.gList.push(nm);
+        }
+      }
+      // pot: blok baru, atau migrasi dari teks berawalan #
+      if (Array.isArray(o.pots)) {
+        st.pots = o.pots.map(function (p) { return { name: String((p && p.name) || '').slice(0, 30), text: String((p && p.text) || '') }; }).slice(0, 20);
+        st.usePots = o.usePots === true && st.pots.length > 0;
+      } else if (st.goal === 'grup' && hasHash(st.text)) { potsFromText(st.text); }
       if (o.saved && typeof o.saved === 'object') st.saved = o.saved;
       if (o.session && o.session.all) { sess = E.Session.fromJSON(o.session, newSource()); }
       if (o.plan && o.plan.steps && o.plan.groups && o.plan.pots) { st.plan = o.plan; st.planStep = Math.max(0, Math.min(o.planStep | 0, o.plan.steps.length)); }
     } catch (e) { /* data rusak: mulai bersih */ }
     if (!Roda.presenters[st.view]) st.view = 'roda';
     if (['satu', 'urut', 'grup'].indexOf(st.goal) < 0) st.goal = 'urut';
+    if (['bergilir', 'penuh', 'diundi'].indexOf(st.gFill) < 0) st.gFill = 'bergilir';
+    if (!Array.isArray(st.pots) || !st.pots.length) { st.pots = [{ name: 'Pot 1', text: '' }]; st.usePots = false; }
     if (st.screen === 'stage' && !sess) st.screen = 'setup';
     if (st.screen === 'group' && !st.plan) st.screen = 'setup';
   }
@@ -84,21 +128,85 @@
     });
   }
 
-  function groupNames() {
-    var out = [];
-    for (var i = 0; i < st.gCount; i++) out.push((st.gNames[i] || '').trim() || 'Grup ' + String.fromCharCode(65 + i));
-    return out;
+  function groupNames() { return st.gList.slice(); }
+
+  function gmsg(t) { $('gMsg').textContent = t; }
+
+  function renderGroupList(flashIdx) {
+    var ul = $('gList'); clear(ul);
+    st.gList.forEach(function (name, i) {
+      var li = h('li', 'g-row' + (i === flashIdx ? ' flash' : '')), dot = h('span', 'g-dot'), inp = h('input', 'gname'), del = h('button', 'g-x', '\u00d7');
+      dot.style.background = gcol(i); dot.setAttribute('aria-hidden', 'true');
+      inp.type = 'text'; inp.value = name; inp.maxLength = 30; inp.setAttribute('aria-label', 'Nama grup ' + (i + 1) + ', ubah langsung'); inp.autocomplete = 'off';
+      inp.addEventListener('focus', function () { inp.select(); });
+      inp.addEventListener('keydown', function (e) {
+        if (e.key === 'Enter') { e.preventDefault(); inp.blur(); }
+        else if (e.key === 'Escape') { e.preventDefault(); e.stopPropagation(); inp.value = st.gList[i]; inp.blur(); }
+      });
+      inp.addEventListener('blur', function () {
+        var v = cleanName(inp.value);
+        if (!v) { inp.value = st.gList[i]; return; }
+        if (v.toLowerCase() === st.gList[i].toLowerCase() && v === st.gList[i]) return;
+        for (var k = 0; k < st.gList.length; k++) if (k !== i && st.gList[k].toLowerCase() === v.toLowerCase()) { inp.value = st.gList[i]; gmsg('Nama "' + v + '" sudah dipakai grup lain.'); return; }
+        st.gList[i] = v; inp.value = v; del.setAttribute('aria-label', 'Hapus ' + v); gmsg(''); save(); renderSetupInfo();
+      });
+      del.type = 'button'; del.setAttribute('aria-label', 'Hapus ' + name);
+      del.addEventListener('click', function () { st.gList.splice(i, 1); gmsg(''); renderGroupList(); renderSetupInfo(); save(); $('gInput').focus(); });
+      li.appendChild(dot); li.appendChild(inp); li.appendChild(del); ul.appendChild(li);
+    });
+    $('gInput').placeholder = nextName();
+    $('gCountTxt').textContent = st.gList.length + ' grup';
+    if (st.gList.length < 2) gmsg('Tambahkan minimal 2 grup.');
+    else if ($('gMsg').textContent === 'Tambahkan minimal 2 grup.') gmsg('');
   }
-  function renderGroupNames() {
-    var box = $('gNames'); clear(box);
-    for (var i = 0; i < st.gCount; i++) {
-      (function (i) {
-        var inp = h('input', 'field-sm'); inp.type = 'text'; inp.maxLength = 30; inp.value = st.gNames[i] || ''; inp.placeholder = 'Grup ' + String.fromCharCode(65 + i);
-        inp.setAttribute('aria-label', 'Nama grup ' + (i + 1)); inp.style.fontSize = '16px'; inp.style.height = '44px'; inp.style.width = '100%';
-        inp.addEventListener('input', function () { st.gNames[i] = inp.value; save(); });
-        box.appendChild(inp);
-      })(i);
+
+  function addGroup() {
+    var inp = $('gInput'), v = cleanName(inp.value) || nextName();
+    if (st.gList.length >= 16) { gmsg('Paling banyak 16 grup.'); inp.focus(); return; }
+    for (var k = 0; k < st.gList.length; k++) if (st.gList[k].toLowerCase() === v.toLowerCase()) { gmsg('Nama "' + v + '" sudah dipakai grup lain.'); inp.focus(); return; }
+    st.gList.push(v); inp.value = ''; gmsg('');
+    renderGroupList(st.gList.length - 1); renderSetupInfo(); save(); inp.focus();
+  }
+
+  function renderPotBlocks(focusIdx) {
+    var box = $('potBlocks'); clear(box);
+    st.pots.forEach(function (p, i) {
+      var blk = h('div', 'pot-blk' + (i === focusIdx ? ' flash' : '')), head = h('div', 'pot-head'), name = h('input', 'field-sm pname'), del = h('button', 'g-x', '\u00d7'), ta = h('textarea', 'field pot-ta');
+      name.type = 'text'; name.value = p.name; name.maxLength = 30; name.placeholder = 'Pot ' + (i + 1); name.setAttribute('aria-label', 'Nama pot ' + (i + 1)); name.autocomplete = 'off';
+      name.addEventListener('input', function () { st.pots[i].name = name.value; del.setAttribute('aria-label', 'Hapus ' + potNameOf(st.pots[i], i)); renderSetupInfo(); save(); });
+      del.type = 'button'; del.setAttribute('aria-label', 'Hapus ' + potNameOf(p, i)); del.disabled = st.pots.length < 2;
+      del.addEventListener('click', function () { st.pots.splice(i, 1); renderPotBlocks(); renderSetupInfo(); save(); $('btnAddPot').focus(); });
+      ta.value = p.text; ta.spellcheck = false; ta.placeholder = 'Satu nama per baris'; ta.rows = 5; ta.setAttribute('aria-label', 'Peserta ' + potNameOf(p, i)); ta.autocomplete = 'off';
+      ta.addEventListener('input', function () { st.pots[i].text = ta.value; renderSetupInfo(); save(); });
+      head.appendChild(name); head.appendChild(del); blk.appendChild(head); blk.appendChild(ta); box.appendChild(blk);
+    });
+  }
+
+  function addPot() {
+    if (st.pots.length >= 20) return;
+    var n = st.pots.length + 1, used = {};
+    st.pots.forEach(function (p, i) { used[potNameOf(p, i).toLowerCase()] = 1; });
+    while (used['pot ' + n]) n++;
+    st.pots.push({ name: 'Pot ' + n, text: '' });
+    renderPotBlocks(st.pots.length - 1); renderSetupInfo(); save();
+    var tas = document.querySelectorAll('#potBlocks textarea'); if (tas.length) tas[tas.length - 1].focus();
+  }
+
+  function setPots(on) {
+    $('mergeAsk').hidden = true;
+    if (on) {
+      st.pots = [{ name: 'Pot 1', text: st.text }]; st.usePots = true;
+    } else {
+      var filled = st.pots.filter(function (p) { return stripHash(p.text).trim(); });
+      if (filled.length > 1 && !setPots.confirmed) {
+        $('swPots').checked = true;
+        $('mergeTxt').textContent = 'Ada ' + filled.length + ' pot yang terisi. Gabungkan semuanya jadi satu daftar peserta?';
+        $('mergeAsk').hidden = false; $('btnMerge').focus(); return;
+      }
+      st.text = st.pots.map(function (p) { return stripHash(p.text).trim(); }).filter(Boolean).join('\n'); st.usePots = false;
     }
+    setPots.confirmed = false;
+    $('list').value = st.text; renderPotBlocks(); renderSetupInfo(); save();
   }
 
   function syncControls() {
@@ -106,17 +214,19 @@
     document.querySelectorAll('input[name=goal]').forEach(function (r) { r.checked = r.value === st.goal; });
     document.querySelectorAll('input[name=view]').forEach(function (r) { r.checked = r.value === st.view; });
     document.querySelectorAll('input[name=speed]').forEach(function (r) { r.checked = r.value === st.speed; });
+    document.querySelectorAll('input[name=fill]').forEach(function (r) { r.checked = r.value === st.gFill; });
     $('swRemove').checked = st.remove; $('swTick').checked = st.tick; $('seed').value = st.seed;
-    $('gCount').value = st.gCount; $('gFill').value = st.gFill;
-    renderGroupNames(); renderSaved(); renderSetupInfo();
+    renderGroupList(); renderPotBlocks(); renderSaved(); renderSetupInfo();
   }
 
   function summaryText(n, pots) {
     var viewName = { roda: 'roda', bola: 'tabung', kartu: 'kartu' }[st.view];
     if (st.goal === 'grup') {
+      var G = st.gList.length;
       if (!n) return 'Belum ada peserta.';
-      var lo = Math.floor(n / st.gCount), hi = Math.ceil(n / st.gCount);
-      return n + ' peserta, ' + st.gCount + ' grup, ' + pots + ' pot: ' + (lo === hi ? lo : lo + ' sampai ' + hi) + ' per grup, ' + FILLS[st.gFill] + '.';
+      if (G < 2) return n + ' peserta. Tambahkan minimal 2 grup.';
+      var lo = Math.floor(n / G), hi = Math.ceil(n / G);
+      return n + ' peserta, ' + G + ' grup: ' + (lo === hi ? lo : lo + ' sampai ' + hi) + ' per grup' + (pots > 1 ? ', ' + pots + ' pot' : '') + ', ' + FILLS[st.gFill] + '.';
     }
     if (!n) return 'Belum ada pilihan.';
     if (st.goal === 'satu') return n + ' pilihan, satu jawaban besar.';
@@ -124,43 +234,47 @@
   }
 
   function renderSetupInfo() {
-    var grup = st.goal === 'grup';
-    $('grpOpts').hidden = !grup;
-    $('rowRemove').hidden = st.goal !== 'urut';
+    var grup = st.goal === 'grup', G = st.gList.length;
+    $('grpPanel').hidden = !grup; $('rowPots').hidden = !grup;
+    $('flatBox').hidden = grup && st.usePots; $('potBox').hidden = !(grup && st.usePots);
+    $('rowRemove').hidden = st.goal !== 'urut'; $('swPots').checked = st.usePots;
+    $('listTitle').textContent = grup ? 'Peserta' : 'Daftar pilihan';
+    $('btnDedupe').hidden = grup;
+    $('fillDesc').textContent = FILL_DESC[st.gFill];
+    $('gCountTxt').textContent = G + ' grup';
     var warn = $('listWarn'); clear(warn);
-    function note(text, cls, tip) { var d = h('div', 'issue ' + (cls || 'warning')); d.appendChild(h('p', '', text)); if (tip) d.appendChild(h('p', 'small muted', tip)); warn.appendChild(d); }
-    var ex = $('listEx'); ex.hidden = false; ex.textContent = grup ? EX_POTS : EX_LIST;
+    function note(text, cls, tip, btn) {
+      var d = h('div', 'issue ' + (cls || 'warning')); d.appendChild(h('p', '', text)); if (tip) d.appendChild(h('p', 'small muted', tip));
+      if (btn) { var b = h('button', 'btn btn-sm', btn[0]); b.type = 'button'; b.style.height = '44px'; b.style.marginTop = '8px'; b.addEventListener('click', btn[1]); d.appendChild(b); }
+      warn.appendChild(d);
+    }
     var hint = $('listHint'); clear(hint);
     $('startWhy').textContent = '';
     if (grup) {
-      var pp = E.parsePots(st.text), n = 0, sizes = [];
-      pp.pots.forEach(function (p) { n += p.items.length; sizes.push(p.items.length); });
-      $('count').textContent = n + ' peserta, ' + pp.pots.length + ' pot';
-      $('startSum').textContent = summaryText(n, pp.pots.length);
+      var pp = parsedPeople(), n = peopleCount(pp), sizes = pp.pots.map(function (p) { return p.items.length; });
+      $('count').textContent = n + ' peserta' + (st.usePots ? ', ' + pp.pots.length + ' pot' : '');
+      $('startSum').textContent = summaryText(n, st.usePots ? pp.pots.length : 1);
       if (pp.over) note('Hanya ' + E.MAX_ITEMS + ' peserta pertama yang dipakai.', 'warning', 'Kurangi daftar agar semuanya ikut.');
-      if (n && n < st.gCount) note('Peserta (' + n + ') lebih sedikit dari jumlah grup (' + st.gCount + ').', 'warning', 'Kurangi jumlah grup atau tambah peserta.');
-      else if (n) {
+      if (!st.usePots && hasHash(st.text)) note('Ada baris berawalan # di teks ini. Baris itu dianggap judul pot.', 'info', 'Mau dipecah jadi pot?', ['Pakai pot dari teks ini', function () { potsFromText(st.text); renderPotBlocks(); renderSetupInfo(); save(); }]);
+      if (n && G >= 2 && n < G) note('Peserta (' + n + ') lebih sedikit dari jumlah grup (' + G + ').', 'warning', 'Hapus beberapa grup atau tambah peserta.');
+      else if (n && G >= 2) {
         try {
-          E.groupPlan(pp.pots, { G: st.gCount, fill: st.gFill }, E.seededSource('cek')).warnings.forEach(function (t) {
+          E.groupPlan(pp.pots, { G: G, fill: st.gFill }, E.seededSource('cek')).warnings.forEach(function (t) {
             var tip = '';
             if (/Ukuran pot/.test(t)) {
               var same = sizes.length > 1 && sizes.every(function (x) { return x === sizes[0]; });
-              tip = same && sizes[0] >= 2 && sizes[0] <= 16 ? 'Ubah jumlah grup menjadi ' + sizes[0] + ' agar tiap grup mendapat satu peserta dari tiap pot.' : 'Samakan jumlah peserta tiap pot dengan jumlah grup bila ingin satu per pot.';
+              tip = same && sizes[0] >= 2 && sizes[0] <= 16 ? 'Buat ' + sizes[0] + ' grup supaya tiap grup mendapat satu peserta dari tiap pot.' : 'Samakan jumlah peserta tiap pot dengan jumlah grup bila ingin satu per pot.';
             }
             note(t, /Ukuran pot/.test(t) ? 'warning' : 'info', tip);
           });
         } catch (e) { /* diabaikan di sini */ }
       }
-      hint.appendChild(document.createTextNode('Satu peserta per baris. Mulai pot dengan baris judul berawalan '));
-      hint.appendChild(h('code', '', '#'));
-      hint.appendChild(document.createTextNode('. Tanpa baris judul, semua peserta masuk satu pot. Contoh:'));
-      $('btnDedupe').hidden = true;
+      hint.appendChild(document.createTextNode(st.usePots ? 'Satu nama per baris di tiap pot.' : 'Satu nama per baris.'));
       return;
     }
-    $('btnDedupe').hidden = false;
-    hint.appendChild(document.createTextNode('Satu pilihan per baris. Tambah '));
+    hint.appendChild(document.createTextNode('Satu nama per baris. Tambah '));
     hint.appendChild(h('code', '', 'x3'));
-    hint.appendChild(document.createTextNode(' di belakang nama agar peluangnya tiga kali lipat. Contoh:'));
+    hint.appendChild(document.createTextNode(' di belakang nama agar peluangnya tiga kali lipat.'));
     var p = E.parseList(st.text);
     $('count').textContent = p.items.length + ' pilihan';
     $('startSum').textContent = summaryText(p.items.length);
@@ -176,22 +290,35 @@
 
   function setupEvents() {
     $('list').addEventListener('input', function () { st.text = $('list').value; renderSetupInfo(); save(); });
-    document.querySelectorAll('input[name=goal],input[name=view],input[name=speed]').forEach(function (r) {
-      r.addEventListener('change', function () { st[r.name] = r.value; renderSetupInfo(); save(); });
+    document.querySelectorAll('input[name=goal],input[name=view],input[name=speed],input[name=fill]').forEach(function (r) {
+      r.addEventListener('change', function () { if (r.name === 'fill') st.gFill = r.value; else st[r.name] = r.value; renderSetupInfo(); save(); });
     });
     $('swRemove').addEventListener('change', function () { st.remove = $('swRemove').checked; renderSetupInfo(); save(); });
     $('swTick').addEventListener('change', function () { st.tick = $('swTick').checked; if (st.tick) ensureAudio(); save(); });
+    $('swPots').addEventListener('change', function () { setPots($('swPots').checked); });
+    $('btnMerge').addEventListener('click', function () { setPots.confirmed = true; setPots(false); $('swPots').focus(); });
+    $('btnMergeNo').addEventListener('click', function () { $('mergeAsk').hidden = true; $('swPots').checked = true; $('swPots').focus(); });
+    $('btnAddPot').addEventListener('click', addPot);
+    $('btnAddGrp').addEventListener('click', addGroup);
+    $('gInput').addEventListener('keydown', function (e) { if (e.key === 'Enter') { e.preventDefault(); addGroup(); } });
     $('seed').addEventListener('input', function () { st.seed = $('seed').value.trim(); save(); });
     $('btnSeedNew').addEventListener('click', function () {
       var b = new Uint32Array(2); crypto.getRandomValues(b); st.seed = (b[0].toString(36) + b[1].toString(36)).slice(0, 10); $('seed').value = st.seed; save();
     });
     $('btnSeedCopy').addEventListener('click', function () { if (st.seed) copy(st.seed, $('btnSeedCopy')); });
-    $('gCount').addEventListener('change', function () {
-      var n = Math.max(2, Math.min(16, parseInt($('gCount').value, 10) || 2)); st.gCount = n; $('gCount').value = n; renderGroupNames(); renderSetupInfo(); save();
+    $('btnSample').addEventListener('click', function () {
+      if (st.goal === 'grup') {
+        if (st.gList.length === 2 && st.gList[0] === 'Grup A' && st.gList[1] === 'Grup B') st.gList = ['Grup A', 'Grup B', 'Grup C', 'Grup D'];
+        if (st.usePots) potsFromText(SAMPLE_POTS); else st.text = SAMPLE_PEOPLE;
+        renderGroupList(); renderPotBlocks();
+      } else st.text = SAMPLE_LIST;
+      $('list').value = st.text; renderSetupInfo(); save();
     });
-    $('gFill').addEventListener('change', function () { st.gFill = $('gFill').value; renderSetupInfo(); save(); });
-    $('btnSample').addEventListener('click', function () { st.text = st.goal === 'grup' ? SAMPLE_POTS : SAMPLE_LIST; $('list').value = st.text; renderSetupInfo(); save(); });
-    $('btnClear').addEventListener('click', function () { st.text = ''; $('list').value = ''; renderSetupInfo(); save(); $('list').focus(); });
+    $('btnClear').addEventListener('click', function () {
+      st.text = ''; $('list').value = '';
+      if (st.goal === 'grup' && st.usePots) { st.pots = [{ name: 'Pot 1', text: '' }]; renderPotBlocks(); }
+      renderSetupInfo(); save(); (st.usePots && st.goal === 'grup' ? document.querySelector('#potBlocks textarea') : $('list')).focus();
+    });
     $('btnDedupe').addEventListener('click', function () {
       var items = E.dedupe(E.parseList(st.text).items);
       st.text = items.map(function (i) { return i.label + (i.weight > 1 ? ' x' + i.weight : ''); }).join('\n'); $('list').value = st.text; renderSetupInfo(); save();
@@ -199,12 +326,12 @@
     $('btnSave').addEventListener('click', function () {
       var n = $('saveName').value.trim(), m = $('saveMsg');
       if (!n) { m.textContent = 'Isi nama daftar dulu.'; $('saveName').focus(); return; }
-      if (!st.text.trim()) { m.textContent = 'Daftar masih kosong, belum ada yang disimpan.'; return; }
-      st.saved[n] = st.text; renderSaved(); $('savedSel').value = n; m.textContent = 'Daftar "' + n + '" tersimpan di browser ini.'; save();
+      if (!currentText().trim()) { m.textContent = 'Daftar masih kosong, belum ada yang disimpan.'; return; }
+      st.saved[n] = currentText(); renderSaved(); $('savedSel').value = n; m.textContent = 'Daftar "' + n + '" tersimpan di browser ini.'; save();
     });
     $('btnLoad').addEventListener('click', function () {
       var n = $('savedSel').value; if (!n || !(n in st.saved)) { $('saveMsg').textContent = 'Belum ada daftar tersimpan.'; return; }
-      st.text = st.saved[n]; $('list').value = st.text; renderSetupInfo(); $('saveMsg').textContent = 'Daftar "' + n + '" dimuat.'; save();
+      setText(st.saved[n]); $('list').value = st.text; renderPotBlocks(); renderSetupInfo(); $('saveMsg').textContent = 'Daftar "' + n + '" dimuat.'; save();
     });
     $('btnDelSaved').addEventListener('click', function () {
       var n = $('savedSel').value; if (!n) return; delete st.saved[n]; renderSaved(); $('saveMsg').textContent = 'Daftar "' + n + '" dihapus.'; save();
@@ -246,15 +373,16 @@
     }
     src = newSource();
     if (st.goal === 'grup') {
-      var pp = E.parsePots(st.text), n = 0;
-      pp.pots.forEach(function (p) { n += p.items.length; });
-      if (!n) return fail('Daftar peserta masih kosong. Tulis satu peserta per baris, atau klik Coba dengan contoh.', $('list'));
-      if (n < st.gCount) return fail('Peserta (' + n + ') lebih sedikit dari jumlah grup (' + st.gCount + '). Kurangi jumlah grup atau tambah peserta.', $('gCount'));
+      if (!st.usePots && hasHash(st.text)) { potsFromText(st.text); renderPotBlocks(); }
+      var pp = parsedPeople(), n = peopleCount(pp), G = st.gList.length;
+      if (G < 2) return fail('Tambahkan minimal 2 grup.', $('gInput'));
+      if (!n) return fail('Daftar peserta masih kosong. Tulis satu nama per baris, atau klik Coba dengan contoh.', st.usePots ? document.querySelector('#potBlocks textarea') : $('list'));
+      if (n < G) return fail('Peserta (' + n + ') lebih sedikit dari jumlah grup (' + G + '). Hapus beberapa grup atau tambah peserta.', st.usePots ? document.querySelector('#potBlocks textarea') : $('list'));
       st.plan = null; sess = null; newPlan(pp.pots, true);
       st.screen = 'group';
     } else {
       var pl = E.parseList(st.text);
-      if (!pl.items.length) return fail('Daftar masih kosong. Tulis satu pilihan per baris, atau klik Coba dengan contoh.', $('list'));
+      if (!pl.items.length) return fail('Daftar masih kosong. Tulis satu nama per baris, atau klik Coba dengan contoh.', $('list'));
       sess = new E.Session(pl.items, src); st.plan = null; st.screen = 'stage';
     }
     save(); showScreen();
@@ -280,7 +408,7 @@
     var s = st.screen;
     $('screenSetup').hidden = s !== 'setup'; $('screenStage').hidden = s !== 'stage'; $('screenGroup').hidden = s !== 'group';
     $('main').classList.toggle('wide', s === 'group'); document.querySelector('header.top').classList.toggle('wide', s === 'group');
-    $('stageActions').hidden = s === 'setup';
+    $('stageActions').hidden = s === 'setup'; $('startBar').hidden = s !== 'setup';
     $('stepSetup').setAttribute('aria-current', s === 'setup' ? 'step' : 'false');
     $('stepStage').setAttribute('aria-current', s === 'setup' ? 'false' : 'step');
     $('stepStage').disabled = !(sess || st.plan);
@@ -322,6 +450,7 @@
 
   function buildStage() {
     var P = Roda.presenters[st.view], v = VERBS[st.view] || VERBS.roda;
+    $('stageView').classList.toggle('kv', st.view === 'kartu');
     presenter = P.create($('stageView'), { onActivate: spin, hubLabel: v[0] });
     refreshDisplay(); renderResults(); updateStageText();
     $('btnSpin').disabled = !sess.remaining.length; $('btnSkip').disabled = true;
@@ -446,7 +575,7 @@
   function newPlan(pots, silent) {
     pots = pots || st.plan.pots;
     if (!src) src = newSource();
-    var plan = E.groupPlan(pots, { G: st.gCount, fill: st.gFill, names: groupNames() }, src);
+    var plan = E.groupPlan(pots, { G: st.gList.length, fill: st.gFill, names: groupNames() }, src);
     plan.pots = pots; st.plan = plan; st.planStep = 0;
     save();
     if (!silent) { showScreen(); announce('Undian diacak ulang.'); }
@@ -470,6 +599,7 @@
     $('lead').textContent = { bergilir: 'Bergilir', penuh: 'Isi penuh dulu', diundi: 'Grup ikut diundi' }[plan.fill] + ' · ' + plan.groups.length + ' grup · ' + plan.pots.length + ' pot.';
     $('board').classList.toggle('many', plan.groups.length > 8);
     $('doneGrid').classList.toggle('many', plan.groups.length > 8);
+    $('g1view').classList.toggle('kv', st.view === 'kartu');
     if (!isDone()) makePresenters();
     groupIdle(); renderPots(); renderBoard(null, -1);
   }

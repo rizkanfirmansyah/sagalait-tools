@@ -37,91 +37,110 @@
   </div>
 
   <!-- layar 1: siapkan -->
-  <section id="screenSetup" class="app-grid">
-    <div class="panel">
-      <div class="panel-head"><h2>Daftar pilihan</h2><span class="small muted" id="count">0 pilihan</span></div>
-      <label class="vh" for="list">Daftar pilihan, satu per baris</label>
-      <textarea id="list" class="field list-field" spellcheck="false" autocomplete="off" placeholder="Tulis satu pilihan per baris"></textarea>
-      <div class="btn-row">
-        <button class="btn" id="btnDedupe" type="button">Hapus duplikat</button>
-        <button class="btn" id="btnSample" type="button">Coba dengan contoh</button>
-        <button class="btn" id="btnClear" type="button">Bersihkan</button>
+  <section id="screenSetup" class="setup">
+    <div class="col-l">
+      <div class="panel p-goal">
+        <fieldset class="choices" id="goals" aria-label="Tujuan">
+          <legend class="lbl">Tujuan</legend>
+          <label class="choice"><input type="radio" name="goal" value="satu"><span class="box"><b>Pilih satu</b><small>Satu jawaban besar.</small></span></label>
+          <label class="choice"><input type="radio" name="goal" value="urut"><span class="box"><b>Berurutan</b><small>Pemenang keluar satu per satu.</small></span></label>
+          <label class="choice"><input type="radio" name="goal" value="grup"><span class="box"><b>Bagi grup</b><small>Bagi peserta ke beberapa grup.</small></span></label>
+        </fieldset>
       </div>
-      <div class="warn-note" id="listWarn" aria-live="polite"></div>
-      <p class="hint" id="listHint"></p>
-      <pre class="src hint-code" id="listEx" hidden></pre>
+
+      <div class="panel p-list">
+        <div class="panel-head"><h2 id="listTitle">Daftar pilihan</h2><span class="small muted" id="count">0 pilihan</span></div>
+        <div class="row-sw" id="rowPots" hidden><label for="swPots">Pakai pot</label><input type="checkbox" role="switch" id="swPots"></div>
+        <div class="merge-ask" id="mergeAsk" hidden role="alert">
+          <p id="mergeTxt"></p>
+          <div class="btn-row"><button class="btn" id="btnMerge" type="button">Gabungkan</button><button class="btn" id="btnMergeNo" type="button">Batal</button></div>
+        </div>
+        <div id="flatBox">
+          <label class="vh" for="list">Daftar, satu nama per baris</label>
+          <textarea id="list" class="field list-field" spellcheck="false" autocomplete="off" placeholder="Tulis satu nama per baris"></textarea>
+        </div>
+        <div id="potBox" hidden>
+          <div id="potBlocks"></div>
+          <button class="btn" id="btnAddPot" type="button">+ Tambah pot</button>
+        </div>
+        <div class="btn-row">
+          <button class="btn" id="btnDedupe" type="button">Hapus duplikat</button>
+          <button class="btn" id="btnSample" type="button">Coba dengan contoh</button>
+          <button class="btn" id="btnClear" type="button">Bersihkan</button>
+        </div>
+        <div class="row-sw" id="rowRemove"><label for="swRemove">Keluarkan pemenang dari roda</label><input type="checkbox" role="switch" id="swRemove"></div>
+        <div class="warn-note" id="listWarn" aria-live="polite"></div>
+        <p class="hint" id="listHint"></p>
+      </div>
     </div>
 
-    <div class="panel">
-      <fieldset class="choices" id="goals" aria-label="Tujuan">
-        <legend class="lbl">Tujuan</legend>
-        <label class="choice"><input type="radio" name="goal" value="satu"><span class="box"><b>Pilih satu</b><small>Satu jawaban besar, tanpa daftar hasil.</small></span></label>
-        <label class="choice"><input type="radio" name="goal" value="urut"><span class="box"><b>Berurutan</b><small>Pemenang keluar dari roda, masuk ke daftar.</small></span></label>
-        <label class="choice"><input type="radio" name="goal" value="grup"><span class="box"><b>Bagi grup</b><small>Undian grup dengan pot dan urutan isi.</small></span></label>
-      </fieldset>
-
-      <fieldset class="choices views" id="views" aria-label="Tampilan">
-        <legend class="lbl">Tampilan</legend>
-      </fieldset>
-
-      <div class="lbl" id="lblSpeed">Kecepatan</div>
-      <div class="seg" role="radiogroup" aria-labelledby="lblSpeed">
-        <label><input type="radio" name="speed" value="cepat"><span>Cepat</span></label>
-        <label><input type="radio" name="speed" value="normal"><span>Normal</span></label>
-        <label><input type="radio" name="speed" value="dramatis"><span>Dramatis</span></label>
+    <div class="col-r">
+      <div class="panel p-grp" id="grpPanel" hidden>
+        <div class="panel-head"><h2>Grup</h2><span class="small muted" id="gCountTxt"></span></div>
+        <div class="add-row">
+          <label class="vh" for="gInput">Nama grup baru</label>
+          <input class="field-sm" id="gInput" type="text" maxlength="30" autocomplete="off" placeholder="Grup C">
+          <button class="btn" id="btnAddGrp" type="button">Tambah</button>
+        </div>
+        <ul class="g-list" id="gList"></ul>
+        <p class="g-msg" id="gMsg" aria-live="polite"></p>
+        <div class="lbl" id="lblFill">Cara membagi</div>
+        <div class="seg" role="radiogroup" aria-labelledby="lblFill">
+          <label><input type="radio" name="fill" value="bergilir"><span>Bergilir</span></label>
+          <label><input type="radio" name="fill" value="penuh"><span>Satu grup dulu</span></label>
+          <label><input type="radio" name="fill" value="diundi"><span>Grup ikut diundi</span></label>
+        </div>
+        <p class="hint" id="fillDesc" style="margin-top:0"></p>
       </div>
 
-      <div class="grp-opts" id="grpOpts" hidden>
-        <div class="grid2">
-          <div><label for="gCount">Jumlah grup (2 sampai 16)</label><input class="field-sm" id="gCount" type="number" min="2" max="16" step="1" inputmode="numeric" style="width:100%"></div>
-          <div><label for="gFill">Cara mengisi grup</label>
-            <select class="field-sm" id="gFill" style="width:100%">
-              <option value="bergilir">Bergilir (A, B, C)</option>
-              <option value="penuh">Isi penuh dulu</option>
-              <option value="diundi">Grup diundi (2 langkah)</option>
-            </select></div>
-        </div>
-        <div class="lbl" style="font-size:14px">Nama grup</div>
-        <div class="grp-names" id="gNames"></div>
+      <div class="panel p-view">
+        <fieldset class="choices views" id="views" aria-label="Tampilan">
+          <legend class="lbl">Tampilan</legend>
+        </fieldset>
       </div>
 
-      <div class="row-sw" id="rowRemove"><label for="swRemove">Keluarkan pemenang dari roda</label><input type="checkbox" role="switch" id="swRemove"></div>
-      <div class="row-sw"><label for="swTick">Suara tik saat berputar</label><input type="checkbox" role="switch" id="swTick"></div>
-
-      <div class="set-row">
-        <label class="lbl" for="saveName" style="margin:0">Daftar tersimpan</label>
-        <div class="inline">
-          <select class="field-sm grow" id="savedSel" aria-label="Pilih daftar tersimpan"><option value="">(belum ada)</option></select>
-          <button class="btn btn-sm" id="btnLoad" type="button" style="height:44px">Muat</button>
-          <button class="btn btn-sm" id="btnDelSaved" type="button" style="height:44px">Hapus</button>
+      <details class="panel more" id="moreBox">
+        <summary>Pengaturan tambahan</summary>
+        <div class="lbl" id="lblSpeed">Kecepatan</div>
+        <div class="seg" role="radiogroup" aria-labelledby="lblSpeed">
+          <label><input type="radio" name="speed" value="cepat"><span>Cepat</span></label>
+          <label><input type="radio" name="speed" value="normal"><span>Normal</span></label>
+          <label><input type="radio" name="speed" value="dramatis"><span>Dramatis</span></label>
         </div>
-        <div class="inline">
-          <input class="field-sm grow" id="saveName" type="text" placeholder="Nama daftar" autocomplete="off" maxlength="40">
-          <button class="btn btn-sm" id="btnSave" type="button" style="height:44px">Simpan daftar</button>
+        <div class="row-sw"><label for="swTick">Suara tik saat berputar</label><input type="checkbox" role="switch" id="swTick"></div>
+        <div class="set-row">
+          <label class="lbl" for="seed" style="margin:0">Benih acak</label>
+          <p class="hint" style="margin:0">Dengan benih, undian yang sama bisa diputar ulang persis. Kosongkan untuk acak biasa.</p>
+          <div class="inline">
+            <input class="field-sm grow" id="seed" type="text" placeholder="Benih (opsional)" autocomplete="off" spellcheck="false">
+            <button class="btn btn-sm" id="btnSeedNew" type="button" style="height:44px">Buat benih</button>
+            <button class="btn btn-sm" id="btnSeedCopy" type="button" style="height:44px">Salin</button>
+          </div>
         </div>
-        <p class="small muted" id="saveMsg" aria-live="polite" style="min-height:1.2em"></p>
-      </div>
-
-      <details class="adv">
-        <summary>Lanjutan: kunci dengan benih</summary>
-        <p class="hint" style="margin-top:0">Dengan benih, undian yang sama bisa diputar ulang persis. Kosongkan untuk acak sungguhan (<code>crypto</code>).</p>
-        <div class="inline" style="display:flex;gap:8px;flex-wrap:wrap">
-          <input class="field-sm" id="seed" type="text" placeholder="Benih (opsional)" autocomplete="off" spellcheck="false" style="flex:1 1 180px;font-size:16px;height:44px">
-          <button class="btn btn-sm" id="btnSeedNew" type="button" style="height:44px">Buat benih</button>
-          <button class="btn btn-sm" id="btnSeedCopy" type="button" style="height:44px">Salin</button>
+        <div class="set-row" style="border-bottom:0">
+          <label class="lbl" for="saveName" style="margin:0">Daftar tersimpan</label>
+          <div class="inline">
+            <select class="field-sm grow" id="savedSel" aria-label="Pilih daftar tersimpan"><option value="">(belum ada)</option></select>
+            <button class="btn btn-sm" id="btnLoad" type="button" style="height:44px">Muat</button>
+            <button class="btn btn-sm" id="btnDelSaved" type="button" style="height:44px">Hapus</button>
+          </div>
+          <div class="inline">
+            <input class="field-sm grow" id="saveName" type="text" placeholder="Nama daftar" autocomplete="off" maxlength="40">
+            <button class="btn btn-sm" id="btnSave" type="button" style="height:44px">Simpan daftar</button>
+          </div>
+          <p class="small muted" id="saveMsg" aria-live="polite" style="min-height:1.2em"></p>
         </div>
       </details>
-
-      <div class="start-wrap">
-        <p class="start-sum" id="startSum" aria-live="polite"></p>
-        <div class="start-bar">
-          <span class="small muted">Pengaturan tersimpan di browser ini.</span>
-          <button class="btn btn-primary" id="btnStart" type="button">Mulai undian</button>
-        </div>
-        <p class="start-why" id="startWhy" role="status"></p>
-      </div>
     </div>
   </section>
+
+  <div class="start-wrap" id="startBar">
+    <div class="start-txt">
+      <p class="start-sum" id="startSum" aria-live="polite"></p>
+      <p class="start-why" id="startWhy" role="status"></p>
+    </div>
+    <button class="btn btn-primary btn-main" id="btnStart" type="button">Mulai undian</button>
+  </div>
 
   <!-- layar 2a: panggung pilih satu / berurutan -->
   <section id="screenStage" class="stage-grid" hidden>
