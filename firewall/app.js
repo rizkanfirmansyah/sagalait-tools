@@ -140,6 +140,7 @@
     Object.assign(m, { fwd: true, masq: true, lanSubnet: '192.168.88.0/24', wanIp: '203.0.113.10', mgmt: '192.168.88.0/24',
       pf: [{ name: 'web internal', proto: 'tcp', ext: '8080', ip: '192.168.88.20', port: '80', hairpin: true }] });
     save(); renderForm(); renderResult();
+    var g = document.querySelector('.fw-hairpin'); if (g) g.open = true;
   }
   function formMT() {
     var m = st.mt, f = document.createDocumentFragment();
@@ -261,7 +262,8 @@
     if (!r.script) {
       var e = el('div', { class: 'panel empty' }, el('p', { text: r.empty ? 'Belum ada hasil.' : 'Hasil belum bisa dibuat.' }),
         el('p', { class: 'small', text: r.empty ? 'Langkah pertama: isi alamat yang boleh mengelola perangkat. Tanpa itu tidak ada aturan yang dihasilkan, supaya Anda tidak terkunci.' : 'Perbaiki isian yang ditandai di form.' }),
-        el('button', { type: 'button', class: 'btn btn-sm', id: 'btnSample2', text: 'Coba dengan contoh', onclick: sample }));
+        el('button', { type: 'button', class: 'btn btn-sm', id: 'btnSample2', text: 'Coba dengan contoh', onclick: sample }),
+        el('button', { type: 'button', class: 'btn btn-sm', text: 'Contoh hairpin NAT', onclick: hairpinExample }));
       $result.appendChild(e);
       Object.keys(r.errors).forEach(function (k) { if (!(r.empty && /mgmt$/.test(k))) $result.appendChild(card('warning', 'Isian perlu diperbaiki', r.errors[k])); });
       return;
@@ -289,6 +291,7 @@
   /* ---------- aksi ---------- */
   function sample() { FW.example(st); save(); renderForm(); renderResult(); }
   document.getElementById('btnSample').addEventListener('click', sample);
+  document.getElementById('btnHairpin').addEventListener('click', function () { hairpinExample(); var d = document.querySelector('.fw-hairpin'); if (d) { d.open = true; d.scrollIntoView({ block: 'center' }); } });
   document.getElementById('btnClear').addEventListener('click', function () { var t = st.target; st = FW.defaults(); st.target = t; save(); renderForm(); renderResult(); });
   Array.prototype.forEach.call($tabs.querySelectorAll('button'), function (b) {
     b.addEventListener('click', function () { st.target = b.getAttribute('data-t'); save(); renderForm(); renderResult(); });
