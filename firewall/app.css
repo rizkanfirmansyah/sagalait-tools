@@ -37,3 +37,8 @@ pre.fw-code { white-space: pre; word-break: normal; overflow: auto; max-height: 
 .fw-issue-body { margin-top: 8px; color: var(--body); }
 .fw-notes { grid-template-columns: 110px minmax(0, 1fr); }
 @media (max-width: 520px) { .fw-notes { grid-template-columns: minmax(0, 1fr); } }
+
+.fw-hairpin { margin: 12px 0; border: 1px solid var(--line); border-radius: 12px; padding: 4px 16px 14px; background: var(--well); }
+.fw-hairpin > summary { cursor: pointer; font-weight: 600; font-size: 14.5px; min-height: 44px; display: flex; align-items: center; }
+.fw-hairpin[open] > summary { margin-bottom: 10px; }
+.fw-hairpin > .small { margin: 12px 0; }

@@ -116,6 +116,31 @@
   }
 
   /* ---------- form ---------- */
+  /* panduan NAT hairpin: teks tetap, tanpa data pengguna */
+  function hairpinGuide() {
+    var steps = [
+      ['Masalahnya.', 'Dari luar, http://203.0.113.10:8080 sampai ke server 192.168.88.20 lewat port forward. Dari dalam LAN, alamat yang sama sering gagal: router meneruskan paket ke server, tapi server satu subnet dengan klien dan membalas langsung ke klien dengan alamat 192.168.88.20, bukan 203.0.113.10. Klien menolak balasan itu.'],
+      ['Solusinya (hairpin).', 'Router membuat dua aturan tambahan: dst-nat untuk permintaan yang datang dari LAN ke IP publik, lalu masquerade supaya server membalas ke router dan bukan langsung ke klien. Alurnya jadi klien, router, server, router, klien.'],
+      ['Langkah 1.', 'Pastikan port forward dari luar sudah jalan. Isi nama, protokol, port luar, alamat dalam, dan port dalam.'],
+      ['Langkah 2.', 'Isi "Alamat IPv4 publik WAN" dengan satu IP publik tetap, dan "Subnet LAN" di Pengaturan dasar.'],
+      ['Langkah 3.', 'Centang "NAT hairpin" pada port forward yang ingin bisa dibuka dari dalam LAN.'],
+      ['Langkah 4.', 'Salin skrip, aktifkan Safe Mode di RouterOS, tempel, lalu uji.'],
+      ['Langkah 5.', 'Dari komputer di LAN jalankan: curl -I http://203.0.113.10:8080 (ganti dengan IP dan port Anda). Hasil sukses berarti hairpin bekerja.']
+    ];
+    var ol = el('ol', { class: 'fw-steps' });
+    steps.forEach(function (s) { ol.appendChild(el('li', null, el('strong', { text: s[0] + ' ' }), document.createTextNode(s[1]))); });
+    var d = el('details', { class: 'fw-hairpin' }, el('summary', { text: 'Apa itu NAT hairpin? Penjelasan dan contoh langkah demi langkah' }), ol,
+      el('p', { class: 'small muted', text: 'Alternatif yang lebih sederhana: DNS lokal yang mengarahkan nama domain ke alamat server di LAN, jadi klien tidak perlu lewat IP publik. Alat ini belum mendukung IP publik dinamis maupun akses lewat tunnel.' }),
+      el('button', { type: 'button', class: 'btn btn-sm', text: 'Isi contoh hairpin NAT', onclick: hairpinExample }));
+    return d;
+  }
+  function hairpinExample() {
+    var m = st.mt;
+    st.target = 'mt'; FW.presetMT(m, 'home');
+    Object.assign(m, { fwd: true, masq: true, lanSubnet: '192.168.88.0/24', wanIp: '203.0.113.10', mgmt: '192.168.88.0/24',
+      pf: [{ name: 'web internal', proto: 'tcp', ext: '8080', ip: '192.168.88.20', port: '80', hairpin: true }] });
+    save(); renderForm(); renderResult();
+  }
   function formMT() {
     var m = st.mt, f = document.createDocumentFragment();
     f.appendChild(panel('Pengaturan dasar', null,
@@ -141,6 +166,7 @@
     }
     var fp = panel('Forward dan NAT', null, checks.apply(null, fwd));
     if (m.fwd) {
+      fp.appendChild(hairpinGuide());
       fp.appendChild(field('Alamat IPv4 publik WAN (hanya untuk NAT hairpin)', text(m, 'wanIp', 'mt-wanIp', '203.0.113.10')));
       fp.appendChild(el('p', { class: 'small', text: 'Port forward (dst-nat)' }));
       fp.appendChild(repeat(m.pf, 'port forward', pfRow(m, true), function () { return { name: '', proto: 'tcp', ext: '', ip: '', port: '', hairpin: false }; }));
