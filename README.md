@@ -19,6 +19,7 @@ nginx-generator/      app 7
 db-viewer/            app 8
 firewall/             app 9
 roda-acak/            app 10
+db-cmd/               app 11
 ```
 
 ## Menjalankan di lokal

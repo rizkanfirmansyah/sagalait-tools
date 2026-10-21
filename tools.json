@@ -115,6 +115,16 @@
       "icon": "spin",
       "tags": ["roda","spin","acak","random","undian","kelompok","grup","giliran","picker","pot"],
       "favorite": false
+    },
+    {
+      "id": "db-cmd",
+      "name": "Perintah database",
+      "description": "Susun perintah mysql, mysqldump, psql, dan pg_dump",
+      "group": "db",
+      "path": "db-cmd/",
+      "icon": "SQL",
+      "tags": ["mysql", "mariadb", "postgresql", "psql", "mysqldump", "pg_dump", "dump", "backup", "restore", "koneksi"],
+      "favorite": false
     }
   ]
 }
