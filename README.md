@@ -54,7 +54,7 @@ Lalu buka http://localhost:8000. Di produksi cukup unggah seluruh folder ke subd
 
 | Field | Keterangan |
 |---|---|
-| `id` | unik, dipakai untuk menyimpan favorit |
+| `id` | unik, dipakai untuk menyimpan favorite |
 | `name`, `description` | teks di daftar |
 | `group` | harus sama dengan `id` di array `groups`. Kalau tidak cocok, tool masuk grup "Lainnya" |
 | `path` | folder atau alamat tujuan saat diklik |
