@@ -109,6 +109,16 @@
         </div>
         <div class="row-sw"><label for="swTick">Suara tik saat berputar</label><input type="checkbox" role="switch" id="swTick"></div>
         <div class="set-row">
+          <label class="lbl" for="bgm" style="margin:0">Backsound saat berputar</label>
+          <p class="hint" style="margin:0">Dibuat langsung di browser, tanpa berkas audio. Melambat bersama putaran dan ditutup dengan nada selesai.</p>
+          <div class="inline">
+            <select class="field-sm grow" id="bgm"><option value="mati">Mati</option><option value="drum">Drum roll</option><option value="tegang">Tegang (naik perlahan)</option><option value="ceria">Ceria (melodi)</option></select>
+            <button class="btn btn-sm" id="btnBgmTry" type="button" style="height:44px">Coba</button>
+          </div>
+          <label class="lbl" for="bgmVol" style="margin:6px 0 0;font-weight:500;font-size:14px">Volume backsound: <span id="bgmVolV">70%</span></label>
+          <input type="range" id="bgmVol" min="0" max="100" step="5" style="width:100%;height:44px;accent-color:var(--accent)">
+        </div>
+        <div class="set-row">
           <label class="lbl" for="seed" style="margin:0">Benih acak</label>
           <p class="hint" style="margin:0">Dengan benih, undian yang sama bisa diputar ulang persis. Kosongkan untuk acak biasa.</p>
           <div class="inline">

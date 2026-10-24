@@ -13,7 +13,7 @@
   var VERBS = { roda: ['Putar', 'memutar'], bola: ['Kocok', 'mengocok'], kartu: ['Nyalakan', 'menyalakan'] };
   var FILLS = { bergilir: 'bergilir', penuh: 'satu grup dulu', diundi: 'grup ikut diundi' };
 
-  var st = { text: '', goal: 'urut', view: 'roda', speed: 'normal', remove: true, tick: false, gList: ['Grup A', 'Grup B'], usePots: false, pots: [{ name: 'Pot 1', text: '' }], gFill: 'bergilir',
+  var st = { text: '', goal: 'urut', view: 'roda', speed: 'normal', remove: true, tick: false, bgm: 'mati', bgmVol: 70, gList: ['Grup A', 'Grup B'], usePots: false, pots: [{ name: 'Pot 1', text: '' }], gFill: 'bergilir',
     seed: '', saved: {}, screen: 'setup', session: null, plan: null, planStep: 0 };
   var sess = null, src = null, presenter = null, p1 = null, p2 = null, busy = false, run = 0, actx = null, pending = null;
   var skipping = false, flyAnim = null, idleId = null, pngUrl = null, pngBlob = null;
@@ -85,6 +85,8 @@
       if (!o || o.v !== 1) return;
       ['text', 'goal', 'view', 'speed', 'seed', 'gFill', 'screen'].forEach(function (k) { if (typeof o[k] === 'string') st[k] = o[k]; });
       ['remove', 'tick'].forEach(function (k) { if (typeof o[k] === 'boolean') st[k] = o[k]; });
+      if (['mati', 'drum', 'tegang', 'ceria'].indexOf(o.bgm) >= 0) st.bgm = o.bgm;
+      if (o.bgmVol >= 0 && o.bgmVol <= 100) st.bgmVol = o.bgmVol | 0;
       // grup: daftar baru, atau migrasi dari jumlah dan nama lama
       if (Array.isArray(o.gList)) {
         var seen = {}; st.gList = [];
@@ -215,7 +217,7 @@
     document.querySelectorAll('input[name=view]').forEach(function (r) { r.checked = r.value === st.view; });
     document.querySelectorAll('input[name=speed]').forEach(function (r) { r.checked = r.value === st.speed; });
     document.querySelectorAll('input[name=fill]').forEach(function (r) { r.checked = r.value === st.gFill; });
-    $('swRemove').checked = st.remove; $('swTick').checked = st.tick; $('seed').value = st.seed;
+    $('swRemove').checked = st.remove; $('swTick').checked = st.tick; $('bgm').value = st.bgm; $('bgmVol').value = st.bgmVol; $('bgmVolV').textContent = st.bgmVol + '%'; $('seed').value = st.seed;
     renderGroupList(); renderPotBlocks(); renderSaved(); renderSetupInfo();
   }
 
@@ -295,6 +297,12 @@
     });
     $('swRemove').addEventListener('change', function () { st.remove = $('swRemove').checked; renderSetupInfo(); save(); });
     $('swTick').addEventListener('change', function () { st.tick = $('swTick').checked; if (st.tick) ensureAudio(); save(); });
+    $('bgm').addEventListener('change', function () { st.bgm = $('bgm').value; save(); if (st.bgm !== 'mati') { bgmStart(3000, true); setTimeout(bgmStop, 3100); } else bgmStop(); });
+    $('bgmVol').addEventListener('input', function () { st.bgmVol = Number($('bgmVol').value); $('bgmVolV').textContent = st.bgmVol + '%'; save(); });
+    $('btnBgmTry').addEventListener('click', function () {
+      if (st.bgm === 'mati') { $('bgmVolV').textContent = st.bgmVol + '% (pilih backsound dulu)'; return; }
+      bgmStart(3500, true); setTimeout(function () { bgmStop(); sound.done(true); }, 3600);
+    });
     $('swPots').addEventListener('change', function () { setPots($('swPots').checked); });
     $('btnMerge').addEventListener('click', function () { setPots.confirmed = true; setPots(false); $('swPots').focus(); });
     $('btnMergeNo').addEventListener('click', function () { $('mergeAsk').hidden = true; $('swPots').checked = true; $('swPots').focus(); });
@@ -431,9 +439,60 @@
     g.gain.setValueAtTime(0.0001, t); g.gain.linearRampToValueAtTime(v, t + 0.005); g.gain.exponentialRampToValueAtTime(0.0001, t + d);
     o.connect(g); g.connect(actx.destination); o.start(t); o.stop(t + d + 0.02);
   }
+  // backsound: dijadwalkan sekali lewat currentTime AudioContext, dibuat dari osilator dan derau
+  var bgmMaster = null, noiseBuf = null;
+  function noise() {
+    if (!noiseBuf) { noiseBuf = actx.createBuffer(1, actx.sampleRate * 0.3, actx.sampleRate); var d = noiseBuf.getChannelData(0); for (var i = 0; i < d.length; i++) d[i] = Math.random() * 2 - 1; }
+    return noiseBuf;
+  }
+  function bgmStart(ms, force) {
+    if (st.bgm === 'mati' || (!force && reduced())) return;
+    ensureAudio(); if (!actx) return;
+    bgmStop();
+    var vol = Math.pow(st.bgmVol / 100, 2) * 0.6; if (vol <= 0) return;
+    var m = actx.createGain(); m.gain.value = vol; m.connect(actx.destination); bgmMaster = m;
+    var t0 = actx.currentTime + 0.03, T = ms / 1000, t, k;
+    try {
+      if (st.bgm === 'drum') {
+        for (t = 0; t < T; t += 0.055) {
+          var s = actx.createBufferSource(), f = actx.createBiquadFilter(), g = actx.createGain();
+          s.buffer = noise(); f.type = 'bandpass'; f.frequency.value = 1800; f.Q.value = 0.7;
+          g.gain.setValueAtTime(0.0001, t0 + t); g.gain.linearRampToValueAtTime(0.25 + 0.75 * (t / T), t0 + t + 0.004); g.gain.exponentialRampToValueAtTime(0.0001, t0 + t + 0.05);
+          s.connect(f); f.connect(g); g.connect(m); s.start(t0 + t); s.stop(t0 + t + 0.06);
+        }
+      } else if (st.bgm === 'tegang') {
+        var o = actx.createOscillator(), fl = actx.createBiquadFilter(), lfo = actx.createOscillator(), lg = actx.createGain(), og = actx.createGain();
+        o.type = 'sawtooth'; o.frequency.setValueAtTime(80, t0); o.frequency.exponentialRampToValueAtTime(280, t0 + T);
+        fl.type = 'lowpass'; fl.frequency.setValueAtTime(300, t0); fl.frequency.exponentialRampToValueAtTime(2200, t0 + T);
+        lfo.frequency.setValueAtTime(5, t0); lfo.frequency.linearRampToValueAtTime(14, t0 + T); lg.gain.value = 0.35; og.gain.value = 0.55;
+        lfo.connect(lg); lg.connect(og.gain); o.connect(fl); fl.connect(og); og.connect(m);
+        o.start(t0); o.stop(t0 + T + 0.1); lfo.start(t0); lfo.stop(t0 + T + 0.1);
+      } else {
+        var notes = [523.25, 659.25, 783.99, 880, 783.99, 659.25, 587.33, 698.46];
+        for (t = 0, k = 0; t < T; k++) {
+          var ov = actx.createOscillator(), gg = actx.createGain(), len = 0.12 + 0.6 * Math.pow(t / T, 3);
+          ov.type = 'triangle'; ov.frequency.value = notes[k % notes.length];
+          gg.gain.setValueAtTime(0.0001, t0 + t); gg.gain.linearRampToValueAtTime(0.45, t0 + t + 0.01); gg.gain.exponentialRampToValueAtTime(0.0001, t0 + t + Math.max(0.1, len * 0.9));
+          ov.connect(gg); gg.connect(m); ov.start(t0 + t); ov.stop(t0 + t + len + 0.05);
+          t += len; // jarak antarnada melebar menjelang akhir, mengikuti roda yang melambat
+        }
+      }
+    } catch (e) { bgmStop(); }
+  }
+  function bgmStop() {
+    if (!bgmMaster) return;
+    var m = bgmMaster; bgmMaster = null;
+    try { m.gain.cancelScheduledValues(actx.currentTime); m.gain.setTargetAtTime(0, actx.currentTime, 0.04); } catch (e) { /* abaikan */ }
+    setTimeout(function () { try { m.disconnect(); } catch (e) { /* abaikan */ } }, 400);
+  }
+  // putar dengan backsound yang berhenti tepat saat penyaji mendarat atau dilewati
+  function runSpin(pres, idx, o) {
+    if (!o.reducedMotion) bgmStart(Roda.durations[o.speed] || 4000, false);
+    return pres.spin(idx, o).then(function (r) { bgmStop(); return r; });
+  }
   var sound = {
     tick: function () { if (st.tick && actx) { try { tone(1800, actx.currentTime, 0.03, 0.06, 'square'); } catch (e) { /* abaikan */ } } },
-    done: function () { if (st.tick && actx) { try { var t = actx.currentTime; tone(660, t, 0.25, 0.15); tone(880, t + 0.18, 0.4, 0.15); } catch (e) { /* abaikan */ } } }
+    done: function (force) { if ((force || st.tick || st.bgm !== 'mati') && actx) { try { var t = actx.currentTime; tone(660, t, 0.25, 0.15); tone(880, t + 0.18, 0.4, 0.15); } catch (e) { /* abaikan */ } } }
   };
 
   // ---------- panggung: pilih satu dan berurutan ----------
@@ -481,13 +540,13 @@
   function spin() {
     if (busy || st.screen !== 'stage' || !presenter) return;
     if (!sess.remaining.length) { announce('Semua pilihan sudah keluar.'); return; }
-    if (st.tick) ensureAudio();
+    if (st.tick || st.bgm !== 'mati') ensureAudio();
     var my = ++run;
     setBusy(true);
     refreshDisplay();
     var p = sess.pick(), d = display(), wi = -1;
     d.forEach(function (x, i) { if (x.id === p.item.id) wi = i; });
-    presenter.spin(wi, { speed: st.speed, reducedMotion: reduced(), sound: st.tick ? sound : null }).then(function (landed) {
+    runSpin(presenter, wi, { speed: st.speed, reducedMotion: reduced(), sound: st.tick ? sound : null }).then(function (landed) {
       if (my !== run) return;
       var li = d[landed];
       if (!li || li.id !== p.item.id) console.error('Roda acak: penyaji berhenti di "' + (li && li.label) + '", hasil mesin "' + p.item.label + '". Memakai hasil mesin.');
@@ -716,7 +775,7 @@
     if (busy || st.screen !== 'group') return;
     var plan = st.plan, step = plan.steps[st.planStep];
     if (!step || !p1) return;
-    if (st.tick) ensureAudio();
+    if (st.tick || st.bgm !== 'mati') ensureAudio();
     var my = ++run; busy = true; pending = null; skipping = false;
     $('btnNext').disabled = true; $('btnGSkip').disabled = false; $('btnGUndo').disabled = true; $('btnBack').disabled = true; $('stepSetup').disabled = true;
     poke();
@@ -724,14 +783,14 @@
     $('gWho').textContent = ''; $('gWho').appendChild(h('mark', '', '…'));
     p1.setItems(step.candidates.map(function (id) { return { id: id, label: labelOf(id), weight: 1 }; }));
     p2.setItems(groupItems2(step));
-    p1.spin(step.winnerIndex, opts()).then(function (landed) {
+    runSpin(p1, step.winnerIndex, opts()).then(function (landed) {
       if (my !== run) return null;
       if (landed !== step.winnerIndex) console.error('Roda acak: penyaji langkah 1 berhenti di ' + landed + ', mesin ' + step.winnerIndex + '. Memakai hasil mesin.');
       pending = step; renderPots();
       $('gWho').textContent = ''; $('gWho').appendChild(h('mark', '', step.person.label));
       announce('Terpilih: ' + step.person.label);
       var o2 = opts(); if (!step.groupCandidates) o2.reducedMotion = true;
-      return p2.spin(step.groupIndex, o2);
+      return runSpin(p2, step.groupIndex, o2);
     }).then(function (l2) {
       if (my !== run) return null;
       if (l2 !== step.groupIndex) console.error('Roda acak: penyaji langkah 2 berhenti di ' + l2 + ', mesin ' + step.groupIndex + '. Memakai hasil mesin.');

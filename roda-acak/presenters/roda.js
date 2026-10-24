@@ -87,6 +87,8 @@
       var turns = { cepat: 3, normal: 5, dramatis: 8 }[o.speed] || 5, th0 = theta;
       var thF = -phi + TAU * Math.ceil((th0 + TAU * turns + phi) / TAU);
       var dur = Roda.durations[o.speed] || 4000, t0 = performance.now(), lastIdx = indexAt(th0);
+      // peluruhan eksponensial: cepat di awal, lalu merayap dari irisan ke irisan menjelang berhenti (efek dramatis)
+      var kT = { cepat: 5.5, normal: 6.4, dramatis: 7.5 }[o.speed] || 6.4;
       return new Promise(function (resolve) {
         function end(skipped) {
           cancelAnimationFrame(raf); finish = null; theta = thF;
@@ -96,7 +98,7 @@
         if (o.reducedMotion) { end(true); return; }
         (function frame(now) {
           if (disposed) return;
-          var t = Math.min(1, (now - t0) / dur), e = 1 - Math.pow(1 - t, 4);
+          var t = Math.min(1, (now - t0) / dur), e = (1 - Math.exp(-kT * t)) / (1 - Math.exp(-kT));
           theta = th0 + (thF - th0) * e;
           var idx = indexAt(theta);
           if (idx !== lastIdx) { lastIdx = idx; if (o.sound && o.sound.tick) o.sound.tick(); }
