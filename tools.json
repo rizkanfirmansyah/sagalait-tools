@@ -125,6 +125,16 @@
       "icon": "SQL",
       "tags": ["mysql", "mariadb", "postgresql", "psql", "mysqldump", "pg_dump", "dump", "backup", "restore", "koneksi"],
       "favorite": false
+    },
+    {
+      "id": "php-installer",
+      "name": "Pemasang PHP",
+      "description": "Susun perintah apt untuk PHP, paket, dan repo Ondřej",
+      "group": "server",
+      "path": "php-installer/",
+      "icon": "php",
+      "tags": ["php", "apt", "ubuntu", "debian", "ondrej", "sury", "php-fpm", "install", "ppa"],
+      "favorite": false
     }
   ]
 }

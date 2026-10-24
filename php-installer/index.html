@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="id" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Pemasang PHP · Tools SagalaIT</title>
+<link rel="icon" href="data:,">
+<script src="../assets/theme.js"></script>
+<link rel="stylesheet" href="../assets/app.css">
+<link rel="stylesheet" href="app.css">
+</head>
+<body>
+
+<header class="wrap top">
+  <a class="back" href="../index.html">← Semua tools</a>
+  <button class="icon-btn" type="button" data-theme-toggle aria-label="Ganti tema terang atau gelap">
+    <svg width="20" height="20" viewBox="-11 -11 22 22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle r="9"/><path d="M0 -9 A9 9 0 0 1 0 9 Z" fill="currentColor"/></svg>
+  </button>
+</header>
+
+<main class="wrap">
+  <div class="app-head">
+    <div>
+      <h1>Pemasang PHP</h1>
+      <p class="lead">Pilih versi PHP dan paketnya, lalu salin perintah apt untuk Ubuntu atau Debian, lengkap dengan cara menambah repo Ondřej Surý.</p>
+    </div>
+    <div class="actions">
+      <button class="btn" id="btnSample" type="button">Coba dengan contoh</button>
+      <button class="btn" id="btnReset" type="button">Atur ulang</button>
+    </div>
+  </div>
+
+  <div class="app-grid">
+    <div class="stack">
+      <section class="panel">
+        <div class="panel-head"><h2>Server dan sumber</h2></div>
+        <div class="pi-f"><label for="os">Sistem operasi</label><select class="field-sm pi-in" id="os"></select></div>
+        <div class="pi-f"><label for="source">Sumber paket PHP</label><select class="field-sm pi-in" id="source"></select></div>
+        <p class="small muted" id="srcHint"></p>
+      </section>
+
+      <section class="panel" id="pVer">
+        <div class="panel-head"><h2>Versi PHP</h2><span class="pi-badge" id="verBadge"></span></div>
+        <div class="pi-f"><label for="ver">Versi</label><select class="field-sm pi-in" id="ver"></select></div>
+        <div class="pi-f"><label for="pin">Kunci ke rilis tertentu (opsional)</label>
+          <input class="field-sm pi-in" id="pin" type="text" placeholder="8.3.12" autocomplete="off" spellcheck="false" autocapitalize="off">
+          <p class="pi-err" id="pinErr" hidden></p>
+          <p class="small muted">Nomor rilis lengkap seperti di php.net, mis. 8.3.12. Kosong = rilis terbaru di repo.</p></div>
+      </section>
+
+      <section class="panel">
+        <div class="panel-head"><h2>Paket</h2></div>
+        <div class="pi-presets"><span class="small muted">Isi cepat:</span>
+          <button class="btn btn-sm" type="button" data-preset="laravel">Laravel</button>
+          <button class="btn btn-sm" type="button" data-preset="wordpress">WordPress</button>
+          <button class="btn btn-sm" type="button" data-preset="minimal">Minimal (FPM)</button>
+          <button class="btn btn-sm" type="button" data-preset="none">Kosongkan</button></div>
+        <div id="pkgs"></div>
+      </section>
+
+      <section class="panel">
+        <div class="panel-head"><h2>Opsi perintah</h2></div>
+        <label class="pi-chk"><input type="checkbox" id="meta"> Tulis seperti metapaket (<code>php8.3</code> / <code>php</code>), bukan <code>php8.3-cli</code></label>
+        <label class="pi-chk"><input type="checkbox" id="yes"> Tanpa konfirmasi (<code>-y</code>)</label>
+        <label class="pi-chk"><input type="checkbox" id="noRec"> Tanpa paket rekomendasi (<code>--no-install-recommends</code>)</label>
+        <label class="pi-chk"><input type="checkbox" id="nonInter"> Untuk skrip atau Docker (<code>DEBIAN_FRONTEND=noninteractive</code>)</label>
+        <label class="pi-chk" id="holdRow"><input type="checkbox" id="hold"> Tahan versi agar tidak naik saat upgrade (<code>apt-mark hold</code>, butuh kunci rilis)</label>
+      </section>
+    </div>
+
+    <div class="stack" id="out" aria-live="polite"></div>
+  </div>
+</main>
+
+<script src="core.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
