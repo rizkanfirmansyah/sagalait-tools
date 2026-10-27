@@ -2,7 +2,7 @@
 
 Portal kecil untuk kumpulan tool. Halaman utama (`index.html`) membaca daftar tool dari `tools.json`, jadi menambah atau mengurangi tool cukup mengubah satu file JSON. Tidak ada backend.
 
-## Struktur
+## Strukture
 
 ```
 index.html            portal (membaca tools.json)
