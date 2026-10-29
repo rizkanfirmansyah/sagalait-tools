@@ -135,6 +135,16 @@
       "icon": "php",
       "tags": ["php", "apt", "ubuntu", "debian", "ondrej", "sury", "php-fpm", "install", "ppa"],
       "favorite": false
+    },
+    {
+      "id": "json-compare",
+      "name": "Pembanding JSON",
+      "description": "Bandingkan dua JSON: key, nilai, tipe, dan panjang array",
+      "group": "php",
+      "path": "json-compare/",
+      "icon": "\u00b1",
+      "tags": ["json", "compare", "diff", "banding", "response api", "before after", "beda"],
+      "favorite": false
     }
   ]
 }

@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="id" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="referrer" content="no-referrer">
+<title>Pembanding JSON · Tools SagalaIT</title>
+<link rel="icon" href="data:,">
+<script src="../assets/theme.js"></script>
+<link rel="stylesheet" href="../assets/app.css">
+<link rel="stylesheet" href="app.css">
+</head>
+<body>
+
+<header class="wrap top">
+  <a class="back" href="../index.html">← Semua tools</a>
+  <button class="icon-btn" type="button" data-theme-toggle aria-label="Ganti tema terang atau gelap">
+    <svg width="20" height="20" viewBox="-11 -11 22 22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle r="9"/><path d="M0 -9 A9 9 0 0 1 0 9 Z" fill="currentColor"/></svg>
+  </button>
+</header>
+
+<main class="wrap">
+  <div class="app-head">
+    <div>
+      <h1>Pembanding JSON</h1>
+      <p class="lead">Tempel dua JSON, misalnya response API sebelum dan sesudah perubahan. Hasilnya menunjukkan key yang ditambah atau hilang, nilai atau tipe yang berubah, dan panjang array yang berbeda. Semua diproses di browser.</p>
+    </div>
+    <div class="actions">
+      <button class="btn" id="btnSample" type="button">Coba dengan contoh</button>
+      <button class="btn" id="btnSwap" type="button">Tukar sisi</button>
+      <button class="btn" id="btnClear" type="button">Bersihkan</button>
+    </div>
+  </div>
+
+  <div class="jc-inputs">
+    <section class="panel">
+      <div class="panel-head"><h2>Sebelum</h2><span class="small muted" id="sa"></span></div>
+      <label class="vh" for="ta">JSON sebelum</label>
+      <textarea id="ta" class="field jc-ta" spellcheck="false" autocomplete="off" placeholder="Tempel JSON sebelum di sini"></textarea>
+      <div class="jc-tools">
+        <label class="btn btn-sm">Pilih file<input class="vh" type="file" id="fa" accept=".json,application/json,text/plain"></label>
+        <button class="btn btn-sm" type="button" id="fmtA">Rapikan</button>
+      </div>
+      <div class="jc-err" id="ea" hidden></div>
+    </section>
+    <section class="panel">
+      <div class="panel-head"><h2>Sesudah</h2><span class="small muted" id="sb"></span></div>
+      <label class="vh" for="tb">JSON sesudah</label>
+      <textarea id="tb" class="field jc-ta" spellcheck="false" autocomplete="off" placeholder="Tempel JSON sesudah di sini"></textarea>
+      <div class="jc-tools">
+        <label class="btn btn-sm">Pilih file<input class="vh" type="file" id="fb" accept=".json,application/json,text/plain"></label>
+        <button class="btn btn-sm" type="button" id="fmtB">Rapikan</button>
+      </div>
+      <div class="jc-err" id="eb" hidden></div>
+    </section>
+  </div>
+
+  <details class="panel jc-opts" id="opts">
+    <summary>Opsi pembanding</summary>
+    <div class="jc-grid">
+      <div class="jc-f"><label for="arrayMode">Cara membandingkan array</label>
+        <select class="field-sm jc-in" id="arrayMode">
+          <option value="index">Per urutan (item ke-1 dengan item ke-1)</option>
+          <option value="key">Cocokkan lewat key, mis. id</option>
+          <option value="unordered">Abaikan urutan</option>
+        </select></div>
+      <div class="jc-f" id="rowKey"><label for="arrayKey">Key pencocok</label>
+        <input class="field-sm jc-in" id="arrayKey" type="text" autocomplete="off" spellcheck="false" autocapitalize="off" placeholder="id"></div>
+      <div class="jc-f"><label for="tolerance">Toleransi angka (opsional)</label>
+        <input class="field-sm jc-in" id="tolerance" type="text" inputmode="decimal" autocomplete="off" placeholder="0.001"></div>
+    </div>
+    <div class="jc-f"><label for="ignore">Abaikan key atau path (pisah koma atau baris baru)</label>
+      <textarea class="field jc-ign" id="ignore" spellcheck="false" autocomplete="off" placeholder="updated_at, request_id&#10;data.items[*].timestamp"></textarea>
+      <p class="small muted">Nama key (updated_at) berlaku di mana saja. Path seperti data.items[*].timestamp berlaku di lokasi itu saja. Tanda * mewakili satu nama atau satu indeks.</p></div>
+    <label class="jc-chk"><input type="checkbox" id="trim"> Abaikan spasi di awal dan akhir teks</label>
+    <label class="jc-chk"><input type="checkbox" id="loose"> Anggap angka 1 dan teks "1" sama</label>
+    <p class="small muted">Urutan key di dalam objek selalu diabaikan, karena memang tidak berarti dalam JSON.</p>
+  </details>
+
+  <section id="result" aria-live="polite"></section>
+</main>
+
+<script src="diff.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
