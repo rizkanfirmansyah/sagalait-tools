@@ -22,6 +22,7 @@ roda-acak/            app 10
 db-cmd/               app 11
 php-installer/        app 12
 json-compare/         app 13
+api-docs/             app 14
 ```
 
 ## Menjalankan di lokal

@@ -145,6 +145,16 @@
       "icon": "\u00b1",
       "tags": ["json", "compare", "diff", "banding", "response api", "before after", "beda"],
       "favorite": false
+    },
+    {
+      "id": "api-docs",
+      "name": "Generator dokumentasi API",
+      "description": "Buat dokumen OpenAPI (Swagger) dari contoh request dan response",
+      "group": "dev",
+      "path": "api-docs/",
+      "icon": "API",
+      "tags": ["openapi", "swagger", "api docs", "dokumentasi", "rest", "yaml", "schema", "request", "response"],
+      "favorite": false
     }
   ]
 }
