@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="id" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Generator dokumentasi API · Tools SagalaIT</title>
+<link rel="icon" href="data:,">
+<script src="../assets/theme.js"></script>
+<link rel="stylesheet" href="../assets/app.css">
+<link rel="stylesheet" href="app.css">
+</head>
+<body>
+
+<header class="wrap top">
+  <a class="back" href="../index.html">← Semua tools</a>
+  <button class="icon-btn" type="button" data-theme-toggle aria-label="Ganti tema terang atau gelap">
+    <svg width="20" height="20" viewBox="-11 -11 22 22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle r="9"/><path d="M0 -9 A9 9 0 0 1 0 9 Z" fill="currentColor"/></svg>
+  </button>
+</header>
+
+<main class="wrap">
+  <div class="app-head">
+    <div>
+      <h1>Generator dokumentasi API</h1>
+      <p class="lead">Buat dokumen OpenAPI (Swagger) dari contoh request dan response. Tempel JSON, tandai tiap field wajib atau opsional, lalu unduh YAML atau JSON. Isian tidak dikirim ke mana pun.</p>
+    </div>
+    <div class="actions">
+      <button class="btn" id="btnSample" type="button">Coba dengan contoh</button>
+      <label class="btn">Buka proyek<input class="vh" type="file" id="fileProj" accept=".json,application/json"></label>
+      <button class="btn" id="btnClear" type="button">Bersihkan</button>
+    </div>
+  </div>
+
+  <div class="app-grid ad-grid">
+    <div class="stack" id="left">
+      <section class="panel">
+        <div class="panel-head"><h2>Info API</h2></div>
+        <div class="ad-f"><label for="ver">Versi spesifikasi</label><select class="field-sm ad-in" id="ver"></select>
+          <p class="small muted" id="verHint"></p></div>
+        <div class="ad-grid2">
+          <div class="ad-f"><label for="title">Judul API</label><input class="field-sm ad-in" id="title" type="text" placeholder="API Pengguna" autocomplete="off"></div>
+          <div class="ad-f"><label for="apiver">Versi API</label><input class="field-sm ad-in" id="apiver" type="text" placeholder="1.0.0" autocomplete="off"></div>
+        </div>
+        <div class="ad-f"><label for="desc">Deskripsi (opsional)</label><textarea class="field ad-ta" id="desc" spellcheck="false" placeholder="Apa fungsi API ini"></textarea></div>
+      </section>
+
+      <section class="panel">
+        <div class="panel-head"><h2>Server dan keamanan</h2></div>
+        <div id="servers"></div>
+        <button class="btn btn-sm ad-btn" type="button" id="addServer">Tambah server</button>
+        <div class="ad-grid2" style="margin-top:12px">
+          <div class="ad-f"><label for="auth">Autentikasi</label>
+            <select class="field-sm ad-in" id="auth"><option value="none">Tanpa autentikasi</option><option value="bearer">Bearer token (JWT)</option><option value="apikey">API key di header</option><option value="basic">Basic (user dan sandi)</option></select></div>
+          <div class="ad-f" id="rowKeyName"><label for="keyName">Nama header API key</label><input class="field-sm ad-in" id="keyName" type="text" placeholder="X-API-Key" autocomplete="off" spellcheck="false"></div>
+        </div>
+        <label class="ad-chk"><input type="checkbox" id="optComp"> Pisahkan skema ke components (dipakai ulang lewat $ref)</label>
+        <label class="ad-chk"><input type="checkbox" id="optEx"> Sertakan contoh nilai di tiap properti</label>
+      </section>
+
+      <section class="panel">
+        <div class="panel-head"><h2>Endpoint</h2><span class="small muted" id="epCount"></span></div>
+        <div id="endpoints"></div>
+        <button class="btn btn-primary ad-btn" type="button" id="addEp">Tambah endpoint</button>
+      </section>
+    </div>
+
+    <div class="stack ad-out" id="right">
+      <section class="panel" id="outPanel">
+        <div class="panel-head"><h2>Hasil</h2><span class="small muted" id="outInfo"></span></div>
+        <div class="ad-tabs" role="tablist" aria-label="Format hasil">
+          <button class="btn btn-sm" type="button" role="tab" id="tabYaml" aria-selected="true">YAML</button>
+          <button class="btn btn-sm" type="button" role="tab" id="tabJson" aria-selected="false">JSON</button>
+        </div>
+        <pre class="src ad-code" id="code" tabindex="0"></pre>
+        <div class="ad-btns">
+          <button class="btn" type="button" id="btnCopy">Salin</button>
+          <button class="btn btn-primary" type="button" id="btnDl">Unduh</button>
+          <button class="btn" type="button" id="btnProj">Simpan proyek</button>
+        </div>
+      </section>
+      <section class="panel" id="issuePanel" hidden>
+        <div class="panel-head"><h2>Periksa</h2></div>
+        <div id="issues"></div>
+      </section>
+      <section class="panel" id="prevPanel">
+        <div class="panel-head"><h2>Pratinjau dokumentasi</h2></div>
+        <div id="preview"></div>
+      </section>
+    </div>
+  </div>
+</main>
+
+<script src="core.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
