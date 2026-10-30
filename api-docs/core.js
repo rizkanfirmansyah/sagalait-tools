@@ -18,7 +18,7 @@
     return '';
   }
   function infer(v) {
-    if (v === null) return { type: 'null', nullable: true, desc: '', example: null };
+    if (v === null) return { type: 'string', nullable: true, nullOnly: true, desc: '', example: null };
     if (Array.isArray(v)) {
       var n = { type: 'array', nullable: false, desc: '', items: null };
       v.forEach(function (e) { var x = infer(e); n.items = n.items ? mergeNodes(n.items, x) : x; });
@@ -37,8 +37,8 @@
     }
   }
   function mergeNodes(a, b) {
-    if (a.type === 'null') { b.nullable = true; return b; }
-    if (b.type === 'null') { a.nullable = true; return a; }
+    if (a.nullOnly) { b.nullable = true; return b; }
+    if (b.nullOnly) { a.nullable = true; return a; }
     if (a.type !== b.type) {
       if ((a.type === 'integer' && b.type === 'number') || (a.type === 'number' && b.type === 'integer')) { a.type = 'number'; a.format = ''; return a; }
       a.mixed = true; return a;

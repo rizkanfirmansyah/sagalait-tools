@@ -36,7 +36,7 @@
   function hydrate() { st.endpoints.forEach(function (e) { analyze(e.body); e.responses.forEach(analyze); }); }
 
   /* ---------- tabel skema ---------- */
-  var LEAF = ['string', 'integer', 'number', 'boolean', 'null'];
+  var LEAF = ['string', 'integer', 'number', 'boolean'];
   function schemaTable(root, ro, onChange) {
     var wrap = el('div', 'sc-wrap'), tb = el('table', 'sc'), head = el('tr');
     ['Nama', 'Tipe', 'Wajib', 'Boleh null', 'Deskripsi', 'Contoh'].forEach(function (h) { head.appendChild(el('th', '', h)); });
@@ -50,8 +50,8 @@
       else if (ro) c2.textContent = node.type + (node.format ? ' (' + node.format + ')' : '');
       else {
         var sel = el('select'); sel.setAttribute('aria-label', 'Tipe ' + name); LEAF.forEach(function (t) { opt(sel, t, t); }); sel.value = node.type;
-        sel.addEventListener('change', function () { node.type = sel.value; node.userType = true; if (node.type !== 'integer' && node.type !== 'number') node.format = ''; if (node.type === 'null') node.nullable = true; onChange(true); });
-        c2.appendChild(sel); if (node.format) c2.appendChild(el('span', 'small muted', ' ' + node.format));
+        sel.addEventListener('change', function () { node.type = sel.value; node.userType = true; if (node.type !== 'integer' && node.type !== 'number') node.format = ''; node.nullOnly = false; onChange(true); });
+        c2.appendChild(sel); if (node.format) c2.appendChild(el('span', 'small muted', ' ' + node.format)); if (node.nullOnly) c2.appendChild(el('span', 'small muted', ' (contoh null: tipe dianggap string, ubah bila perlu)'));
       }
       tr.appendChild(c2);
       var c3 = el('td', 'c');
@@ -62,7 +62,7 @@
       tr.appendChild(c3);
       var c4 = el('td', 'c');
       if (ro) c4.textContent = node.nullable ? 'ya' : '–';
-      else { var cn = el('input'); cn.type = 'checkbox'; cn.checked = node.nullable; cn.disabled = node.type === 'null'; cn.setAttribute('aria-label', 'Boleh null: ' + name); cn.addEventListener('change', function () { node.nullable = cn.checked; onChange(false); }); c4.appendChild(cn); }
+      else { var cn = el('input'); cn.type = 'checkbox'; cn.checked = node.nullable;  cn.setAttribute('aria-label', 'Boleh null: ' + name); cn.addEventListener('change', function () { node.nullable = cn.checked; onChange(false); }); c4.appendChild(cn); }
       tr.appendChild(c4);
       var c5 = el('td'), holder = prop || node;
       if (ro) c5.textContent = holder.desc || '';
