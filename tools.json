@@ -155,6 +155,16 @@
       "icon": "API",
       "tags": ["openapi", "swagger", "api docs", "dokumentasi", "rest", "yaml", "schema", "request", "response"],
       "favorite": false
+    },
+    {
+      "id": "watermark",
+      "name": "Watermark",
+      "description": "Beri watermark pada foto KTP atau dokumen, diproses di browser",
+      "group": "harian",
+      "path": "watermark/",
+      "icon": "WM",
+      "tags": ["watermark", "ktp", "dokumen", "gambar", "identitas", "foto", "tanda air", "privasi"],
+      "favorite": false
     }
   ]
 }
