@@ -165,6 +165,16 @@
       "icon": "WM",
       "tags": ["watermark", "ktp", "dokumen", "gambar", "identitas", "foto", "tanda air", "privasi"],
       "favorite": false
+    },
+    {
+      "id": "converter",
+      "name": "Konverter data",
+      "description": "Ubah JSON, array, object, serialize PHP, tabel, CSV, dan Excel satu sama lain",
+      "group": "dev",
+      "path": "converter/",
+      "icon": "\u21c4",
+      "tags": ["converter", "konversi", "json", "array", "object", "serialize", "unserialize", "csv", "excel", "xlsx", "tabel", "php"],
+      "favorite": false
     }
   ]
 }
