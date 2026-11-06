@@ -1,0 +1,25 @@
+/* Gaya khusus Konverter data; semua warna lewat token portal */
+.cv-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 20px; align-items: start; margin-bottom: 72px; }
+.cv-grid > * { min-width: 0; }
+.cv-f { min-width: 0; margin-bottom: 12px; }
+.cv-f > label { display: block; font-size: 14px; color: var(--body); margin-bottom: 4px; }
+.field-sm.cv-in { width: 100%; height: 44px; font-size: 16px; }
+.cv-ta { min-height: 320px; font-size: 14px; }
+.cv-out { min-height: 320px; max-height: 560px; overflow: auto; border: 1px solid var(--line-strong); border-radius: 10px; background: var(--well); }
+.cv-out pre { margin: 0; padding: 12px 14px; font: 13.5px/1.55 var(--mono); color: var(--ink); white-space: pre; tab-size: 4; }
+.cv-out .cv-empty { padding: 14px; color: var(--muted); font-size: 14px; }
+.cv-out table { border-collapse: collapse; font-size: 13.5px; width: max-content; min-width: 100%; }
+.cv-out th, .cv-out td { border: 1px solid var(--line); padding: 6px 10px; text-align: left; vertical-align: top; max-width: 320px; overflow-wrap: anywhere; color: var(--ink); }
+.cv-out th { background: var(--panel); position: sticky; top: 0; font-weight: 600; }
+.cv-out td.num { text-align: right; font-variant-numeric: tabular-nums; }
+.cv-out td.nil { color: var(--muted); }
+.cv-out .cv-more { padding: 10px 14px; font-size: 13px; color: var(--muted); }
+.cv-tools { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+.cv-tools .btn { height: 44px; }
+.cv-opts { margin-top: 8px; }
+.cv-chk { display: flex; align-items: center; gap: 10px; min-height: 44px; font-size: 14.5px; color: var(--body); cursor: pointer; }
+.cv-chk input { width: 20px; height: 20px; margin: 0; accent-color: var(--accent); flex: none; }
+.cv-err { margin-top: 10px; padding: 10px 14px; border-radius: 10px; background: var(--err-t); color: var(--err); font-size: 14px; overflow-wrap: anywhere; }
+[hidden] { display: none !important; }
+.back { display: inline-flex; align-items: center; min-height: 44px; }
+@media (max-width: 900px) { .cv-grid { grid-template-columns: minmax(0, 1fr); } .cv-ta, .cv-out { min-height: 220px; } }
