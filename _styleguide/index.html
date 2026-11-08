@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="id" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Panduan gaya · Tools SagalaIT</title>
+<link rel="icon" href="data:,">
+<script src="../assets/theme.js"></script>
+<link rel="stylesheet" href="../assets/app.css">
+<style>
+  .sw-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px; }
+  .sw { border: 1px solid var(--line); border-radius: var(--r-md); overflow: hidden; background: var(--panel); font-size: 12.5px; }
+  .sw i { display: block; height: 44px; }
+  .sw span { display: block; padding: 6px 10px; color: var(--muted); font-family: var(--mono); }
+  .row { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; }
+  .sec { margin-top: 20px; }
+  .sec > h2 { margin-bottom: 12px; }
+  .radius-demo { width: 72px; height: 48px; border: 1px solid var(--line-strong); background: var(--panel); display: grid; place-items: center; font: 12px var(--mono); color: var(--muted); }
+</style>
+</head>
+<body>
+<header class="wrap top">
+  <a class="logo" href="../" aria-label="Tools SagalaIT, ke beranda">S</a>
+  <nav class="crumbs" aria-label="Lokasi"><a href="../">Tools</a><span aria-hidden="true">/</span><span class="crumb-now" aria-current="page">Panduan gaya</span></nav>
+  <span class="top-end">
+    <button class="icon-btn" type="button" data-theme-toggle aria-label="Ganti tema terang atau gelap">
+      <svg width="20" height="20" viewBox="-11 -11 22 22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle r="9"/><path d="M0 -9 A9 9 0 0 1 0 9 Z" fill="currentColor"/></svg>
+    </button>
+  </span>
+</header>
+<main class="wrap">
+  <div class="app-head"><div><h1>Panduan gaya</h1><p class="lead">Token dan komponen bersama Tools SagalaIT v2. Halaman ini tidak terdaftar di portal.</p></div></div>
+
+  <section class="panel sec"><h2>Warna</h2>
+    <div class="sw-grid" id="swatches"></div></section>
+
+  <section class="panel sec"><h2>Warna grup</h2>
+    <div class="row" id="groups"></div></section>
+
+  <section class="panel sec"><h2>Bentuk</h2>
+    <div class="row"><div class="radius-demo" style="border-radius: var(--r-sm)">8</div><div class="radius-demo" style="border-radius: var(--r-md)">12</div><div class="radius-demo" style="border-radius: var(--r-lg)">20</div><div class="radius-demo" style="border-radius: var(--r-xl)">24</div></div></section>
+
+  <section class="panel sec"><h2>Tombol</h2>
+    <div class="row">
+      <button class="btn btn-primary" type="button">Utama</button>
+      <button class="btn" type="button">Biasa</button>
+      <button class="btn btn-ghost" type="button">Ghost</button>
+      <button class="btn btn-danger" type="button">Hapus</button>
+      <button class="btn" type="button" disabled>Nonaktif</button>
+      <button class="btn is-loading" type="button">Memuat</button>
+      <button class="btn btn-sm" type="button">Kecil</button>
+    </div></section>
+
+  <section class="panel sec"><h2>Isian</h2>
+    <div class="row"><select class="field-sm" aria-label="Contoh pilihan"><option>Pilihan</option></select><input class="field-sm" type="text" value="Isian teks" aria-label="Contoh isian"></div>
+    <textarea class="field" style="margin-top:12px" aria-label="Contoh area teks">{"nama": "Ani", "aktif": true}</textarea></section>
+
+  <section class="panel sec"><h2>Kontrol</h2>
+    <div class="row">
+      <div class="ui-seg" role="radiogroup" aria-label="Contoh segmented">
+        <label><input type="radio" name="sg" checked><span>Rapikan</span></label>
+        <label><input type="radio" name="sg"><span>Kecilkan</span></label>
+        <label><input type="radio" name="sg"><span>Urutkan</span></label>
+      </div>
+      <button class="ui-chip" type="button" aria-pressed="true">Chip aktif</button>
+      <button class="ui-chip" type="button" aria-pressed="false">Chip biasa</button>
+      <label class="ui-switch"><input type="checkbox" checked> Saklar</label>
+      <span><span class="ui-kbd">Ctrl</span> <span class="ui-kbd">F</span></span>
+      <span class="ui-tile" aria-hidden="true">{}</span>
+    </div></section>
+
+  <section class="panel sec"><h2>Status</h2>
+    <div class="stack">
+      <div class="banner ok"><span class="dot">✓</span>JSON valid</div>
+      <div class="banner bad"><span class="dot">!</span>Ada kesalahan<span class="aside">baris 3</span></div>
+      <div class="issue warning"><div class="issue-head"><span class="tag">Peringatan</span></div><p>Contoh kartu peringatan.</p></div>
+      <div class="ui-empty">Belum ada data. Tempel sesuatu atau coba contoh.</div>
+    </div></section>
+</main>
+<script>
+(function () {
+  var names = ['bg','panel','well','ink','body','muted','line','line-strong','accent','accent-t','mark','err','ok','warn','link'];
+  var box = document.getElementById('swatches');
+  names.forEach(function (n) {
+    var d = document.createElement('div'); d.className = 'sw';
+    var i = document.createElement('i'); i.style.background = 'var(--' + n + ')';
+    var s = document.createElement('span'); s.textContent = '--' + n;
+    d.appendChild(i); d.appendChild(s); box.appendChild(d);
+  });
+  var g = document.getElementById('groups');
+  ['php','teks','waktu','server','db','dev','harian','fav'].forEach(function (k) {
+    var w = document.createElement('span'); w.className = 'ui-chip';
+    var d = document.createElement('span'); d.className = 'ui-dot'; d.setAttribute('data-g', k);
+    w.appendChild(d); w.appendChild(document.createTextNode(k)); g.appendChild(w);
+  });
+})();
+</script>
+</body>
+</html>
