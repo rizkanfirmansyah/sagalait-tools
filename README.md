@@ -5,10 +5,13 @@ Portal kecil untuk kumpulan tool. Halaman utama (`index.html`) membaca daftar to
 ## Strukture
 
 ```
-index.html            portal (membaca tools.json)
+index.html            portal v2 (membaca tools.json)
+portal.css, portal.js gaya dan logika portal (kisi satu layar, pencarian)
 tools.json            daftar tool, edit di sini
-assets/app.css        gaya bersama
+assets/app.css        token dan komponen bersama v2
 assets/theme.js       tema terang/gelap bersama
+_styleguide/          panduan token dan komponen (tidak terdaftar di portal)
+v1/                   cadangan tampilan lama, dibekukan (tag git v1-final)
 serialize-checker/    app 1
 json-formatter/       app 2
 hitung-byte/          app 3
@@ -27,6 +30,10 @@ watermark/            app 15
 converter/            app 16
 signature/            app 17
 ```
+
+## Tampilan v2 dan v1
+
+Folder akar adalah tampilan v2. Tampilan lama utuh di `v1/` (`tools.sagalait.cloud/v1/`) dan di tag `v1-final` serta branch `backup/v1`. Di portal, Ctrl atau Cmd + F, `/`, dan Ctrl atau Cmd + K membuka pencarian; di portal Ctrl/Cmd + F menggantikan pencarian bawaan browser, halaman app tidak terpengaruh. Kolom opsional `short` di `tools.json` adalah nama pendek untuk tampilan ponsel.
 
 ## Menjalankan di lokal
 
