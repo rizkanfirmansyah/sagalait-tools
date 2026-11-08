@@ -1,0 +1,190 @@
+{
+  "site": {
+    "title": "Tools SagalaIT",
+    "tagline": [
+      "{n} tool kecil untuk pekerjaan harian.",
+      "Semua berjalan di browser, data tidak dikirim ke server."
+    ],
+    "footer": "sagalait.cloud"
+  },
+  "groups": [
+    { "id": "php", "name": "PHP dan data" },
+    { "id": "teks", "name": "Teks dan encoding" },
+    { "id": "waktu", "name": "Waktu dan fokus" },
+    { "id": "server", "name": "Server dan jaringan" },
+    { "id": "db", "name": "Database" },
+    { "id": "dev", "name": "Developer" },
+    { "id": "harian", "name": "Sehari-hari" }
+  ],
+  "tools": [
+    {
+      "id": "serialize-checker",
+      "name": "Serialize Checker",
+      "description": "Cek dan betulkan string serialize",
+      "group": "php",
+      "path": "serialize-checker/",
+      "icon": "a:",
+      "tags": ["php", "serialize", "unserialize", "panjang string"],
+      "favorite": true
+    },
+    {
+      "id": "json-formatter",
+      "name": "JSON Formatter",
+      "description": "Rapikan dan validasi JSON",
+      "group": "php",
+      "path": "json-formatter/",
+      "icon": "{}",
+      "tags": ["json", "format", "minify", "validasi"]
+    },
+    {
+      "id": "hitung-byte",
+      "name": "Hitung Byte",
+      "description": "Panjang string dalam byte dan karakter",
+      "group": "teks",
+      "path": "hitung-byte/",
+      "icon": "B",
+      "tags": ["byte", "strlen", "utf-8", "panjang", "karakter"],
+      "favorite": true
+    },
+    {
+      "id": "timer",
+      "name": "Timer",
+      "description": "Hitung mundur dengan durasi dan suara pilihan",
+      "group": "waktu",
+      "path": "timer/",
+      "icon": "⏱",
+      "tags": ["countdown", "hitung mundur", "alarm", "pomodoro", "fokus"],
+      "favorite": false
+    },
+    {
+      "id": "jwt",
+      "name": "Decoder JWT",
+      "description": "Baca isi token JWT dan periksa masa berlakunya",
+      "group": "dev",
+      "path": "jwt/",
+      "icon": "JWT",
+      "tags": ["jwt", "token", "bearer", "auth", "jws", "claims", "oauth"],
+      "favorite": false
+    },
+    {
+      "id": "cron",
+      "name": "Cron dan timer",
+      "description": "Buat, jelaskan, dan uji jadwal cron atau systemd timer",
+      "group": "server",
+      "path": "cron/",
+      "icon": "*/5",
+      "tags": ["cron", "crontab", "systemd", "timer", "jadwal", "scheduler"],
+      "favorite": false
+    },
+    {
+      "id": "nginx-generator",
+      "name": "Nginx generator",
+      "description": "Buat konfigurasi server block: statis, reverse proxy, PHP-FPM",
+      "group": "server",
+      "path": "nginx-generator/",
+      "icon": "ng",
+      "tags": ["nginx", "reverse proxy", "proxy_pass", "php-fpm", "https", "server block"],
+      "favorite": false
+    },
+    {
+      "id": "db-viewer",
+      "name": "Database viewer",
+      "description": "Lihat data tabel dari CSV, JSON, atau dump SQL",
+      "group": "db",
+      "path": "db-viewer/",
+      "icon": "DB",
+      "tags": ["csv", "sql", "tabel", "dump", "mysql", "json"],
+      "favorite": false
+    },
+    {
+      "id": "firewall",
+      "name": "Generator firewall",
+      "description": "Buat aturan firewall MikroTik atau Linux (nftables)",
+      "group": "server",
+      "path": "firewall/",
+      "icon": "fw",
+      "tags": ["firewall", "mikrotik", "routeros", "nftables", "iptables", "nat", "port forward"],
+      "favorite": false
+    },
+    {
+      "id": "roda-acak",
+      "name": "Roda acak",
+      "description": "Pilih acak dengan roda, bola undian, atau kartu menyala; bisa juga bagi grup",
+      "group": "harian",
+      "path": "roda-acak/",
+      "icon": "spin",
+      "tags": ["roda","spin","acak","random","undian","kelompok","grup","giliran","picker","pot"],
+      "favorite": false
+    },
+    {
+      "id": "db-cmd",
+      "name": "Perintah database",
+      "description": "Susun perintah mysql, mysqldump, psql, dan pg_dump",
+      "group": "db",
+      "path": "db-cmd/",
+      "icon": "SQL",
+      "tags": ["mysql", "mariadb", "postgresql", "psql", "mysqldump", "pg_dump", "dump", "backup", "restore", "koneksi"],
+      "favorite": false
+    },
+    {
+      "id": "php-installer",
+      "name": "Pemasang PHP",
+      "description": "Susun perintah apt untuk PHP, paket, dan repo Ondřej",
+      "group": "server",
+      "path": "php-installer/",
+      "icon": "php",
+      "tags": ["php", "apt", "ubuntu", "debian", "ondrej", "sury", "php-fpm", "install", "ppa"],
+      "favorite": false
+    },
+    {
+      "id": "json-compare",
+      "name": "Pembanding JSON",
+      "description": "Bandingkan dua JSON: key, nilai, tipe, dan panjang array",
+      "group": "php",
+      "path": "json-compare/",
+      "icon": "\u00b1",
+      "tags": ["json", "compare", "diff", "banding", "response api", "before after", "beda"],
+      "favorite": false
+    },
+    {
+      "id": "api-docs",
+      "name": "Generator dokumentasi API",
+      "description": "Buat dokumen OpenAPI (Swagger) dari contoh request dan response",
+      "group": "dev",
+      "path": "api-docs/",
+      "icon": "API",
+      "tags": ["openapi", "swagger", "api docs", "dokumentasi", "rest", "yaml", "schema", "request", "response"],
+      "favorite": false
+    },
+    {
+      "id": "watermark",
+      "name": "Watermark",
+      "description": "Beri watermark pada foto KTP atau dokumen, diproses di browser",
+      "group": "harian",
+      "path": "watermark/",
+      "icon": "WM",
+      "tags": ["watermark", "ktp", "dokumen", "gambar", "identitas", "foto", "tanda air", "privasi"],
+      "favorite": false
+    },
+    {
+      "id": "converter",
+      "name": "Konverter data",
+      "description": "Ubah JSON, array, object, serialize PHP, tabel, CSV, dan Excel satu sama lain",
+      "group": "dev",
+      "path": "converter/",
+      "icon": "\u21c4",
+      "tags": ["converter", "konversi", "json", "array", "object", "serialize", "unserialize", "csv", "excel", "xlsx", "tabel", "php"],
+      "favorite": false
+    },
+    {
+      "id": "signature",
+      "name": "Pembuat tanda tangan",
+      "description": "Gambar tanda tangan, pilih latar transparan, putih, biru, atau warna lain, unduh PNG atau JPG",
+      "group": "harian",
+      "path": "signature/",
+      "icon": "TT",
+      "tags": ["tanda tangan", "signature", "ttd", "png", "jpg", "transparan", "gambar", "dokumen"],
+      "favorite": false
+    }
+  ]
+}

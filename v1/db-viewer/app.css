@@ -1,0 +1,105 @@
+/* Database viewer: gaya khusus app. Warna hanya lewat token portal. */
+
+:root { --rowh: 34px; --headh: 56px; }
+@media (pointer: coarse), (max-width: 700px) { :root { --rowh: 44px; } }
+
+.dbv { padding-bottom: 72px; }
+.dbv > * + * { margin-top: 16px; }
+.dbv > .app-head { margin-bottom: 24px; }
+.dbv .stack > * + * { margin-top: 16px; }
+
+.dbv .opts { display: flex; flex-wrap: wrap; gap: 12px 20px; align-items: center; margin: 14px 0; font-size: 14px; }
+.dbv .opts label, .dbv label.ck { display: inline-flex; align-items: center; gap: 8px; color: var(--body); min-height: 36px; }
+.dbv input[type="checkbox"] { accent-color: var(--accent); width: 18px; height: 18px; margin: 0; flex: none; }
+.dbv .hint { margin-top: 12px; }
+#inPanel.drop { border-style: dashed; border-color: var(--accent); background: var(--accent-t); }
+#msg { margin-top: 12px; }
+#msg:empty { margin-top: 0; }
+.banner.warn { background: var(--warn-t); color: var(--warn); }
+.prog { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; margin-top: 12px; }
+.prog progress { flex: 1 1 160px; min-width: 120px; accent-color: var(--accent); }
+
+.sum { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px 20px; }
+.sum .k { color: var(--muted); font-size: 13px; }
+.sum .v { font-weight: 600; font-variant-numeric: tabular-nums; overflow-wrap: anywhere; }
+.notes { margin-top: 16px; }
+.notelist { margin: 10px 0 0; padding-left: 20px; font-size: 14px; color: var(--body); }
+.notelist li + li { margin-top: 4px; }
+
+.tabs { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 12px; }
+.tab[aria-pressed="true"] { background: var(--mark); border-color: var(--line-strong); color: var(--ink); }
+:root[data-theme="dark"] .tab[aria-pressed="true"] { background: var(--hl); }
+
+.toolbar { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin-bottom: 8px; }
+.toolbar .q { flex: 1 1 220px; min-width: 0; }
+.opnote { min-height: 0; color: var(--warn); }
+.opnote:empty { display: none; }
+.drawer { border: 1px solid var(--line); background: var(--well); border-radius: 12px; padding: 14px 16px; margin: 8px 0 12px; }
+.drawer > * + * { margin-top: 12px; }
+.frow { display: flex; flex-wrap: wrap; gap: 12px; align-items: flex-end; }
+.frow label { display: flex; flex-direction: column; gap: 4px; font-size: 13px; color: var(--muted); }
+.frow label.grow { flex: 1 1 160px; }
+.frow input, .frow select { min-width: 0; }
+.chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.chip { font: inherit; font-size: 13.5px; min-height: 36px; padding: 0 12px; border-radius: 18px; border: 1px solid var(--line-strong); background: var(--panel); color: var(--ink); cursor: pointer; max-width: 100%; overflow-wrap: anywhere; text-align: left; }
+.chip:hover { border-color: var(--err); }
+.collist { display: flex; flex-wrap: wrap; gap: 4px 20px; }
+
+/* ---------- tabel ---------- */
+.gridwrap {
+  position: relative; overflow: auto; max-height: min(70vh, 720px);
+  border: 1px solid var(--line); border-radius: 12px; background: var(--panel);
+  scroll-padding-left: 64px; scroll-padding-top: var(--headh);
+}
+.grid { border-collapse: separate; border-spacing: 0; table-layout: fixed; font-size: 14px; }
+.grid th, .grid td {
+  box-sizing: border-box; padding: 0 10px; text-align: left;
+  border-bottom: 1px solid var(--line); border-right: 1px solid var(--line);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.grid thead th { position: sticky; top: 0; z-index: 2; height: calc(var(--headh) - 1px); padding: 0; background: var(--well); font-weight: 600; }
+.grid thead th.rn { left: 0; z-index: 3; color: var(--muted); text-align: center; padding: 0; }
+.grid tbody td { height: calc(var(--rowh) - 1px); color: var(--body); cursor: pointer; }
+.grid tbody tr:hover td { background: var(--accent-t); }
+.grid td.rn { position: sticky; left: 0; z-index: 1; background: var(--well); padding: 0; cursor: default; }
+.grid td.num { text-align: right; font-variant-numeric: tabular-nums; }
+.grid td.cur { outline: 2px solid var(--accent); outline-offset: -2px; }
+.grid tr.sp td { padding: 0; border: 0; cursor: default; background: none; }
+.grid tr.sp:hover td { background: none; }
+.nul { font-style: italic; color: var(--muted); }
+.rnb { display: block; width: 100%; height: calc(var(--rowh) - 1px); border: 0; background: none; color: var(--muted); font: inherit; font-size: 13px; font-variant-numeric: tabular-nums; cursor: pointer; }
+.rnb:hover { color: var(--ink); text-decoration: underline; }
+.hc { display: flex; flex-direction: column; justify-content: center; align-items: flex-start; gap: 2px; width: 100%; height: calc(var(--headh) - 1px); padding: 0 16px 0 10px; border: 0; background: none; color: var(--ink); font: inherit; text-align: left; cursor: pointer; overflow: hidden; }
+.hc:hover .nm { text-decoration: underline; }
+.hrow { display: flex; gap: 6px; max-width: 100%; }
+.hc .nm { font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.hc .ar { color: var(--accent); font-weight: 700; flex: none; }
+.hc .ty { font-size: 12px; font-weight: 400; color: var(--muted); }
+.rz { position: absolute; top: 0; right: 0; width: 10px; height: 100%; cursor: col-resize; touch-action: none; }
+.rz:hover { background: var(--accent-t); }
+.dbv mark.hl { box-shadow: none; }
+
+/* ---------- dialog ---------- */
+dialog.dlg {
+  width: min(720px, calc(100vw - 32px)); max-height: calc(100vh - 32px); overflow: auto;
+  border: 1px solid var(--line); border-radius: 16px; padding: 20px 24px;
+  background: var(--panel); color: var(--ink);
+}
+dialog.dlg::backdrop { background: var(--ink); opacity: .45; }
+dialog.dlg .panel-head h2 { overflow-wrap: anywhere; }
+dialog.dlg dl.kv { grid-template-columns: minmax(70px, 180px) minmax(0, 1fr); margin-top: 16px; }
+dialog.dlg dl.kv dd { white-space: pre-wrap; }
+dialog.dlg .src { white-space: pre-wrap; word-break: break-word; }
+
+@media (max-width: 700px) {
+  .dbv .field, .dbv .field-sm, .dbv select, .dbv input[type="text"], .dbv input[type="search"] { font-size: 16px; }
+  .dbv .btn-sm, .dbv .field-sm, dialog.dlg .btn-sm { min-height: 44px; height: auto; }
+  .dbv .opts label, .dbv label.ck { min-height: 44px; }
+  .chip { min-height: 44px; }
+  .frow label, .frow select, .frow input { width: 100%; }
+  .dbv .opts label:not(.ck) { width: 100%; justify-content: space-between; }
+  .dbv .opts select { flex: 1 1 auto; min-width: 0; max-width: 70%; }
+  .panel { padding: 16px; }
+  dialog.dlg { padding: 16px; }
+}
+@media (prefers-reduced-motion: reduce) { * { scroll-behavior: auto !important; } }

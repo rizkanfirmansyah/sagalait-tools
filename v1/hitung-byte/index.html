@@ -1,0 +1,164 @@
+<!doctype html>
+<html lang="id" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Hitung Byte · Tools SagalaIT</title>
+<script src="../assets/theme.js"></script>
+<link rel="stylesheet" href="../assets/app.css">
+<style>
+  .field.tall { min-height: 300px; }
+  .readout { padding-bottom: 14px; margin-bottom: 4px; border-bottom: 1px solid var(--line); }
+  .readout .label { color: var(--muted); font-size: 14px; margin-top: 6px; }
+  .mb-list { margin: 8px 0 0; padding: 0; list-style: none; display: flex; flex-wrap: wrap; gap: 8px; }
+  .mb-list li { font-size: 14px; background: var(--well); border: 1px solid var(--line); border-radius: 8px; padding: 3px 10px; }
+  .mb-list li span { color: var(--muted); font-size: 12.5px; margin-left: 6px; }
+  .note-warn { color: var(--warn); }
+</style>
+</head>
+<body>
+
+<header class="wrap top">
+  <a class="back" href="../index.html">← Semua tools</a>
+  <button class="icon-btn" type="button" data-theme-toggle aria-label="Ganti tema terang atau gelap">
+    <svg width="20" height="20" viewBox="-11 -11 22 22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle r="9"/><path d="M0 -9 A9 9 0 0 1 0 9 Z" fill="currentColor"/></svg>
+  </button>
+</header>
+
+<main class="wrap">
+  <div class="app-head">
+    <div>
+      <h1>Hitung Byte</h1>
+      <p class="lead">Panjang teks dalam byte UTF-8 (yang dihitung strlen() PHP), karakter, dan baris baru. Berguna untuk mencocokkan angka <code>s:N</code> pada string serialize.</p>
+    </div>
+    <div class="actions">
+      <label class="btn">Pilih file…<input class="vh" type="file" id="file"></label>
+      <button class="btn" id="btnClear" type="button">Bersihkan</button>
+    </div>
+  </div>
+
+  <div class="app-grid">
+    <section class="panel">
+      <div class="panel-head"><h2>Teks</h2><span class="small muted" id="inNote"></span></div>
+      <textarea id="input" class="field tall" spellcheck="false" placeholder="Ketik atau tempel teks di sini"></textarea>
+      <p class="small muted" style="margin-top:10px">Browser mengubah <code>\r\n</code> menjadi <code>\n</code> saat paste. Pakai <b>Pilih file</b> kalau karakter <code>\r</code> harus ikut terhitung.</p>
+    </section>
+
+    <div class="stack">
+      <section class="panel">
+        <div class="readout">
+          <div class="big" id="bigBytes">0</div>
+          <div class="label">byte UTF-8 (strlen PHP)</div>
+        </div>
+        <div id="stats"></div>
+      </section>
+
+      <section class="panel" id="serPanel" hidden>
+        <div class="panel-head"><h2>Awalan serialize</h2></div>
+        <div id="serRows"></div>
+        <p class="small muted" style="margin-top:10px" id="serNote"></p>
+      </section>
+
+      <section class="panel" id="mbPanel" hidden>
+        <div class="panel-head"><h2>Karakter multibyte</h2><span class="small muted" id="mbNote"></span></div>
+        <ul class="mb-list" id="mbList"></ul>
+      </section>
+    </div>
+  </div>
+</main>
+
+<script>
+(function () {
+  'use strict';
+  var $ = function (id) { return document.getElementById(id); };
+  var esc = function (t) { return String(t).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); };
+  var fmt = function (n) { return n.toLocaleString('id-ID'); };
+  var enc = new TextEncoder();
+  var loadedRaw = null, loadedNorm = null;
+
+  function count(re, s) { var m = s.match(re); return m ? m.length : 0; }
+
+  function analyze(text) {
+    var bytes = enc.encode(text).length;
+    var crlf = count(/\r\n/g, text);
+    var lf = count(/(?<!\r)\n/g, text);
+    var cr = count(/\r(?!\n)/g, text);
+    var chars = Array.from(text);
+    var multi = {};
+    chars.forEach(function (c) {
+      var b = enc.encode(c).length;
+      if (b > 1) multi[c] = b;
+    });
+    return {
+      bytes: bytes,
+      codepoints: chars.length,
+      utf16: text.length,
+      lines: text === '' ? 0 : text.split(/\r\n|\n|\r/).length,
+      crlf: crlf, lf: lf, cr: cr,
+      asLF: bytes - crlf,            // semua baris baru dijadikan \n
+      asCRLF: bytes + lf + cr,       // semua baris baru dijadikan \r\n
+      multi: multi
+    };
+  }
+
+  function row(k, v, mono) {
+    return '<div class="stat-row"><span class="k">' + k + '</span><span class="v' + (mono ? ' mono' : '') + '">' + v + '</span></div>';
+  }
+  function hex(c) { return 'U+' + c.codePointAt(0).toString(16).toUpperCase().padStart(4, '0'); }
+
+  function render() {
+    var ta = $('input').value;
+    var text = (loadedRaw !== null && ta === loadedNorm) ? loadedRaw : ta;
+    var a = analyze(text);
+    $('inNote').textContent = text ? fmt(a.bytes) + ' byte' : '';
+    $('bigBytes').textContent = fmt(a.bytes);
+
+    var nl = a.lf + a.crlf + a.cr;
+    var html = '';
+    html += row('Karakter (code point)', fmt(a.codepoints));
+    html += row('Unit UTF-16 (<span class="code">.length</span> di JavaScript)', fmt(a.utf16));
+    html += row('Baris', fmt(a.lines));
+    html += row('Baris baru', nl ? fmt(nl) + ' (LF ' + a.lf + ', CRLF ' + a.crlf + (a.cr ? ', CR ' + a.cr : '') + ')' : '0');
+    if (nl) {
+      html += row('Byte jika semua baris baru <span class="code">\\n</span>', fmt(a.asLF));
+      html += row('Byte jika semua baris baru <span class="code">\\r\\n</span>', fmt(a.asCRLF));
+    }
+    $('stats').innerHTML = html;
+
+    // awalan s:N untuk string serialize
+    var ser = '';
+    if (text) {
+      ser += row('Apa adanya', '<span class="code">s:' + a.bytes + ':"</span>', true);
+      if (nl && a.asLF !== a.bytes) ser += row('Baris baru \\n', '<span class="code">s:' + a.asLF + ':"</span>', true);
+      if (nl && a.asCRLF !== a.bytes) ser += row('Baris baru \\r\\n', '<span class="code">s:' + a.asCRLF + ':"</span>', true);
+    }
+    $('serRows').innerHTML = ser;
+    $('serNote').innerHTML = nl && a.asLF !== a.asCRLF
+      ? 'Form HTML mengirim baris baru sebagai <code>\\r\\n</code>. Kalau angka <code>s:N</code> di datamu tidak cocok, bandingkan dengan dua angka di atas.' : '';
+    $('serPanel').hidden = !text;
+
+    // karakter multibyte
+    var keys = Object.keys(a.multi);
+    $('mbPanel').hidden = !keys.length;
+    $('mbNote').textContent = keys.length ? fmt(keys.length) + ' jenis' : '';
+    $('mbList').innerHTML = keys.slice(0, 30).map(function (c) {
+      return '<li>' + esc(c) + '<span>' + hex(c) + ', ' + a.multi[c] + ' byte</span></li>';
+    }).join('') + (keys.length > 30 ? '<li>…<span>dan ' + (keys.length - 30) + ' lainnya</span></li>' : '');
+  }
+
+  $('input').addEventListener('input', render);
+  $('btnClear').onclick = function () { loadedRaw = loadedNorm = null; $('input').value = ''; render(); $('input').focus(); };
+  $('file').onchange = function (e) {
+    var f = e.target.files[0]; if (!f) return;
+    f.arrayBuffer().then(function (buf) {
+      loadedRaw = new TextDecoder('utf-8').decode(buf);
+      $('input').value = loadedRaw;
+      loadedNorm = $('input').value;
+      render();
+    });
+  };
+  render();
+})();
+</script>
+</body>
+</html>

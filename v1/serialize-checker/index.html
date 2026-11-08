@@ -1,0 +1,352 @@
+<!doctype html>
+<html lang="id" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Serialize Checker · Tools SagalaIT</title>
+<script src="../assets/theme.js"></script>
+<link rel="stylesheet" href="../assets/app.css">
+</head>
+<body>
+
+<header class="wrap top">
+  <a class="back" href="../index.html">← Semua tools</a>
+  <button class="icon-btn" type="button" data-theme-toggle aria-label="Ganti tema terang atau gelap">
+    <svg width="20" height="20" viewBox="-11 -11 22 22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle r="9"/><path d="M0 -9 A9 9 0 0 1 0 9 Z" fill="currentColor"/></svg>
+  </button>
+</header>
+
+<main class="wrap">
+  <div class="app-head">
+    <div>
+      <h1>Serialize Checker</h1>
+      <p class="lead">Cek string hasil serialize() PHP. Panjang string dan jumlah elemen dihitung per byte, sama seperti PHP.</p>
+    </div>
+    <div class="actions">
+      <label class="btn">Pilih file…<input class="vh" type="file" id="file"></label>
+      <button class="btn btn-primary" id="btnCheck" type="button">Cek</button>
+    </div>
+  </div>
+
+  <div class="app-grid">
+    <div class="stack">
+      <section class="panel">
+        <div class="panel-head"><h2>Data serialize</h2><span class="small muted" id="inputNote"></span></div>
+        <textarea id="input" class="field" rows="9" spellcheck="false" placeholder='Tempel data di sini, misalnya a:1:{i:0;s:3:"abc";}'></textarea>
+        <p class="small muted" style="margin-top:10px">Browser mengubah <code>\r\n</code> menjadi <code>\n</code> saat paste, jadi string yang berisi baris baru bisa tampak salah padahal aslinya benar. Untuk hasil akurat, pakai <b>Pilih file</b>. Ctrl+Enter untuk cek.</p>
+      </section>
+      <section class="panel" id="srcPanel" hidden>
+        <div class="panel-head"><h2>Sumber</h2><span class="small muted">bagian bermasalah ditandai</span></div>
+        <pre class="src" id="src"></pre>
+      </section>
+    </div>
+
+    <div class="stack" id="resultCol">
+      <div class="panel empty" id="empty">
+        <p>Belum ada hasil.</p>
+        <p class="small">Tempel data atau pilih file, lalu tekan Cek.</p>
+        <button class="btn btn-sm" id="btnSample" type="button">Coba dengan contoh</button>
+      </div>
+      <div id="out" class="stack" hidden>
+        <div id="banner" class="banner"></div>
+        <div id="issues" class="stack"></div>
+        <div id="noticesWrap" class="stack"></div>
+        <section class="panel" id="fixedPanel">
+          <div class="panel-head"><h2>Versi yang sudah diperbaiki</h2></div>
+          <textarea id="fixed" class="field" rows="5" readonly spellcheck="false"></textarea>
+          <p class="small muted" id="fixedNote" style="margin-top:10px"></p>
+          <div class="actions" style="margin-top:12px">
+            <button class="btn btn-sm" id="btnCopy" type="button">Salin</button>
+            <button class="btn btn-sm btn-primary" id="btnDownload" type="button">Unduh .txt</button>
+          </div>
+        </section>
+      </div>
+    </div>
+  </div>
+</main>
+
+<script>
+/* ---- inti pemeriksa (diuji terhadap unserialize() PHP) ---- */
+const SerializeChecker = (() => {
+  // Semua pemrosesan memakai "binary string": 1 karakter = 1 byte, persis seperti strlen() PHP.
+  function toBin(str) {
+    const b = new TextEncoder().encode(str); let s = '';
+    for (let i = 0; i < b.length; i += 0x8000) s += String.fromCharCode.apply(null, b.subarray(i, i + 0x8000));
+    return s;
+  }
+  function fromBin(s) {
+    const b = new Uint8Array(s.length);
+    for (let i = 0; i < s.length; i++) b[i] = s.charCodeAt(i) & 255;
+    return new TextDecoder().decode(b);
+  }
+  const visible = s => s.replace(/\r/g, '\\r').replace(/\n/g, '\\n').replace(/\t/g, '\\t');
+
+  function stringHint(value, declared, actual) {
+    const lf = (value.match(/(?<!\r)\n/g) || []).length;
+    const crlf = (value.match(/\r\n/g) || []).length;
+    let chars = actual;
+    try { chars = [...fromBin(value)].length; } catch (e) {}
+    if (chars !== actual && chars === declared) return 'Panjang dihitung per karakter, bukan per byte. Ada karakter multibyte (UTF-8); serialize() PHP memakai byte (strlen), bukan mb_strlen.';
+    if (lf > 0 && declared === actual + lf) return 'Selisihnya sama dengan jumlah baris baru. Panjang tertulis menghitung \\r\\n (CRLF) tapi data sekarang hanya \\n (LF): baris baru berubah saat disalin/disimpan (editor, chat, git autocrlf, textarea JS). Kembalikan ke \\r\\n, atau pakai panjang baru.';
+    if (crlf > 0 && declared === actual - crlf) return 'Selisihnya sama dengan jumlah \\r\\n. Panjang tertulis menghitung \\n (LF) tapi data sekarang \\r\\n (CRLF): baris baru berubah saat disalin/disimpan.';
+    return declared > actual
+      ? 'Panjang tertulis lebih besar dari isi: value kemungkinan diedit/diperpendek manual tanpa mengubah angka panjangnya (misal perbaikan typo).'
+      : 'Panjang tertulis lebih kecil dari isi: value kemungkinan ditambah/diedit manual tanpa mengubah angka panjangnya.';
+  }
+
+  function build(n) {
+    if (n.t === 's') return 's:' + n.v.length + ':"' + n.v + '";';
+    if (n.t === 'a') return 'a:' + n.items.length + ':{' + n.items.map(p => build(p[0]) + build(p[1])).join('') + '}';
+    return n.raw;
+  }
+
+  function duplicateNames(tree) {
+    if (tree.t !== 'a') return [];
+    const seen = {};
+    tree.items.forEach((pair, idx) => {
+      const rec = pair[1]; if (rec.t !== 'a') return;
+      rec.items.forEach(kv => { if (kv[0].t === 's' && kv[0].v === 'name' && kv[1].t === 's') (seen[kv[1].v] = seen[kv[1].v] || []).push(idx); });
+    });
+    return Object.keys(seen).filter(k => seen[k].length > 1).map(k => ({
+      name: k, count: seen[k].length, indexes: seen[k],
+      note: 'Nama field muncul lebih dari sekali. Wajar untuk checkbox/radio grup; tapi kalau data dibaca sebagai array [name => value], nilai sebelumnya tertimpa.'
+    }));
+  }
+
+  function check(s) {
+    const len = s.length; let pos = 0, fatal = false;
+    const issues = [], names = [];
+    const R = {
+      str: /s:(\d+):"/y, int: /i:(-?\d+);/y, dbl: /d:(-?(?:\d+(?:\.\d+)?(?:[eE][+-]?\d+)?|INF|NAN));/y,
+      bool: /b:([01]);/y, nul: /N;/y, arr: /a:(\d+):\{/y,
+      follow: /(?:\}|s:\d+:"|i:-?\d+;|d:[^;]+;|b:[01];|N;|a:\d+:\{|$)/y
+    };
+    const at = (re, p) => { re.lastIndex = p; return re.exec(s); };
+    const currentName = () => { for (let i = names.length - 1; i >= 0; i--) if (names[i] !== null) return names[i]; return null; };
+
+    function issue(level, kind, path, message, start, end, extra) {
+      const before = s.slice(0, start), nl = before.lastIndexOf('\n');
+      let excerpt = visible(s.slice(start, start + Math.min(end - start, 120)));
+      if (end - start > 120) excerpt += '...';
+      issues.push(Object.assign({
+        level, kind, path: path.join(''), field: currentName(), message, offset: start, end,
+        line: before.split('\n').length, col: start - nl, excerpt
+      }, extra || {}));
+    }
+    function fail(path, kind, message) {
+      fatal = true;
+      issue('error', kind, path, message, pos, Math.min(pos + 40, len), {
+        action: 'Struktur rusak di titik ini, tidak bisa diperbaiki otomatis. Cek data di sekitar offset ' + pos + ' (kemungkinan terpotong atau teks tersalin tidak utuh).'
+      });
+      return null;
+    }
+    function findStringEnd(from) {
+      let p = s.indexOf('";', from);
+      while (p !== -1) { if (at(R.follow, p + 2)) return p; p = s.indexOf('";', p + 1); }
+      return null;
+    }
+    function scalar(path, re, type) {
+      const m = at(re, pos);
+      if (!m) return fail(path, 'malformed_token', 'Token tipe "' + type + '" rusak (format tidak sesuai).');
+      pos += m[0].length;
+      return { t: type, v: m[1] === undefined ? null : m[1], raw: m[0] };
+    }
+    function parseString(path) {
+      const m = at(R.str, pos);
+      if (!m) return fail(path, 'malformed_token', 'Token string rusak (harus s:<panjang>:"...";).');
+      const tokStart = pos, declared = parseInt(m[1], 10), start = tokStart + m[0].length;
+      if (start + declared + 2 <= len && s.substr(start + declared, 2) === '";') {
+        pos = start + declared + 2;
+        return { t: 's', v: s.substr(start, declared) };
+      }
+      const end = findStringEnd(start);
+      if (end === null) return fail(path, 'string_unterminated', 'String s:' + declared + ' tidak ditutup dengan ";" yang valid (data terpotong/rusak).');
+      const value = s.slice(start, end), actual = value.length;
+      issue('error', 'string_length', path,
+        'Panjang string salah: tertulis s:' + declared + ' tapi isinya ' + actual + ' byte.', tokStart, end + 2, {
+          declared, actual, fix: { from: 's:' + declared + ':', to: 's:' + actual + ':' },
+          action: 'Ganti `s:' + declared + ':` menjadi `s:' + actual + ':` pada value ini.',
+          hint: stringHint(value, declared, actual), value: visible(value)
+        });
+      pos = end + 2;
+      return { t: 's', v: value };
+    }
+    function parseArray(path) {
+      const m = at(R.arr, pos);
+      if (!m) return fail(path, 'malformed_token', 'Token array rusak (harus a:<jumlah>:{...}).');
+      const tokStart = pos, tokEnd = tokStart + m[0].length, declared = parseInt(m[1], 10);
+      pos = tokEnd; names.push(null);
+      const items = [];
+      for (;;) {
+        if (pos >= len) { names.pop(); return fail(path, 'array_unterminated', 'Array a:' + declared + ' tidak ditutup dengan } (data terpotong?).'); }
+        if (s[pos] === '}') break;
+        const k = parseValue(path.concat('#' + items.length + '(key)'));
+        if (k === null) { names.pop(); return null; }
+        if (k.t !== 's' && k.t !== 'i') { names.pop(); return fail(path, 'invalid_key', 'Key array harus string atau integer.'); }
+        const seg = k.t === 'i' ? '[' + k.v + ']' : "['" + k.v + "']";
+        const v = parseValue(path.concat(seg));
+        if (v === null) { names.pop(); return null; }
+        if (k.t === 's' && k.v === 'name' && v.t === 's') names[names.length - 1] = v.v;
+        items.push([k, v]);
+      }
+      pos++;
+      const actual = items.length;
+      if (actual !== declared) issue('error', 'array_count', path,
+        'Jumlah elemen array salah: tertulis a:' + declared + ' tapi isinya ' + actual + ' elemen.', tokStart, tokEnd, {
+          declared, actual, fix: { from: 'a:' + declared + ':', to: 'a:' + actual + ':' },
+          action: 'Ganti `a:' + declared + ':` menjadi `a:' + actual + ':` pada array ini.',
+          hint: declared > actual
+            ? 'Jumlah tertulis lebih besar: ada elemen yang dihapus manual tanpa mengubah angka jumlahnya.'
+            : 'Jumlah tertulis lebih kecil: ada elemen yang ditambah manual tanpa mengubah angka jumlahnya.'
+        });
+      names.pop();
+      return { t: 'a', items };
+    }
+    function parseValue(path) {
+      if (fatal) return null;
+      if (pos >= len) return fail(path, 'unexpected_end', 'Data berakhir tiba-tiba (input terpotong?).');
+      switch (s[pos]) {
+        case 's': return parseString(path);
+        case 'a': return parseArray(path);
+        case 'i': return scalar(path, R.int, 'i');
+        case 'd': return scalar(path, R.dbl, 'd');
+        case 'b': return scalar(path, R.bool, 'b');
+        case 'N': return scalar(path, R.nul, 'N');
+        default: return fail(path, 'unexpected_token', 'Token tidak dikenali/tidak didukung: "' + s[pos] + '" (tipe objek O:/C:/E: tidak didukung checker ini).');
+      }
+    }
+
+    const tree = parseValue([]);
+    if (!fatal && pos < len) {
+      if (s.slice(pos).trim() === '') issue('warning', 'trailing_whitespace', [], 'Ada spasi/baris baru setelah akhir data serialize.', pos, len, { action: 'Lakukan trim($data) sebelum disimpan atau dibandingkan.' });
+      else issue('error', 'trailing_data', [], 'Ada data sisa setelah akhir serialize yang valid.', pos, len, { action: 'Hapus data sisa tersebut (kemungkinan dua serialize tergabung atau ada teks ikut tersalin).' });
+    }
+    const errorCount = issues.filter(i => i.level === 'error').length;
+    return {
+      valid: errorCount === 0, bytes: len, error_count: errorCount, issues,
+      notices: tree ? duplicateNames(tree) : [],
+      fixed: (!fatal && tree) ? build(tree) : null
+    };
+  }
+  return { check, toBin, fromBin, visible };
+})();
+
+/* ----------------------------------------------------------------- UI */
+const $ = id => document.getElementById(id);
+const esc = t => t.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+const fmt = n => n.toLocaleString('id-ID');
+let loadedBin = null, loadedText = null, lastFixedBin = null;
+
+const SAMPLE = 'a:2:{i:0;a:3:{s:4:"name";s:14:"diagnosa_utama";s:5:"value";s:20:"fracture humerus dx";s:4:"type";s:8:"textarea";}i:1;s:2:"ok";}';
+
+function binFromBytes(buf) {
+  let s = '';
+  for (let i = 0; i < buf.length; i += 0x8000) s += String.fromCharCode.apply(null, buf.subarray(i, i + 0x8000));
+  return s;
+}
+function currentBin() {
+  const t = $('input').value;
+  return (loadedBin !== null && t === loadedText) ? loadedBin : SerializeChecker.toBin(t);
+}
+// Potong sumber di batas token (ASCII) agar karakter multibyte tidak terbelah.
+function showSeg(bin) {
+  return esc(SerializeChecker.fromBin(bin)).replace(/\r/g, '␍').replace(/\n/g, '␊\n');
+}
+
+function run() {
+  const bin = currentBin();
+  if (!bin.trim()) {
+    $('out').hidden = true; $('srcPanel').hidden = true; $('empty').hidden = false; $('inputNote').textContent = '';
+    return;
+  }
+  const r = SerializeChecker.check(bin);
+  const crs = (bin.match(/\r/g) || []).length;
+  $('inputNote').textContent = fmt(r.bytes) + ' byte' + (crs ? ', ' + crs + ' karakter \\r' : '');
+
+  const b = $('banner');
+  b.className = 'banner ' + (r.valid ? 'ok' : 'bad');
+  b.innerHTML = r.valid
+    ? '<span class="dot">✓</span><span>Valid</span><span class="aside">Panjang string dan jumlah elemen cocok.</span>'
+    : '<span class="dot">!</span><span>' + r.error_count + ' masalah ditemukan</span>';
+
+  const label = { error: 'Error', warning: 'Peringatan' };
+  $('issues').innerHTML = r.issues.map((i, idx) => `
+    <article class="issue ${i.level}">
+      <div class="issue-head">
+        <span class="tag">${label[i.level] || i.level}</span><span class="code">${esc(i.kind)}</span>
+        <span class="where">baris ${i.line}, kolom ${i.col} &nbsp;<a class="jump" data-idx="${idx}" href="#m${idx}">lihat di sumber</a></span>
+      </div>
+      <dl class="kv">
+        <dt>Lokasi</dt><dd><span class="code">${esc(i.path || '(paling luar)')}</span>${i.field ? ' &mdash; field <b>' + esc(i.field) + '</b>' : ''}</dd>
+        <dt>Masalah</dt><dd>${esc(i.message)}</dd>
+        <dt>Potongan</dt><dd><span class="code">${esc(SerializeChecker.fromBin(i.excerpt))}</span></dd>
+        ${i.fix ? `<dt>Perbaikan</dt><dd><span class="pill from">${esc(i.fix.from)}</span><span class="arrow">→</span><span class="pill to">${esc(i.fix.to)}</span></dd>` : ''}
+        ${i.action ? `<dt>Aksi</dt><dd>${esc(i.action).replace(/`([^`]+)`/g, '<span class="code">$1</span>')}</dd>` : ''}
+        ${i.hint ? `<dt>Dugaan</dt><dd>${esc(i.hint)}</dd>` : ''}
+      </dl>
+    </article>`).join('');
+
+  $('noticesWrap').innerHTML = r.notices.map(n => `
+    <article class="issue info">
+      <div class="issue-head"><span class="tag">Info</span></div>
+      <p style="margin-top:8px;font-size:14.5px"><b>${esc(n.name)}</b> muncul ${n.count}× (index ${n.indexes.join(', ')}).</p>
+      <p class="small muted" style="margin-top:4px">${esc(n.note)}</p>
+    </article>`).join('');
+
+  // sumber + penanda
+  const ranges = r.issues
+    .map((i, idx) => ({ s: i.offset, e: Math.min(Math.max(i.end, i.offset + 1), bin.length), idx, level: i.level }))
+    .sort((a, c) => a.s - c.s);
+  let html = '', cur = 0;
+  for (const g of ranges) {
+    if (g.s < cur) continue;
+    html += showSeg(bin.slice(cur, g.s)) + `<mark class="hl ${g.level}" id="m${g.idx}">${showSeg(bin.slice(g.s, g.e))}</mark>`;
+    cur = g.e;
+  }
+  $('src').innerHTML = html + showSeg(bin.slice(cur));
+  $('srcPanel').hidden = false;
+
+  $('fixedPanel').hidden = r.fixed === null;
+  if (r.fixed !== null) {
+    lastFixedBin = r.fixed;
+    $('fixed').value = SerializeChecker.fromBin(r.fixed);
+    $('fixedNote').textContent = r.fixed === bin
+      ? 'Sama dengan input, tidak ada yang diubah.'
+      : 'Panjang dan jumlah dihitung ulang dari isi. Periksa dulu sebelum dipakai. Untuk data berisi baris baru, pakai Unduh agar \\r tidak hilang.';
+  }
+  $('empty').hidden = true;
+  $('out').hidden = false;
+}
+
+$('btnCheck').onclick = run;
+$('input').addEventListener('keydown', e => { if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') run(); });
+$('btnSample').onclick = () => { loadedBin = loadedText = null; $('input').value = SAMPLE; run(); };
+$('file').onchange = async e => {
+  const f = e.target.files[0]; if (!f) return;
+  loadedBin = binFromBytes(new Uint8Array(await f.arrayBuffer()));
+  $('input').value = SerializeChecker.fromBin(loadedBin);
+  loadedText = $('input').value;
+  run();
+};
+$('issues').addEventListener('click', e => {
+  const a = e.target.closest('a.jump'); if (!a) return;
+  e.preventDefault();
+  const m = $('m' + a.dataset.idx); if (!m) return;
+  m.scrollIntoView({ block: 'center', behavior: 'smooth' });
+  m.classList.remove('flash'); void m.offsetWidth; m.classList.add('flash');
+});
+$('btnCopy').onclick = async () => {
+  try { await navigator.clipboard.writeText($('fixed').value); $('btnCopy').textContent = 'Tersalin'; }
+  catch (e) { $('fixed').select(); document.execCommand('copy'); }
+  setTimeout(() => { $('btnCopy').textContent = 'Salin'; }, 1500);
+};
+$('btnDownload').onclick = () => {
+  const bytes = new Uint8Array(lastFixedBin.length);
+  for (let i = 0; i < bytes.length; i++) bytes[i] = lastFixedBin.charCodeAt(i);
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(new Blob([bytes], { type: 'text/plain' }));
+  a.download = 'serialize_fixed.txt'; a.click(); URL.revokeObjectURL(a.href);
+};
+</script>
+</body>
+</html>

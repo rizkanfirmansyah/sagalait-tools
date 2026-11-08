@@ -1,0 +1,216 @@
+<!doctype html>
+<html lang="id" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Cron dan timer · Tools SagalaIT</title>
+<script src="../assets/theme.js"></script>
+<link rel="icon" href="data:,">
+<link rel="stylesheet" href="../assets/app.css">
+<link rel="stylesheet" href="app.css">
+</head>
+<body>
+
+<header class="wrap top">
+  <a class="back" href="../index.html">← Semua tools</a>
+  <button class="icon-btn" type="button" data-theme-toggle aria-label="Ganti tema terang atau gelap">
+    <svg width="20" height="20" viewBox="-11 -11 22 22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle r="9"/><path d="M0 -9 A9 9 0 0 1 0 9 Z" fill="currentColor"/></svg>
+  </button>
+</header>
+
+<main class="wrap">
+  <div class="app-head">
+    <div>
+      <h1>Cron dan timer</h1>
+      <p class="lead">Buat, jelaskan, dan uji jadwal cron atau systemd timer. Hasilnya baris crontab atau pasangan .service dan .timer.</p>
+    </div>
+    <div class="actions">
+      <label class="tzlab" for="tz">Zona waktu hitungan</label>
+      <select id="tz" class="in tz"></select>
+    </div>
+  </div>
+
+  <div class="tabs" role="tablist" aria-label="Jenis jadwal">
+    <button class="btn tab btn-primary" role="tab" type="button" id="tabCron" aria-controls="paneCron" aria-selected="true">Cron</button>
+    <button class="btn tab" role="tab" type="button" id="tabSd" aria-controls="paneSd" aria-selected="false" tabindex="-1">systemd timer</button>
+  </div>
+
+  <!-- ================= Tab 1: Cron ================= -->
+  <div role="tabpanel" id="paneCron" aria-labelledby="tabCron">
+    <div class="app-grid">
+      <div class="stack">
+        <section class="panel">
+          <div class="panel-head"><h2>Ekspresi cron</h2><span class="small muted">menit jam tanggal bulan hari-minggu</span></div>
+          <label class="vh" for="expr">Ekspresi cron</label>
+          <input id="expr" class="in mono big-in" type="text" spellcheck="false" autocomplete="off" autocapitalize="off" placeholder="*/15 9-17 * * 1-5">
+          <p class="small muted hint">Alias: @hourly @daily @weekly @monthly @yearly @reboot. Nama bulan dan hari (jan, mon) boleh dipakai.</p>
+
+          <h3 class="sub">Pembangun visual</h3>
+          <div class="fgrid">
+            <div class="fld">
+              <label for="bmode">Jadwal</label>
+              <select id="bmode" class="in">
+                <option value="every">Setiap N menit</option>
+                <option value="hourly">Setiap jam pada menit ke-</option>
+                <option value="daily">Setiap hari pukul</option>
+                <option value="weekly">Setiap minggu pada hari</option>
+                <option value="monthly">Setiap bulan pada tanggal</option>
+                <option value="custom" selected>Kustom</option>
+              </select>
+            </div>
+            <div class="fld" data-b="every"><label for="bN">N (menit)</label><input id="bN" class="in" type="number" min="1" max="59" value="15" inputmode="numeric"></div>
+            <div class="fld" data-b="hourly"><label for="bMin">Menit ke-</label><input id="bMin" class="in" type="number" min="0" max="59" value="0" inputmode="numeric"></div>
+            <div class="fld" data-b="weekly"><label for="bDow">Hari</label>
+              <select id="bDow" class="in">
+                <option value="1">Senin</option><option value="2">Selasa</option><option value="3">Rabu</option><option value="4">Kamis</option><option value="5">Jumat</option><option value="6">Sabtu</option><option value="0">Minggu</option>
+              </select>
+            </div>
+            <div class="fld" data-b="monthly"><label for="bDom">Tanggal</label><input id="bDom" class="in" type="number" min="1" max="31" value="1" inputmode="numeric"></div>
+            <div class="fld" data-b="daily weekly monthly"><label for="bTime">Pukul</label><input id="bTime" class="in" type="time" value="02:30"></div>
+          </div>
+
+          <h3 class="sub">Contoh siap pakai</h3>
+          <div class="actions" id="examples">
+            <button class="btn btn-sm" type="button" data-ex="mysql">Backup MySQL harian</button>
+            <button class="btn btn-sm" type="button" data-ex="log">Bersihkan log mingguan</button>
+            <button class="btn btn-sm" type="button" data-ex="artisan">php artisan schedule:run</button>
+            <button class="btn btn-sm" type="button" data-ex="cert">Perpanjang sertifikat</button>
+          </div>
+        </section>
+
+        <section class="panel">
+          <div class="panel-head"><h2>Pembuat baris crontab</h2><span class="small muted">memakai ekspresi di atas</span></div>
+          <div class="fld full"><label for="cCmd">Perintah (satu baris, jalur absolut)</label><input id="cCmd" class="in mono" type="text" spellcheck="false" autocomplete="off" placeholder="/usr/bin/php /var/www/app/jalankan.php"></div>
+          <div class="fgrid">
+            <div class="fld"><label for="cUser">Pengguna (hanya untuk /etc/cron.d)</label><input id="cUser" class="in" type="text" spellcheck="false" autocomplete="off" placeholder="kosong untuk crontab -e"></div>
+            <div class="fld"><label for="cMail">MAILTO (opsional)</label><input id="cMail" class="in" type="text" spellcheck="false" autocomplete="off" placeholder="admin@contoh.id"></div>
+            <div class="fld"><label for="cOut">Keluaran</label>
+              <select id="cOut" class="in">
+                <option value="default">Biarkan (cron kirim email)</option>
+                <option value="log">Ke berkas log</option>
+                <option value="null">Buang ke /dev/null</option>
+              </select>
+            </div>
+            <div class="fld" id="cLogWrap" hidden><label for="cLog">Berkas log</label><input id="cLog" class="in mono" type="text" spellcheck="false" autocomplete="off" placeholder="/var/log/job.log"></div>
+          </div>
+          <div class="fgrid">
+            <label class="chk" for="cFlock"><input id="cFlock" type="checkbox"> Cegah tumpang tindih (flock -n)</label>
+            <div class="fld" id="cLockWrap" hidden><label for="cLock">Nama kunci (/tmp/&lt;nama&gt;.lock)</label><input id="cLock" class="in mono" type="text" spellcheck="false" autocomplete="off" placeholder="job"></div>
+          </div>
+          <div id="cOutWrap"></div>
+        </section>
+      </div>
+
+      <div class="stack" id="cronRes">
+        <div class="panel empty" id="cronEmpty">
+          <p>Belum ada ekspresi.</p>
+          <p class="small">Ketik ekspresi di kotak, pilih jadwal di pembangun visual, atau mulai dari contoh.</p>
+          <button class="btn btn-sm" id="btnCronSample" type="button">Coba dengan contoh</button>
+        </div>
+        <div id="cronOut" class="stack" hidden>
+          <div id="cronBanner" class="banner"></div>
+          <section class="panel" id="expPanel">
+            <div class="panel-head"><h2>Penjelasan</h2></div>
+            <p id="expText" class="expl"></p>
+            <ul id="expNotes" class="notes"></ul>
+          </section>
+          <section class="panel" id="runPanel">
+            <div class="panel-head"><h2>10 waktu jalan berikutnya</h2><span class="small muted" id="runTz"></span></div>
+            <div id="runs"></div>
+          </section>
+          <section class="panel" id="ocPanel">
+            <div class="panel-head"><h2>Padanan systemd</h2></div>
+            <div id="ocBody"></div>
+          </section>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= Tab 2: systemd timer ================= -->
+  <div role="tabpanel" id="paneSd" aria-labelledby="tabSd" hidden>
+    <div class="app-grid">
+      <div class="stack">
+        <section class="panel">
+          <div class="panel-head"><h2>Unit service</h2></div>
+          <div class="fgrid">
+            <div class="fld"><label for="sName">Nama unit</label><input id="sName" class="in mono" type="text" spellcheck="false" autocomplete="off" autocapitalize="off" placeholder="backup-db"></div>
+            <div class="fld"><label for="sDesc">Deskripsi</label><input id="sDesc" class="in" type="text" autocomplete="off" placeholder="Backup database harian"></div>
+          </div>
+          <div class="fld full"><label for="sExec">ExecStart (jalur absolut)</label><input id="sExec" class="in mono" type="text" spellcheck="false" autocomplete="off" placeholder="/usr/local/bin/backup-db.sh"></div>
+          <div class="fgrid">
+            <div class="fld"><label for="sUser">Pengguna (User=, opsional)</label><input id="sUser" class="in" type="text" spellcheck="false" autocomplete="off" placeholder="root"></div>
+            <div class="fld"><label for="sDir">WorkingDirectory (opsional)</label><input id="sDir" class="in mono" type="text" spellcheck="false" autocomplete="off" placeholder="/srv/app"></div>
+            <div class="fld"><label for="sType">Type</label>
+              <select id="sType" class="in"><option value="oneshot" selected>oneshot (tugas yang selesai sendiri)</option><option value="simple">simple (proses panjang)</option></select>
+            </div>
+            <div class="fld"><label for="sRestart">Restart</label>
+              <select id="sRestart" class="in"><option value="no" selected>no (tidak ditulis)</option><option value="on-failure">on-failure</option></select>
+            </div>
+          </div>
+        </section>
+
+        <section class="panel">
+          <div class="panel-head"><h2>Jadwal timer</h2></div>
+          <div class="seg-row" role="radiogroup" aria-label="Mode jadwal">
+            <label class="chk"><input type="radio" name="smode" value="calendar" checked> Kalender (OnCalendar)</label>
+            <label class="chk"><input type="radio" name="smode" value="interval"> Interval (OnBootSec dan OnUnitActiveSec)</label>
+          </div>
+          <div id="sCalWrap">
+            <div class="fld full"><label for="sCal">OnCalendar</label><input id="sCal" class="in mono" type="text" spellcheck="false" autocomplete="off" placeholder="*-*-* 02:30:00"></div>
+            <div class="actions"><button class="btn btn-sm" id="btnFromCron" type="button">Ambil dari ekspresi cron di tab Cron</button></div>
+            <p class="small muted hint" id="fromCronMsg" role="status"></p>
+          </div>
+          <div id="sIntWrap" hidden>
+            <div class="fgrid">
+              <div class="fld"><label for="sBoot">OnBootSec (pertama setelah boot)</label><input id="sBoot" class="in mono" type="text" spellcheck="false" autocomplete="off" placeholder="5min"></div>
+              <div class="fld"><label for="sActive">OnUnitActiveSec (ulang setiap)</label><input id="sActive" class="in mono" type="text" spellcheck="false" autocomplete="off" placeholder="1h"></div>
+            </div>
+          </div>
+          <div class="fgrid">
+            <label class="chk" id="sPersistWrap" for="sPersist"><input id="sPersist" type="checkbox" checked> Persistent=true (susul bila server mati)</label>
+            <div class="fld"><label for="sRand">RandomizedDelaySec (opsional)</label><input id="sRand" class="in mono" type="text" spellcheck="false" autocomplete="off" placeholder="5min"></div>
+            <div class="fld"><label for="sAcc">AccuracySec (opsional)</label><input id="sAcc" class="in mono" type="text" spellcheck="false" autocomplete="off" placeholder="1s"></div>
+          </div>
+        </section>
+      </div>
+
+      <div class="stack">
+        <div class="panel empty" id="sdEmpty">
+          <p>Belum ada unit.</p>
+          <p class="small">Isi nama unit dan ExecStart, atau mulai dari contoh.</p>
+          <button class="btn btn-sm" id="btnSdSample" type="button">Coba dengan contoh</button>
+        </div>
+        <div id="sdOut" class="stack" hidden>
+          <div id="sdIssues" class="stack"></div>
+          <div id="sdFiles" class="stack" hidden>
+            <section class="panel">
+              <div class="panel-head"><h2 id="svcTitle">.service</h2></div>
+              <pre class="src out" id="svcPre" tabindex="0"></pre>
+              <div class="actions"><button class="btn btn-sm" type="button" data-copy="svcPre">Salin</button><button class="btn btn-sm btn-primary" type="button" data-dl="svc">Unduh .service</button></div>
+            </section>
+            <section class="panel">
+              <div class="panel-head"><h2 id="timTitle">.timer</h2></div>
+              <pre class="src out" id="timPre" tabindex="0"></pre>
+              <div class="actions"><button class="btn btn-sm" type="button" data-copy="timPre">Salin</button><button class="btn btn-sm btn-primary" type="button" data-dl="tim">Unduh .timer</button></div>
+            </section>
+            <section class="panel">
+              <div class="panel-head"><h2>Perintah pasang</h2></div>
+              <pre class="src out" id="cmdPre" tabindex="0"></pre>
+              <div class="actions"><button class="btn btn-sm" type="button" data-copy="cmdPre">Salin</button></div>
+            </section>
+            <section class="panel" id="sdRunPanel">
+              <div class="panel-head"><h2>5 waktu jalan berikutnya</h2><span class="small muted" id="sdRunTz"></span></div>
+              <div id="sdRuns"></div>
+            </section>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<script src="core.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

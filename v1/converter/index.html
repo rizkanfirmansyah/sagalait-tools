@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="id" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="referrer" content="no-referrer">
+<title>Konverter data · Tools SagalaIT</title>
+<link rel="icon" href="data:,">
+<script src="../assets/theme.js"></script>
+<link rel="stylesheet" href="../assets/app.css">
+<link rel="stylesheet" href="app.css">
+</head>
+<body>
+
+<header class="wrap top">
+  <a class="back" href="../index.html">← Semua tools</a>
+  <button class="icon-btn" type="button" data-theme-toggle aria-label="Ganti tema terang atau gelap">
+    <svg width="20" height="20" viewBox="-11 -11 22 22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle r="9"/><path d="M0 -9 A9 9 0 0 1 0 9 Z" fill="currentColor"/></svg>
+  </button>
+</header>
+
+<main class="wrap">
+  <div class="app-head">
+    <div>
+      <h1>Konverter data</h1>
+      <p class="lead">Ubah data antar format: JSON, tabel, object dan array PHP, serialize PHP, CSV, dan Excel. Pilih format asal dan tujuan, hasilnya langsung muncul. Semua diproses di browser.</p>
+    </div>
+    <div class="actions">
+      <button class="btn" id="btnSample" type="button">Coba dengan contoh</button>
+      <button class="btn" id="btnSwap" type="button" title="Jadikan hasil sebagai sumber, untuk dikonversi lagi">Hasil jadi sumber</button>
+      <button class="btn" id="btnClear" type="button">Bersihkan</button>
+    </div>
+  </div>
+
+  <div class="cv-grid">
+    <section class="panel">
+      <div class="panel-head"><h2>Dari</h2><span class="small muted" id="srcInfo"></span></div>
+      <div class="cv-f"><label for="from">Format asal</label>
+        <select class="field-sm cv-in" id="from"></select></div>
+      <label class="vh" for="src">Data sumber</label>
+      <textarea id="src" class="field cv-ta" spellcheck="false" autocomplete="off" placeholder="Tempel data di sini"></textarea>
+      <div class="cv-tools">
+        <label class="btn btn-sm">Buka berkas<input class="vh" type="file" id="file" accept=".json,.csv,.tsv,.txt,.php,.xlsx"></label>
+      </div>
+      <div class="cv-opts">
+        <div class="cv-f" id="oDelim"><label for="delim">Pemisah kolom CSV</label>
+          <select class="field-sm cv-in" id="delim"><option value="auto">Deteksi otomatis</option><option value=",">Koma ( , )</option><option value=";">Titik koma ( ; )</option><option value="&#9;">Tab</option></select></div>
+        <label class="cv-chk" id="oHeader"><input type="checkbox" id="header" checked> Baris pertama adalah judul kolom</label>
+        <label class="cv-chk" id="oTypes"><input type="checkbox" id="types" checked> Kenali angka dan true/false</label>
+      </div>
+      <p class="small muted" id="srcHint"></p>
+      <div class="cv-err" id="err" role="alert" hidden></div>
+    </section>
+
+    <section class="panel">
+      <div class="panel-head"><h2>Ke</h2><span class="small muted" id="outInfo"></span></div>
+      <div class="cv-f"><label for="to">Format tujuan</label>
+        <select class="field-sm cv-in" id="to"></select></div>
+      <div id="outBox" class="cv-out" aria-live="polite"></div>
+      <div class="cv-tools">
+        <button class="btn btn-sm" type="button" id="btnCopy">Salin</button>
+        <button class="btn btn-sm" type="button" id="btnDown">Unduh</button>
+      </div>
+      <div class="cv-opts">
+        <label class="cv-chk" id="oMinify"><input type="checkbox" id="minify"> JSON ringkas (satu baris)</label>
+        <div class="cv-f" id="oDelimOut"><label for="delimOut">Pemisah kolom hasil CSV</label>
+          <select class="field-sm cv-in" id="delimOut"><option value=",">Koma ( , )</option><option value=";">Titik koma ( ; )</option><option value="&#9;">Tab</option></select></div>
+      </div>
+      <p class="small muted" id="outHint"></p>
+    </section>
+  </div>
+</main>
+
+<script src="conv.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

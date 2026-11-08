@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="id" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="referrer" content="no-referrer">
+<title>Watermark · Tools SagalaIT</title>
+<link rel="icon" href="data:,">
+<script src="../assets/theme.js"></script>
+<link rel="stylesheet" href="../assets/app.css">
+<link rel="stylesheet" href="app.css">
+</head>
+<body>
+
+<header class="wrap top">
+  <a class="back" href="../index.html">← Semua tools</a>
+  <button class="icon-btn" type="button" data-theme-toggle aria-label="Ganti tema terang atau gelap">
+    <svg width="20" height="20" viewBox="-11 -11 22 22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle r="9"/><path d="M0 -9 A9 9 0 0 1 0 9 Z" fill="currentColor"/></svg>
+  </button>
+</header>
+
+<main class="wrap">
+  <div class="app-head">
+    <div>
+      <h1>Watermark</h1>
+      <p class="lead">Tambahkan watermark ke foto KTP atau dokumen penting lain supaya tidak disalahgunakan. Semua diproses di browser ini: gambar tidak diunggah dan tidak disimpan.</p>
+    </div>
+    <div class="actions">
+      <label class="btn btn-primary">Pilih gambar<input class="vh" type="file" id="file" accept="image/*" multiple></label>
+      <button class="btn" id="btnReset" type="button">Atur ulang pengaturan</button>
+    </div>
+  </div>
+
+  <div class="wm-grid">
+    <section class="panel wm-stage" id="stage" aria-label="Pratinjau">
+      <div class="wm-view" id="view">
+        <canvas id="cv" width="1200" height="757" role="img" aria-label="Pratinjau gambar dengan watermark"></canvas>
+        <div class="wm-empty" id="empty"><p><b>Tarik gambar ke sini</b></p><p class="small">atau klik Pilih gambar, atau tempel dengan Ctrl+V</p></div>
+      </div>
+      <p class="small muted wm-info" id="info" aria-live="polite">Belum ada gambar. Ini kanvas contoh untuk melihat watermark.</p>
+      <div class="wm-thumbs" id="thumbs" hidden></div>
+      <div class="wm-btns">
+        <button class="btn btn-primary" id="btnDl" type="button" disabled>Unduh gambar</button>
+        <button class="btn" id="btnZip" type="button" hidden>Unduh semua (.zip)</button>
+      </div>
+      <p class="small wm-msg" id="msg" role="status"></p>
+    </section>
+
+    <div class="stack">
+      <section class="panel">
+        <div class="panel-head"><h2>Tulisan</h2></div>
+        <div class="wm-f"><label for="text">Teks watermark (boleh lebih dari satu baris)</label>
+          <textarea class="field wm-ta" id="text" spellcheck="false" autocomplete="off"></textarea></div>
+        <div class="wm-quick">
+          <button class="btn btn-sm" type="button" data-t="SAGALA IT WATERMARK">Bawaan</button>
+          <button class="btn btn-sm" type="button" data-t="COPY - HANYA UNTUK VERIFIKASI">Untuk verifikasi</button>
+          <button class="btn btn-sm" type="button" data-t="{tgl}" id="qDate">Tanggal hari ini</button>
+          <button class="btn btn-sm" type="button" data-t="DOKUMEN INI TIDAK BERLAKU UNTUK KEPERLUAN LAIN">Tidak untuk keperluan lain</button>
+        </div>
+      </section>
+
+      <section class="panel">
+        <div class="panel-head"><h2>Tampilan</h2></div>
+        <div class="wm-row">
+          <div class="wm-f"><label for="color">Warna</label>
+            <div class="wm-color"><input type="color" id="color" aria-label="Pilih warna"><input class="field-sm wm-in" id="hex" type="text" maxlength="7" spellcheck="false" autocomplete="off" aria-label="Kode warna heksadesimal"></div></div>
+          <div class="wm-f"><label for="mode">Tata letak</label>
+            <select class="field-sm wm-in" id="mode"><option value="tile">Berulang</option><option value="center">Satu di tengah</option></select></div>
+        </div>
+        <div class="wm-sw" role="group" aria-label="Warna cepat"></div>
+        <div class="wm-f"><label for="opacity">Opasitas: <b id="vOpacity"></b></label><input type="range" id="opacity" min="1" max="100" step="1"></div>
+        <div class="wm-f"><label for="size">Ukuran huruf: <b id="vSize"></b></label><input type="range" id="size" min="2" max="30" step="0.5"></div>
+        <div class="wm-f"><label for="angle">Sudut: <b id="vAngle"></b></label><input type="range" id="angle" min="-90" max="90" step="1"></div>
+        <div class="wm-f" id="rowGapX"><label for="gapX">Jarak mendatar: <b id="vGapX"></b></label><input type="range" id="gapX" min="0" max="400" step="5"></div>
+        <div class="wm-f" id="rowGapY"><label for="gapY">Jarak menurun: <b id="vGapY"></b></label><input type="range" id="gapY" min="0" max="400" step="5"></div>
+        <div class="wm-row">
+          <div class="wm-f"><label for="font">Huruf</label>
+            <select class="field-sm wm-in" id="font"><option value="sans">Sans-serif</option><option value="serif">Serif</option><option value="mono">Monospace</option></select></div>
+          <div class="wm-checks">
+            <label class="wm-chk"><input type="checkbox" id="bold"> Tebal</label>
+            <label class="wm-chk"><input type="checkbox" id="outline"> Garis tepi kontras</label>
+          </div>
+        </div>
+      </section>
+
+      <section class="panel">
+        <div class="panel-head"><h2>Hasil unduhan</h2></div>
+        <div class="wm-row">
+          <div class="wm-f"><label for="format">Format</label>
+            <select class="field-sm wm-in" id="format"><option value="png">PNG (tajam)</option><option value="jpeg">JPEG (lebih kecil)</option><option value="webp">WebP (paling kecil)</option></select></div>
+          <div class="wm-f"><label for="maxSide">Sisi terpanjang</label>
+            <select class="field-sm wm-in" id="maxSide"><option value="0">Ukuran asli</option><option value="3000">3000 px</option><option value="2000">2000 px</option><option value="1200">1200 px</option></select></div>
+        </div>
+        <div class="wm-f" id="rowQ"><label for="quality">Kualitas: <b id="vQ"></b></label><input type="range" id="quality" min="40" max="100" step="1"></div>
+        <p class="small muted">Hasil unduhan tidak membawa data EXIF dari foto asli, misalnya lokasi GPS dan model kamera.</p>
+      </section>
+    </div>
+  </div>
+</main>
+
+<script src="wm.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

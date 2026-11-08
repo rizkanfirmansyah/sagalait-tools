@@ -1,0 +1,32 @@
+.field.tall { min-height: 160px; }
+.note { margin-top: 10px; }
+.parts { font: 13px/1.8 var(--mono); background: var(--well); border: 1px solid var(--line); border-radius: 12px; padding: 12px; word-break: break-all; }
+.parts .p { border-bottom: 3px solid currentColor; }
+.parts .p-h { color: var(--link); }
+.parts .p-p { color: var(--ok); }
+.parts .p-s { color: var(--warn); }
+.parts .sep { background: var(--hl); color: var(--ink); font-weight: 700; padding: 0 3px; border-radius: 3px; }
+.legend { list-style: none; margin: 10px 0 0; padding: 0; display: flex; flex-wrap: wrap; gap: 6px 18px; color: var(--body); }
+.sw { display: inline-block; width: 18px; height: 3px; vertical-align: middle; margin-right: 6px; }
+.sw-h { background: var(--link); } .sw-p { background: var(--ok); } .sw-s { background: var(--warn); }
+.banner.warn { background: var(--warn-t); color: var(--warn); }
+.banner.warn .dot { background: var(--warn); }
+.banner.sub { margin-top: 8px; background: var(--well); color: var(--body); font-weight: 400; font-size: 14px; }
+.banner.sub .dot { background: var(--muted); }
+details.panel > summary { cursor: pointer; font-size: 15px; font-weight: 600; min-height: 44px; display: flex; align-items: center; }
+.det-body { margin-top: 8px; }
+.lbl { display: block; font-size: 14px; font-weight: 600; margin: 12px 0 6px; }
+.field-in { width: 100%; font: 16px var(--mono); height: 44px; padding: 0 12px; border-radius: 12px; border: 1px solid var(--line); background: var(--well); color: var(--ink); }
+.field-in:focus { outline: 3px solid var(--accent-t); border-color: var(--accent); }
+.chk { display: flex; align-items: center; gap: 8px; margin-top: 10px; font-size: 14px; min-height: 44px; cursor: pointer; }
+.chk input { width: 18px; height: 18px; accent-color: var(--accent); margin: 0; }
+.genwarn { color: var(--warn); }
+.issue p { font-size: 14.5px; margin-top: 8px; color: var(--body); }
+.claims dt { font-family: var(--mono); color: var(--ink); }
+.claims dd .desc { display: block; color: var(--muted); font-size: 13px; }
+.claims dd .rel { display: block; font-weight: 600; }
+.claims dd .cnote { display: block; color: var(--warn); font-size: 13px; }
+.stack > .issue + .issue { margin-top: 12px; }
+#warns > * + * { margin-top: 12px; }
+#warns:empty, #errBox:empty, #status:empty { display: none; }
+@media (max-width: 600px) { .field, select.field-sm { font-size: 16px; } dl.kv { grid-template-columns: minmax(0, 1fr); gap: 2px; } dl.kv dd { margin-bottom: 8px; } }

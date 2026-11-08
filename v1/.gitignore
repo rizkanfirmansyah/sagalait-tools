@@ -1,0 +1,44 @@
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Editor / IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Dependensi dan build (proyek ini statis, tapi alat uji bisa membuatnya)
+node_modules/
+package-lock.json
+dist/
+.cache/
+
+# Hasil uji dan file sementara agent
+test-output/
+screenshots/
+*.log
+tmp/
+.tmp/
+scratch/
+
+# Rahasia dan konfigurasi lokal (jangan pernah di-commit)
+.env
+.env.*
+*.pem
+*.key
+*.crt
+*.p12
+config.local.*
+
+# Arsip hasil unduhan
+*.zip
+*.tar.gz
+
+# Pengaturan lokal alat AI
+.claude/settings.local.json
+
+# Referensi UI untuk agent (tidak ikut di-push)
+reference-ui/

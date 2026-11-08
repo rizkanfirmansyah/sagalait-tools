@@ -1,0 +1,32 @@
+/* Gaya khusus Pemasang PHP; semua warna lewat token portal */
+.pi-f { margin-top: 12px; min-width: 0; }
+.pi-f:first-of-type { margin-top: 0; }
+.pi-f > label { display: block; font-size: 14px; color: var(--body); margin-bottom: 4px; }
+.field-sm.pi-in { width: 100%; height: 44px; font-size: 16px; }
+.pi-err { color: var(--err); font-size: 13.5px; margin-top: 4px; }
+.pi-badge { font-size: 12.5px; font-weight: 600; padding: 3px 10px; border-radius: 999px; border: 1px solid var(--line-strong); color: var(--body); }
+.pi-badge.active { background: var(--ok-t); color: var(--ok); border-color: var(--ok); }
+.pi-badge.security { background: var(--warn-t); color: var(--warn); border-color: var(--warn); }
+.pi-badge.eol { background: var(--err-t); color: var(--err); border-color: var(--err); }
+.pi-presets { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin-bottom: 8px; }
+.pi-presets .btn { height: 44px; }
+.pi-group { margin-top: 12px; }
+.pi-group h3 { font-size: 13.5px; font-weight: 600; color: var(--muted); margin-bottom: 2px; }
+.pi-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 230px), 1fr)); gap: 0 16px; }
+.pi-chk { display: flex; align-items: center; gap: 10px; min-height: 44px; font-size: 14.5px; color: var(--body); cursor: pointer; }
+.pi-chk input { width: 20px; height: 20px; margin: 0; accent-color: var(--accent); flex: none; }
+.pi-chk.off { opacity: .5; cursor: not-allowed; }
+.pi-chk code, .panel code { font-size: 12.5px; }
+.pi-step { display: grid; grid-template-columns: 28px minmax(0, 1fr); gap: 0 12px; }
+.pi-n { width: 28px; height: 28px; border-radius: 50%; background: var(--accent-t); color: var(--accent); display: inline-grid; place-items: center; font-weight: 700; font-size: 14px; }
+.pi-step h3 { font-size: 15px; margin: 3px 0 4px; }
+.pi-step p { margin-bottom: 8px; }
+.pi-step pre.src { white-space: pre; word-break: normal; overflow: auto; max-height: 360px; font-size: 13.5px; }
+.pi-btns { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
+.pi-btns .btn { height: 44px; }
+.pi-step + .pi-step { margin-top: 20px; padding-top: 20px; border-top: 1px solid var(--line); }
+.pi-note + .pi-note { margin-top: 10px; }
+.app-grid > * { min-width: 0; }
+.back { display: inline-flex; align-items: center; min-height: 44px; }
+.pi-chk { min-width: 0; }
+.pi-chk code { overflow-wrap: anywhere; word-break: break-all; }
