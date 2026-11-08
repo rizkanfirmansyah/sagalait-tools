@@ -175,6 +175,16 @@
       "icon": "\u21c4",
       "tags": ["converter", "konversi", "json", "array", "object", "serialize", "unserialize", "csv", "excel", "xlsx", "tabel", "php"],
       "favorite": false
+    },
+    {
+      "id": "signature",
+      "name": "Pembuat tanda tangan",
+      "description": "Gambar tanda tangan, pilih latar transparan, putih, biru, atau warna lain, unduh PNG atau JPG",
+      "group": "harian",
+      "path": "signature/",
+      "icon": "TT",
+      "tags": ["tanda tangan", "signature", "ttd", "png", "jpg", "transparan", "gambar", "dokumen"],
+      "favorite": false
     }
   ]
 }
