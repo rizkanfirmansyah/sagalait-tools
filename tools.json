@@ -20,6 +20,7 @@
     {
       "id": "serialize-checker",
       "name": "Serialize Checker",
+      "short": "Serialize",
       "description": "Cek dan betulkan string serialize",
       "group": "php",
       "path": "serialize-checker/",
@@ -30,6 +31,7 @@
     {
       "id": "json-formatter",
       "name": "JSON Formatter",
+      "short": "Formatter",
       "description": "Rapikan dan validasi JSON",
       "group": "php",
       "path": "json-formatter/",
@@ -39,6 +41,7 @@
     {
       "id": "hitung-byte",
       "name": "Hitung Byte",
+      "short": "Byte",
       "description": "Panjang string dalam byte dan karakter",
       "group": "teks",
       "path": "hitung-byte/",
@@ -49,6 +52,7 @@
     {
       "id": "timer",
       "name": "Timer",
+      "short": "Timer",
       "description": "Hitung mundur dengan durasi dan suara pilihan",
       "group": "waktu",
       "path": "timer/",
@@ -59,6 +63,7 @@
     {
       "id": "jwt",
       "name": "Decoder JWT",
+      "short": "JWT",
       "description": "Baca isi token JWT dan periksa masa berlakunya",
       "group": "dev",
       "path": "jwt/",
@@ -69,6 +74,7 @@
     {
       "id": "cron",
       "name": "Cron dan timer",
+      "short": "Cron",
       "description": "Buat, jelaskan, dan uji jadwal cron atau systemd timer",
       "group": "server",
       "path": "cron/",
@@ -79,6 +85,7 @@
     {
       "id": "nginx-generator",
       "name": "Nginx generator",
+      "short": "Nginx",
       "description": "Buat konfigurasi server block: statis, reverse proxy, PHP-FPM",
       "group": "server",
       "path": "nginx-generator/",
@@ -89,6 +96,7 @@
     {
       "id": "db-viewer",
       "name": "Database viewer",
+      "short": "Viewer",
       "description": "Lihat data tabel dari CSV, JSON, atau dump SQL",
       "group": "db",
       "path": "db-viewer/",
@@ -99,6 +107,7 @@
     {
       "id": "firewall",
       "name": "Generator firewall",
+      "short": "Firewall",
       "description": "Buat aturan firewall MikroTik atau Linux (nftables)",
       "group": "server",
       "path": "firewall/",
@@ -109,6 +118,7 @@
     {
       "id": "roda-acak",
       "name": "Roda acak",
+      "short": "Roda",
       "description": "Pilih acak dengan roda, bola undian, atau kartu menyala; bisa juga bagi grup",
       "group": "harian",
       "path": "roda-acak/",
@@ -119,6 +129,7 @@
     {
       "id": "db-cmd",
       "name": "Perintah database",
+      "short": "Perintah",
       "description": "Susun perintah mysql, mysqldump, psql, dan pg_dump",
       "group": "db",
       "path": "db-cmd/",
@@ -129,6 +140,7 @@
     {
       "id": "php-installer",
       "name": "Pemasang PHP",
+      "short": "Installer",
       "description": "Susun perintah apt untuk PHP, paket, dan repo Ondřej",
       "group": "server",
       "path": "php-installer/",
@@ -139,6 +151,7 @@
     {
       "id": "json-compare",
       "name": "Pembanding JSON",
+      "short": "Compare",
       "description": "Bandingkan dua JSON: key, nilai, tipe, dan panjang array",
       "group": "php",
       "path": "json-compare/",
@@ -149,6 +162,7 @@
     {
       "id": "api-docs",
       "name": "Generator dokumentasi API",
+      "short": "Dokumen",
       "description": "Buat dokumen OpenAPI (Swagger) dari contoh request dan response",
       "group": "dev",
       "path": "api-docs/",
@@ -159,6 +173,7 @@
     {
       "id": "watermark",
       "name": "Watermark",
+      "short": "Watermark",
       "description": "Beri watermark pada foto KTP atau dokumen, diproses di browser",
       "group": "harian",
       "path": "watermark/",
@@ -169,6 +184,7 @@
     {
       "id": "converter",
       "name": "Konverter data",
+      "short": "Konverter",
       "description": "Ubah JSON, array, object, serialize PHP, tabel, CSV, dan Excel satu sama lain",
       "group": "dev",
       "path": "converter/",
@@ -179,6 +195,7 @@
     {
       "id": "signature",
       "name": "Pembuat tanda tangan",
+      "short": "Tanda",
       "description": "Gambar tanda tangan, pilih latar transparan, putih, biru, atau warna lain, unduh PNG atau JPG",
       "group": "harian",
       "path": "signature/",
