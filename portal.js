@@ -6,6 +6,8 @@
   var NS = 'http://www.w3.org/2000/svg';
   var state = { tools: [], groups: [], favs: [], sel: 0, results: [], q: '', opener: null };
   var $ = function (id) { return document.getElementById(id); };
+  var I = window.SagalaI18n, tr = I.t;
+  function loc(o, f) { return (I.lang === 'en' && o[f + '_en']) || o[f]; }
   var isMac = /Mac|iPhone|iPad/.test(navigator.platform || navigator.userAgent || '');
 
   function h(tag, cls, text) { var n = document.createElement(tag); if (cls) n.className = cls; if (text != null) n.textContent = text; return n; }
@@ -35,17 +37,17 @@
   }
 
   /* ---------- panel ---------- */
-  function tile(t) { return h('span', 'ui-tile', t.icon || t.name.charAt(0)); }
-  function shortName(t) { return t.short || String(t.name).split(/\s+/)[0]; }
+  function tile(t) { return h('span', 'ui-tile', t.icon || loc(t, 'name').charAt(0)); }
+  function shortName(t) { return loc(t, 'short') || String(loc(t, 'name')).split(/\s+/)[0]; }
   function item(t) {
     var fav = state.favs.indexOf(t.id) >= 0;
     var li = h('li', 'p-item'), a = h('a', 'p-row'), tx = h('span', 'p-text');
-    a.href = safeHref(t.path); a.setAttribute('aria-label', t.name);
+    a.href = safeHref(t.path); a.setAttribute('aria-label', loc(t, 'name'));
     var tl = tile(t); tl.setAttribute('aria-hidden', 'true');
-    tx.appendChild(h('span', 'p-name', t.name)); tx.appendChild(h('span', 'p-desc', t.description || '')); tx.appendChild(h('span', 'p-short', shortName(t)));
+    tx.appendChild(h('span', 'p-name', loc(t, 'name'))); tx.appendChild(h('span', 'p-desc', loc(t, 'description') || '')); tx.appendChild(h('span', 'p-short', shortName(t)));
     a.appendChild(tl); a.appendChild(tx); li.appendChild(a);
     var b = h('button', 'p-star'); b.type = 'button'; b.setAttribute('data-id', t.id); b.setAttribute('aria-pressed', String(fav));
-    b.setAttribute('aria-label', (fav ? 'Hapus dari favorit: ' : 'Tambah ke favorit: ') + t.name); b.appendChild(iconStar());
+    b.setAttribute('aria-label', tr(fav ? 'p.fav_remove' : 'p.fav_add', { name: loc(t, 'name') })); b.appendChild(iconStar());
     li.appendChild(b); return li;
   }
   function panel(id, name, key, tools, extra) {
@@ -59,24 +61,24 @@
   function renderPanels(focusId) {
     var box = $('panels'); clear(box);
     var favT = state.tools.filter(function (t) { return state.favs.indexOf(t.id) >= 0; });
-    if (favT.length) box.appendChild(panel(null, 'Favorit', 'fav', favT, 'p-fav'));
+    if (favT.length) box.appendChild(panel(null, tr('p.fav'), 'fav', favT, 'p-fav'));
     var known = {}, other = [];
     state.groups.forEach(function (g, i) { known[g.id] = { g: g, i: i, tools: [] }; });
     state.tools.forEach(function (t) { (known[t.group] || { tools: other }).tools.push(t); });
-    state.groups.forEach(function (g, i) { var e = known[g.id]; if (e.tools.length) box.appendChild(panel('grup-' + g.id, g.name, gKey(g, i), e.tools)); });
-    if (other.length) box.appendChild(panel('grup-lainnya', 'Lainnya', 'fav', other));
+    state.groups.forEach(function (g, i) { var e = known[g.id]; if (e.tools.length) box.appendChild(panel('grup-' + g.id, loc(g, 'name'), gKey(g, i), e.tools)); });
+    if (other.length) box.appendChild(panel('grup-lainnya', tr('group.lainnya'), 'fav', other));
     if (focusId) { var b = box.querySelector('.p-star[data-id="' + focusId.replace(/"/g, '') + '"]'); if (b) b.focus(); }
   }
 
   /* ---------- pencarian ---------- */
-  function groupName(t) { for (var i = 0; i < state.groups.length; i++) if (state.groups[i].id === t.group) return state.groups[i].name; return ''; }
+  function groupName(t) { for (var i = 0; i < state.groups.length; i++) if (state.groups[i].id === t.group) return loc(state.groups[i], 'name'); return ''; }
   function groupKeyOf(t) { for (var i = 0; i < state.groups.length; i++) if (state.groups[i].id === t.group) return gKey(state.groups[i], i); return 'fav'; }
   function search(q) {
     var terms = norm(q).trim().split(/\s+/).filter(Boolean);
     if (!terms.length) return state.tools.map(function (t) { return { t: t, r: 0 }; });
     var out = [];
     state.tools.forEach(function (t, i) {
-      var name = norm(t.name), hay = norm([t.name, t.description, (t.tags || []).join(' '), groupName(t)].join(' '));
+      var name = norm(loc(t, 'name')), hay = norm([t.name, t.name_en, t.description, t.description_en, (t.tags || []).join(' '), (t.tags_en || []).join(' '), groupName(t)].join(' '));
       if (!terms.every(function (x) { return hay.indexOf(x) >= 0; })) return;
       var r = name.indexOf(terms[0]) === 0 ? 0 : terms.every(function (x) { return name.indexOf(x) >= 0; }) ? 1 : 2;
       out.push({ t: t, r: r, i: i });
@@ -99,11 +101,11 @@
     var q = $('q').value, terms = norm(q).trim().split(/\s+/).filter(Boolean), list = $('srchList'), res = search(q);
     state.q = q; state.results = res; if (state.sel >= res.length) state.sel = 0;
     clear(list); $('srch').classList.toggle('has-q', !!q.trim());
-    $('srchCount').textContent = q.trim() ? res.length + ' hasil' : 'Semua tool (' + state.tools.length + ')';
+    $('srchCount').textContent = q.trim() ? tr('p.results', { n: res.length }) : tr('p.all', { n: state.tools.length });
     if (!res.length) {
       var e = h('li', 'srch-empty'); e.setAttribute('role', 'presentation');
-      e.appendChild(h('p', '', 'Tidak ada tool untuk “' + q.trim() + '”'));
-      var b = h('button', 'btn btn-sm', 'Hapus pencarian'); b.type = 'button';
+      e.appendChild(h('p', '', tr('p.none', { q: q.trim() })));
+      var b = h('button', 'btn btn-sm', tr('p.clear_search')); b.type = 'button';
       b.addEventListener('click', function () { $('q').value = ''; state.sel = 0; renderResults(); $('q').focus(); });
       e.appendChild(b); list.appendChild(e); $('q').removeAttribute('aria-activedescendant'); return;
     }
@@ -111,7 +113,7 @@
       var t = r.t, li = h('li'), a = h('a', 'srch-opt'), tx = h('span', 'p-text'), nm = h('span', 'p-name'), ds = h('span', 'p-desc'), tl = tile(t), dot = h('span', 'ui-dot');
       li.setAttribute('role', 'presentation'); a.id = 'opt-' + i; a.setAttribute('role', 'option'); a.tabIndex = -1; a.href = safeHref(t.path); a.setAttribute('aria-selected', String(i === state.sel));
       a.setAttribute('data-i', i); tl.setAttribute('aria-hidden', 'true'); dot.setAttribute('data-g', groupKeyOf(t)); dot.setAttribute('aria-hidden', 'true'); dot.title = groupName(t);
-      marked(nm, t.name, terms); marked(ds, t.description || '', terms);
+      marked(nm, loc(t, 'name'), terms); marked(ds, loc(t, 'description') || '', terms);
       tx.appendChild(nm); tx.appendChild(ds); a.appendChild(tl); a.appendChild(tx); a.appendChild(dot); li.appendChild(a); list.appendChild(li);
     });
     $('q').setAttribute('aria-activedescendant', 'opt-' + state.sel);
@@ -171,26 +173,37 @@
 
   /* ---------- mulai ---------- */
   function setup(data) {
-    if (!data || !Array.isArray(data.tools)) throw new Error('Format tools.json salah: harus punya array "tools".');
-    var site = data.site || {};
+    if (!data || !Array.isArray(data.tools)) throw new Error(tr('p.bad_format'));
+    state.site = data.site || {};
     state.tools = data.tools.filter(function (t) { return !t.hidden; }); state.groups = data.groups || [];
-    if (site.title) document.title = site.title;
-    $('footL').textContent = (site.footer || 'sagalait.cloud') + ' · semua berjalan di browser';
-    $('mBarText').textContent = 'Cari dari ' + state.tools.length + ' tool';
-    state.favs = loadFavs(); renderPanels();
+    state.favs = loadFavs(); texts(); renderPanels();
+  }
+  /* teks yang bergantung bahasa dan data; dipanggil saat mulai dan saat bahasa diganti */
+  function texts() {
+    var site = state.site || {};
+    if (site.title) document.title = loc(site, 'title');
+    $('footL').textContent = tr('p.footer', { site: site.footer || 'sagalait.cloud' });
+    $('mBarText').textContent = tr('p.mbar', { n: state.tools.length });
   }
   function fail(err) {
     var box = $('panels'); clear(box);
-    var p = h('div', 'panel p-fail'); p.appendChild(h('h2', '', 'Tidak bisa memuat ' + DATA_URL)); p.appendChild(h('p', '', String(err && err.message ? err.message : err)));
-    if (location.protocol === 'file:') p.appendChild(h('p', 'small muted', 'Halaman dibuka langsung dari file, dan browser memblokir pembacaan JSON dengan cara itu. Jalankan server lokal, misalnya python3 -m http.server 8000.'));
-    var b = h('button', 'btn', 'Coba lagi'); b.type = 'button'; b.addEventListener('click', load); p.appendChild(b); box.appendChild(p);
+    var p = h('div', 'panel p-fail'); p.appendChild(h('h2', '', tr('p.fail_title', { url: DATA_URL }))); p.appendChild(h('p', '', String(err && err.message ? err.message : err)));
+    if (location.protocol === 'file:') p.appendChild(h('p', 'small muted', tr('p.fail_file')));
+    var b = h('button', 'btn', tr('p.retry')); b.type = 'button'; b.addEventListener('click', load); p.appendChild(b); box.appendChild(p);
   }
   function load() {
-    fetch(DATA_URL, { cache: 'no-cache' }).then(function (r) { if (!r.ok) throw new Error('Server menjawab ' + r.status + ' untuk ' + DATA_URL + '.'); return r.json(); }).then(setup).catch(fail);
+    new Promise(function (ok) { I.onReady(ok); }).then(function () {
+      return fetch(DATA_URL, { cache: 'no-cache' }).then(function (r) { if (!r.ok) throw new Error(tr('p.http_error', { status: r.status, url: DATA_URL })); return r.json(); });
+    }).then(setup).catch(fail);
   }
   var kd = $('kbdMain'); kd.textContent = isMac ? '⌘ F' : 'Ctrl F';
   $('hintKey').textContent = isMac ? '⌘ F' : 'Ctrl F';
   $('btnSearch').insertBefore(iconSearch(18), $('btnSearch').firstChild); $('mBar').insertBefore(iconSearch(20), $('mBar').firstChild); $('srchIcon').appendChild(iconSearch(22));
+  document.addEventListener('sagalait:lang', function () {
+    if (!state.tools.length) return;
+    texts(); renderPanels();
+    if (!$('srch').hidden) { renderResults(); } 
+  });
   load();
   window.__portal = { state: state, open: openSearch, close: closeSearch };
 })();
