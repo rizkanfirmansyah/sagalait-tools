@@ -26,7 +26,8 @@
   "p.fail_title": "Tidak bisa memuat {url}",
   "p.fail_file": "Halaman dibuka langsung dari file, dan browser memblokir pembacaan JSON dengan cara itu. Jalankan server lokal, misalnya python3 -m http.server 8000.",
   "p.retry": "Coba lagi",
-  "p.http_error": "Server menjawab {status} untuk {url}."
+  "p.http_error": "Server menjawab {status} untuk {url}.",
+  "p.result_one": "{n} hasil"
  },
  "en": {
   "p.title": "Tools SagalaIT",
@@ -55,6 +56,7 @@
   "p.fail_title": "Cannot load {url}",
   "p.fail_file": "The page was opened directly from a file, and the browser blocks reading JSON that way. Run a local server, for example python3 -m http.server 8000.",
   "p.retry": "Try again",
-  "p.http_error": "The server answered {status} for {url}."
+  "p.http_error": "The server answered {status} for {url}.",
+  "p.result_one": "{n} result"
  }
 }
