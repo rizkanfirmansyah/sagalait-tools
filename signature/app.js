@@ -1,7 +1,7 @@
 /* Antarmuka Pembuat tanda tangan. Goresan hanya ada di memori; yang diingat hanya pengaturan. */
 (function () {
   'use strict';
-  var KEY = 'sagalait-signature';
+  var KEY = 'sagalait-signature', I = window.SagalaI18n;
   var $ = function (id) { return document.getElementById(id); };
   var st = load(), strokes = [], redo = [], cur = null, cv = $('cv'), ctx = cv.getContext('2d'), cssW = 0, cssH = 0;
   var BG = { white: '#ffffff', blue: Sig.BLUE };
@@ -80,8 +80,8 @@
     $('bgPick').classList.toggle('on', st.bg === 'custom'); $('bgColor').value = st.bgColor;
     document.querySelectorAll('[data-fmt]').forEach(function (b) { b.setAttribute('aria-pressed', String(b.dataset.fmt === st.format)); });
     $('scale').value = String(st.scale); $('crop').checked = st.crop;
-    $('bgNote').textContent = st.format === 'jpeg' && st.bg === 'transparent' ? 'JPG tidak mendukung transparan, jadi latar diisi putih. Pilih PNG untuk latar transparan.' : '';
-    padBg(); $('btnDl').textContent = 'Unduh ' + (st.format === 'jpeg' ? 'JPG' : 'PNG'); msg('');
+    $('bgNote').textContent = st.format === 'jpeg' && st.bg === 'transparent' ? I.t('jpg_note') : '';
+    padBg(); $('btnDl').textContent = I.t('download', { fmt: st.format === 'jpeg' ? 'JPG' : 'PNG' }); msg('');
   }
   function set(patch, repaint) { Object.keys(patch).forEach(function (k) { st[k] = patch[k]; }); save(); syncUi(); if (repaint) paint(); refresh(); }
 
@@ -138,14 +138,15 @@
   $('btnDl').addEventListener('click', function () {
     var c = output(); if (!c) return;
     var mime = st.format === 'jpeg' ? 'image/jpeg' : 'image/png', ext = st.format === 'jpeg' ? 'jpg' : 'png';
-    msg('Menyiapkan…');
+    msg(I.t('busy'));
     toBlob(c, mime, 0.95).then(function (b) {
-      var a = document.createElement('a'); a.href = URL.createObjectURL(b); a.download = 'tanda-tangan.' + ext;
+      var a = document.createElement('a'); a.href = URL.createObjectURL(b); a.download = I.t('filename') + '.' + ext;
       document.body.appendChild(a); a.click(); a.remove(); setTimeout(function () { URL.revokeObjectURL(a.href); }, 2000); msg('');
-    }).catch(function () { msg('Gagal membuat gambar. Coba kecilkan ukuran.'); });
+    }).catch(function () { msg(I.t('fail')); });
   });
 
   if (typeof ResizeObserver !== 'undefined') new ResizeObserver(fit).observe(cv); else window.addEventListener('resize', fit);
-  syncUi(); fit(); refresh();
+  I.onReady(function () { syncUi(); fit(); refresh(); });
+  document.addEventListener('sagalait:lang', syncUi);
   window.__sg = { strokes: function () { return strokes; }, output: output, state: function () { return st; } };
 })();
