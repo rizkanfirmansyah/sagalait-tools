@@ -5,7 +5,7 @@
   var KEY = 'sagalait-watermark', PREVIEW = 1600, MAX_MP = 80;
   var $ = function (id) { return document.getElementById(id); };
   var st = load(), files = [], cur = -1, raf = 0, saveT = null, uid = 0;
-  var SWATCH = [['#808080', 'Abu-abu'], ['#000000', 'Hitam'], ['#c0392b', 'Merah'], ['#1f4e9e', 'Biru'], ['#ffffff', 'Putih']];
+  var I = window.SagalaI18n, SWATCH = [['#808080', 'sw_gray'], ['#000000', 'sw_black'], ['#c0392b', 'sw_red'], ['#1f4e9e', 'sw_blue'], ['#ffffff', 'sw_white']];
 
   function load() {
     var d = WM.defaults();
@@ -22,7 +22,7 @@
   function el(tag, cls, text) { var n = document.createElement(tag); if (cls) n.className = cls; if (text != null) n.textContent = text; return n; }
   function msg(t) { $('msg').textContent = t || ''; }
   function mk(w, h) { var c = document.createElement('canvas'); c.width = w; c.height = h; return c; }
-  function kb(n) { return n < 1048576 ? Math.max(1, Math.round(n / 1024)) + ' KB' : (n / 1048576).toFixed(1).replace('.', ',') + ' MB'; }
+  function kb(n) { return n < 1048576 ? Math.max(1, Math.round(n / 1024)) + ' KB' : new Intl.NumberFormat(I.locale, { maximumFractionDigits: 1, minimumFractionDigits: 1 }).format(n / 1048576) + ' MB'; }
   function css(n) { return getComputedStyle(document.documentElement).getPropertyValue(n).trim(); }
 
   /* ---------- kontrol ---------- */
@@ -33,17 +33,25 @@
     labels();
   }
   function labels() {
-    $('vOpacity').textContent = st.opacity + '%'; $('vSize').textContent = String(st.size).replace('.', ',') + '%'; $('vAngle').textContent = st.angle + '°';
+    $('vOpacity').textContent = st.opacity + '%'; $('vSize').textContent = new Intl.NumberFormat(I.locale).format(st.size) + '%'; $('vAngle').textContent = st.angle + '°';
     $('vGapX').textContent = st.gapX + '%'; $('vGapY').textContent = st.gapY + '%'; $('vQ').textContent = st.quality;
     $('rowGapX').hidden = $('rowGapY').hidden = st.mode === 'center'; $('rowQ').hidden = st.format === 'png';
     document.querySelectorAll('.wm-sw button').forEach(function (b) { b.setAttribute('aria-pressed', String(b.dataset.c.toLowerCase() === st.color.toLowerCase())); });
     var empty = !String(st.text).trim();
     $('btnDl').disabled = cur < 0 || empty; $('btnZip').disabled = empty;
-    if (empty && cur >= 0) msg('Teks kosong: tidak ada watermark. Tulis teks dulu supaya bisa diunduh.'); else if ($('msg').textContent.indexOf('Teks kosong') === 0) msg('');
+    var E = I.t('empty_text');
+    if (empty && cur >= 0) msg(E); else if ($('msg').textContent === E) msg('');
+  }
+  function swLabels() {
+    document.querySelectorAll('.wm-sw button').forEach(function (b) {
+      var c = SWATCH.filter(function (x) { return x[0] === b.dataset.c; })[0], n = I.t(c[1]);
+      b.setAttribute('aria-label', n); b.title = n;
+    });
   }
   function bind() {
     var sw = document.querySelector('.wm-sw');
-    SWATCH.forEach(function (c) { var b = el('button'); b.type = 'button'; b.dataset.c = c[0]; b.style.background = c[0]; b.setAttribute('aria-label', c[1]); b.title = c[1]; b.addEventListener('click', function () { st.color = c[0]; sync(); changed(); }); sw.appendChild(b); });
+    SWATCH.forEach(function (c) { var b = el('button'); b.type = 'button'; b.dataset.c = c[0]; b.style.background = c[0]; b.addEventListener('click', function () { st.color = c[0]; sync(); changed(); }); sw.appendChild(b); });
+    swLabels();
     $('text').addEventListener('input', function () { st.text = $('text').value; labels(); changed(); });
     $('color').addEventListener('input', function () { st.color = $('color').value; $('hex').value = st.color; labels(); changed(); });
     $('hex').addEventListener('input', function () { var v = $('hex').value.trim(); if (v && v.charAt(0) !== '#') v = '#' + v; var ok = /^#[0-9a-f]{6}$/i.test(v); $('hex').setAttribute('aria-invalid', String(!ok)); if (ok) { st.color = v.toLowerCase(); $('color').value = st.color; labels(); changed(); } });
@@ -54,7 +62,7 @@
     document.querySelectorAll('.wm-quick button').forEach(function (b) {
       b.addEventListener('click', function () {
         var t = b.dataset.t;
-        if (t === '{tgl}') { var d = new Date(), p = function (n) { return String(n).padStart(2, '0'); }; t = 'HANYA UNTUK VERIFIKASI\n' + p(d.getDate()) + '-' + p(d.getMonth() + 1) + '-' + d.getFullYear(); }
+        if (t === '{tgl}') { var d = new Date(), p = function (n) { return String(n).padStart(2, '0'); }; t = I.t('wm_date_prefix') + '\n' + p(d.getDate()) + '-' + p(d.getMonth() + 1) + '-' + d.getFullYear(); }
         st.text = t; sync(); changed(); $('text').focus();
       });
     });
@@ -82,17 +90,17 @@
   }
   function addFiles(list) {
     var imgs = list.filter(function (f) { return /^image\//.test(f.type) || /\.(jpe?g|png|webp|gif|bmp|avif)$/i.test(f.name); });
-    if (!imgs.length) { msg('Pilih berkas gambar (JPG, PNG, WebP).'); return; }
+    if (!imgs.length) { msg(I.t('need_image')); return; }
     msg(''); var bad = [];
     imgs.reduce(function (p, f) {
       return p.then(function () {
         return decode(f).then(function (bmp) {
           var w = bmp.width || bmp.naturalWidth, h = bmp.height || bmp.naturalHeight;
-          if (w * h > MAX_MP * 1e6) { bad.push(f.name + ' terlalu besar (' + w + '×' + h + ')'); return; }
+          if (w * h > MAX_MP * 1e6) { bad.push(I.t('too_big', { name: f.name, w: w, h: h })); return; }
           var th = mk(96, 96), tc = th.getContext('2d'), s = Math.max(96 / w, 96 / h); tc.fillStyle = '#ffffff'; tc.fillRect(0, 0, 96, 96); tc.drawImage(bmp, (96 - w * s) / 2, (96 - h * s) / 2, w * s, h * s);
           files.push({ id: ++uid, name: f.name, size: f.size, bmp: bmp, w: w, h: h, thumb: th.toDataURL('image/jpeg', 0.7) });
           cur = files.length - 1;
-        }).catch(function () { bad.push(f.name + ' tidak bisa dibaca browser (HEIC perlu diubah ke JPG atau PNG dulu)'); });
+        }).catch(function () { bad.push(I.t('unreadable', { name: f.name })); });
       });
     }, Promise.resolve()).then(function () { if (bad.length) msg(bad.join('. ') + '.'); thumbs(); labels(); schedule(); });
   }
@@ -100,8 +108,8 @@
     var box = $('thumbs'); while (box.firstChild) box.removeChild(box.firstChild);
     box.hidden = files.length < 2; $('btnZip').hidden = files.length < 2;
     files.forEach(function (f, i) {
-      var b = el('button', 'wm-th'), im = el('img'), x = el('span', 'x', '×'); b.type = 'button'; im.src = f.thumb; im.alt = f.name; b.title = f.name; b.setAttribute('aria-current', String(i === cur)); b.setAttribute('aria-label', 'Pilih ' + f.name);
-      b.appendChild(im); x.setAttribute('role', 'button'); x.setAttribute('aria-label', 'Hapus ' + f.name); x.title = 'Hapus'; b.appendChild(x);
+      var b = el('button', 'wm-th'), im = el('img'), x = el('span', 'x', '×'); b.type = 'button'; im.src = f.thumb; im.alt = f.name; b.title = f.name; b.setAttribute('aria-current', String(i === cur)); b.setAttribute('aria-label', I.t('pick_file', { name: f.name }));
+      b.appendChild(im); x.setAttribute('role', 'button'); x.setAttribute('aria-label', I.t('remove_file', { name: f.name })); x.title = I.t('remove'); b.appendChild(x);
       b.addEventListener('click', function (e) {
         if (e.target === x) { files.splice(i, 1); if (cur >= files.length) cur = files.length - 1; thumbs(); labels(); schedule(); return; }
         cur = i; thumbs(); schedule();
@@ -117,11 +125,11 @@
       cv.width = 1200; cv.height = 757; ctx.fillStyle = css('--well') || '#eee'; ctx.fillRect(0, 0, 1200, 757);
       ctx.fillStyle = css('--line-strong') || '#ccc'; ctx.fillRect(60, 80, 220, 280); [[330, 110, 560], [330, 190, 420], [330, 270, 500], [330, 350, 380], [60, 470, 800], [60, 550, 640]].forEach(function (r) { ctx.fillRect(r[0], r[1], r[2], 34); });
       WM.draw(ctx, 1200, 757, st, mk); $('empty').hidden = false;
-      $('info').textContent = 'Belum ada gambar. Ini kanvas contoh untuk melihat watermark.'; return;
+      $('info').textContent = I.t('no_image'); return;
     }
     var f = files[cur], s = Math.min(1, PREVIEW / Math.max(f.w, f.h)), w = Math.max(1, Math.round(f.w * s)), h = Math.max(1, Math.round(f.h * s));
     cv.width = w; cv.height = h; ctx.drawImage(f.bmp, 0, 0, w, h); WM.draw(ctx, w, h, st, mk); $('empty').hidden = true;
-    $('info').textContent = f.name + ' · ' + f.w + '×' + f.h + ' px · ' + kb(f.size) + (files.length > 1 ? ' · ' + (cur + 1) + ' dari ' + files.length : '');
+    $('info').textContent = f.name + ' · ' + f.w + '×' + f.h + ' px · ' + kb(f.size) + (files.length > 1 ? ' · ' + I.t('n_of', { i: cur + 1, n: files.length }) : '');
   }
 
   /* ---------- ekspor ---------- */
@@ -145,21 +153,22 @@
     });
   }
   function outName(f, used) {
-    var ext = st.format === 'jpeg' ? 'jpg' : st.format, base = f.name.replace(/\.[^.]+$/, '').replace(/[^\w.\- ]+/g, '_') || 'gambar', n = base + '-watermark.' + ext, i = 2;
+    var ext = st.format === 'jpeg' ? 'jpg' : st.format, base = f.name.replace(/\.[^.]+$/, '').replace(/[^\w.\- ]+/g, '_') || I.t('base_name'), n = base + '-watermark.' + ext, i = 2;
     while (used && used[n]) n = base + '-watermark-' + (i++) + '.' + ext; if (used) used[n] = 1; return n;
   }
   function save2(blob, name) { var a = el('a'); a.href = URL.createObjectURL(blob); a.download = name; document.body.appendChild(a); a.click(); a.remove(); setTimeout(function () { URL.revokeObjectURL(a.href); }, 2000); }
   function downloadOne() {
-    if (cur < 0) return; var f = files[cur]; msg('Menyiapkan…'); $('btnDl').disabled = true;
-    exportBlob(f).then(function (b) { if (st.format === 'webp' && b.type !== 'image/webp') msg('Browser ini tidak bisa membuat WebP; hasilnya PNG.'); else msg(''); save2(b, outName(f, null).replace(/\.\w+$/, b.type === 'image/jpeg' ? '.jpg' : b.type === 'image/webp' ? '.webp' : '.png')); })
-      .catch(function () { msg('Gagal membuat gambar. Coba kecilkan "Sisi terpanjang".'); }).then(labels);
+    if (cur < 0) return; var f = files[cur]; msg(I.t('busy')); $('btnDl').disabled = true;
+    exportBlob(f).then(function (b) { if (st.format === 'webp' && b.type !== 'image/webp') msg(I.t('no_webp')); else msg(''); save2(b, outName(f, null).replace(/\.\w+$/, b.type === 'image/jpeg' ? '.jpg' : b.type === 'image/webp' ? '.webp' : '.png')); })
+      .catch(function () { msg(I.t('fail_img')); }).then(labels);
   }
   function downloadAll() {
-    msg('Menyiapkan ' + files.length + ' gambar…'); $('btnZip').disabled = true; var used = {}, out = [];
+    msg(I.t('busy_n', { n: files.length })); $('btnZip').disabled = true; var used = {}, out = [];
     files.reduce(function (p, f) { return p.then(function () { return exportBlob(f).then(function (b) { return b.arrayBuffer().then(function (ab) { out.push({ name: outName(f, used), data: new Uint8Array(ab) }); }); }); }); }, Promise.resolve())
-      .then(function () { save2(WM.zipStore(out), 'watermark.zip'); msg(''); }).catch(function () { msg('Gagal membuat ZIP. Coba kurangi jumlah atau ukuran gambar.'); }).then(labels);
+      .then(function () { save2(WM.zipStore(out), 'watermark.zip'); msg(''); }).catch(function () { msg(I.t('fail_zip')); }).then(labels);
   }
 
-  sync(); bind(); schedule();
+  I.onReady(function () { sync(); bind(); schedule(); });
+  document.addEventListener('sagalait:lang', function () { labels(); swLabels(); thumbs(); render(); });
   window.WMApp = { get state() { return st; }, get files() { return files; } };
 })();
