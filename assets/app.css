@@ -284,3 +284,17 @@ a.jump { cursor: pointer; font-size: 13px; }
 .field, .field-sm { transition: border-color var(--t-fast) var(--ease); }
 .field-sm:hover, .field:hover { border-color: var(--line-strong); }
 @media (prefers-reduced-motion: reduce) { .panel, .field, .field-sm { transition: none; } }
+
+/* ---------- saklar bahasa (assets/i18n.js) ---------- */
+.ui-langswitch { display: inline-flex; gap: 2px; padding: 3px; border-radius: var(--r-md); background: var(--well); border: 1px solid var(--line); flex: none; }
+.ui-langswitch button {
+  position: relative; font: inherit; font-size: 13px; font-weight: 700; letter-spacing: .02em;
+  min-width: 40px; height: 32px; padding: 0 8px; border: 0; border-radius: 9px; background: transparent; color: var(--muted); cursor: pointer;
+  transition: background-color var(--t-fast) var(--ease), color var(--t-fast) var(--ease);
+}
+.ui-langswitch button::after { content: ""; position: absolute; inset: -6px -2px; }
+.ui-langswitch button:hover { color: var(--ink); }
+.ui-langswitch button.is-on { background: var(--panel); color: var(--ink); box-shadow: 0 0 0 1px var(--line); }
+.ui-langswitch button:focus-visible { outline: 3px solid var(--accent); outline-offset: 1px; }
+@media (prefers-reduced-motion: reduce) { .ui-langswitch button { transition: none; } }
+@media (max-width: 400px) { .top-end { gap: 8px; } .ui-langswitch button { min-width: 36px; } }
