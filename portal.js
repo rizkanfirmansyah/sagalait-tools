@@ -101,7 +101,7 @@
     var q = $('q').value, terms = norm(q).trim().split(/\s+/).filter(Boolean), list = $('srchList'), res = search(q);
     state.q = q; state.results = res; if (state.sel >= res.length) state.sel = 0;
     clear(list); $('srch').classList.toggle('has-q', !!q.trim());
-    $('srchCount').textContent = q.trim() ? tr('p.results', { n: res.length }) : tr('p.all', { n: state.tools.length });
+    $('srchCount').textContent = q.trim() ? tr(res.length === 1 ? 'p.result_one' : 'p.results', { n: res.length }) : tr('p.all', { n: state.tools.length });
     if (!res.length) {
       var e = h('li', 'srch-empty'); e.setAttribute('role', 'presentation');
       e.appendChild(h('p', '', tr('p.none', { q: q.trim() })));
