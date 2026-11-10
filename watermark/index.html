@@ -1,23 +1,24 @@
 <!doctype html>
-<html lang="id" data-theme="light">
+<html lang="id" data-theme="light" data-lang-src="lang.json">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="referrer" content="no-referrer">
-<title>Watermark · Tools SagalaIT</title>
+<title data-i18n="title">Watermark · Tools SagalaIT</title>
 <link rel="icon" href="data:,">
 <script src="../assets/theme.js"></script>
+<script src="../assets/i18n.js"></script>
 <link rel="stylesheet" href="../assets/app.css">
 <link rel="stylesheet" href="app.css">
 </head>
 <body>
 
 <header class="wrap top">
-  <a class="logo" href="../" aria-label="Tools SagalaIT, ke beranda">S</a>
-  <nav class="crumbs" aria-label="Lokasi"><a href="../">Tools</a><span aria-hidden="true">/</span><a class="crumb-g" href="../#grup-harian">Sehari-hari</a><span aria-hidden="true">/</span><span class="crumb-now" aria-current="page">Watermark</span></nav>
+  <a class="logo" href="../" aria-label="Tools SagalaIT, ke beranda" data-i18n-attr="aria-label:common.home">S</a>
+  <nav class="crumbs" aria-label="Lokasi" data-i18n-attr="aria-label:common.nav"><a href="../" data-i18n="common.tools">Tools</a><span aria-hidden="true">/</span><a class="crumb-g" href="../#grup-harian" data-i18n="group.harian">Sehari-hari</a><span aria-hidden="true">/</span><span class="crumb-now" aria-current="page" data-i18n="crumb">Watermark</span></nav>
   <span class="top-end">
-    <a class="top-link" href="../v1/watermark/">Tampilan lama</a>
-    <button class="icon-btn" type="button" data-theme-toggle aria-label="Ganti tema terang atau gelap">
+    <a class="top-link" href="../v1/watermark/" data-i18n="common.old">Tampilan lama</a>
+    <button class="icon-btn" type="button" data-theme-toggle aria-label="Ganti tema terang atau gelap" data-i18n-attr="aria-label:common.theme">
       <svg width="20" height="20" viewBox="-11 -11 22 22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle r="9"/><path d="M0 -9 A9 9 0 0 1 0 9 Z" fill="currentColor"/></svg>
     </button>
   </span>
@@ -26,77 +27,77 @@
 <main class="wrap">
   <div class="app-head">
     <div>
-      <h1>Watermark</h1>
-      <p class="lead">Tambahkan watermark ke foto KTP atau dokumen penting lain supaya tidak disalahgunakan. Semua diproses di browser ini: gambar tidak diunggah dan tidak disimpan.</p>
+      <h1 data-i18n="w01">Watermark</h1>
+      <p class="lead" data-i18n="w02">Tambahkan watermark ke foto KTP atau dokumen penting lain supaya tidak disalahgunakan. Semua diproses di browser ini: gambar tidak diunggah dan tidak disimpan.</p>
     </div>
     <div class="actions">
-      <label class="btn btn-primary">Pilih gambar<input class="vh" type="file" id="file" accept="image/*" multiple></label>
-      <button class="btn" id="btnReset" type="button">Atur ulang pengaturan</button>
+      <label class="btn btn-primary"><span data-i18n="w03">Pilih gambar</span><input class="vh" type="file" id="file" accept="image/*" multiple></label>
+      <button class="btn" id="btnReset" type="button" data-i18n="w04">Atur ulang pengaturan</button>
     </div>
   </div>
 
   <div class="wm-grid">
-    <section class="panel wm-stage" id="stage" aria-label="Pratinjau">
+    <section class="panel wm-stage" id="stage" aria-label="Pratinjau" data-i18n-attr="aria-label:w05">
       <div class="wm-view" id="view">
         <canvas id="cv" width="1200" height="757" role="img" aria-label="Pratinjau gambar dengan watermark"></canvas>
-        <div class="wm-empty" id="empty"><p><b>Tarik gambar ke sini</b></p><p class="small">atau klik Pilih gambar, atau tempel dengan Ctrl+V</p></div>
+        <div class="wm-empty" id="empty"><p><b data-i18n="w06">Tarik gambar ke sini</b></p><p class="small" data-i18n="w07">atau klik Pilih gambar, atau tempel dengan Ctrl+V</p></div>
       </div>
-      <p class="small muted wm-info" id="info" aria-live="polite">Belum ada gambar. Ini kanvas contoh untuk melihat watermark.</p>
+      <p class="small muted wm-info" id="info" aria-live="polite" data-i18n="w08">Belum ada gambar. Ini kanvas contoh untuk melihat watermark.</p>
       <div class="wm-thumbs" id="thumbs" hidden></div>
       <div class="wm-btns">
-        <button class="btn btn-primary" id="btnDl" type="button" disabled>Unduh gambar</button>
-        <button class="btn" id="btnZip" type="button" hidden>Unduh semua (.zip)</button>
+        <button class="btn btn-primary" id="btnDl" type="button" disabled data-i18n="w09">Unduh gambar</button>
+        <button class="btn" id="btnZip" type="button" hidden data-i18n="w10">Unduh semua (.zip)</button>
       </div>
       <p class="small wm-msg" id="msg" role="status"></p>
     </section>
 
     <div class="stack">
       <section class="panel">
-        <div class="panel-head"><h2>Tulisan</h2></div>
-        <div class="wm-f"><label for="text">Teks watermark (boleh lebih dari satu baris)</label>
+        <div class="panel-head"><h2 data-i18n="w11">Tulisan</h2></div>
+        <div class="wm-f"><label for="text" data-i18n="w12">Teks watermark (boleh lebih dari satu baris)</label>
           <textarea class="field wm-ta" id="text" spellcheck="false" autocomplete="off"></textarea></div>
         <div class="wm-quick">
-          <button class="btn btn-sm" type="button" data-t="SAGALA IT WATERMARK">Bawaan</button>
-          <button class="btn btn-sm" type="button" data-t="COPY - HANYA UNTUK VERIFIKASI">Untuk verifikasi</button>
-          <button class="btn btn-sm" type="button" data-t="{tgl}" id="qDate">Tanggal hari ini</button>
-          <button class="btn btn-sm" type="button" data-t="DOKUMEN INI TIDAK BERLAKU UNTUK KEPERLUAN LAIN">Tidak untuk keperluan lain</button>
+          <button class="btn btn-sm" type="button" data-t="SAGALA IT WATERMARK" data-i18n="w13">Bawaan</button>
+          <button class="btn btn-sm" type="button" data-t="COPY - HANYA UNTUK VERIFIKASI" data-i18n-attr="data-t:wm_verify" data-i18n="w14">Untuk verifikasi</button>
+          <button class="btn btn-sm" type="button" data-t="{tgl}" id="qDate" data-i18n="w15">Tanggal hari ini</button>
+          <button class="btn btn-sm" type="button" data-t="DOKUMEN INI TIDAK BERLAKU UNTUK KEPERLUAN LAIN" data-i18n-attr="data-t:wm_other" data-i18n="w16">Tidak untuk keperluan lain</button>
         </div>
       </section>
 
       <section class="panel">
-        <div class="panel-head"><h2>Tampilan</h2></div>
+        <div class="panel-head"><h2 data-i18n="w17">Tampilan</h2></div>
         <div class="wm-row">
-          <div class="wm-f"><label for="color">Warna</label>
-            <div class="wm-color"><input type="color" id="color" aria-label="Pilih warna"><input class="field-sm wm-in" id="hex" type="text" maxlength="7" spellcheck="false" autocomplete="off" aria-label="Kode warna heksadesimal"></div></div>
-          <div class="wm-f"><label for="mode">Tata letak</label>
-            <select class="field-sm wm-in" id="mode"><option value="tile">Berulang</option><option value="center">Satu di tengah</option></select></div>
+          <div class="wm-f"><label for="color" data-i18n="w18">Warna</label>
+            <div class="wm-color"><input type="color" id="color" aria-label="Pilih warna" data-i18n-attr="aria-label:w19"><input class="field-sm wm-in" id="hex" type="text" maxlength="7" spellcheck="false" autocomplete="off" aria-label="Kode warna heksadesimal" data-i18n-attr="aria-label:w20"></div></div>
+          <div class="wm-f"><label for="mode" data-i18n="w21">Tata letak</label>
+            <select class="field-sm wm-in" id="mode"><option value="tile" data-i18n="w22">Berulang</option><option value="center" data-i18n="w23">Satu di tengah</option></select></div>
         </div>
-        <div class="wm-sw" role="group" aria-label="Warna cepat"></div>
-        <div class="wm-f"><label for="opacity">Opasitas: <b id="vOpacity"></b></label><input type="range" id="opacity" min="1" max="100" step="1"></div>
-        <div class="wm-f"><label for="size">Ukuran huruf: <b id="vSize"></b></label><input type="range" id="size" min="2" max="30" step="0.5"></div>
-        <div class="wm-f"><label for="angle">Sudut: <b id="vAngle"></b></label><input type="range" id="angle" min="-90" max="90" step="1"></div>
-        <div class="wm-f" id="rowGapX"><label for="gapX">Jarak mendatar: <b id="vGapX"></b></label><input type="range" id="gapX" min="0" max="400" step="5"></div>
-        <div class="wm-f" id="rowGapY"><label for="gapY">Jarak menurun: <b id="vGapY"></b></label><input type="range" id="gapY" min="0" max="400" step="5"></div>
+        <div class="wm-sw" role="group" aria-label="Warna cepat" data-i18n-attr="aria-label:w24"></div>
+        <div class="wm-f"><label for="opacity"><span data-i18n="w25">Opasitas:</span> <b id="vOpacity"></b></label><input type="range" id="opacity" min="1" max="100" step="1"></div>
+        <div class="wm-f"><label for="size"><span data-i18n="w26">Ukuran huruf:</span> <b id="vSize"></b></label><input type="range" id="size" min="2" max="30" step="0.5"></div>
+        <div class="wm-f"><label for="angle"><span data-i18n="w27">Sudut:</span> <b id="vAngle"></b></label><input type="range" id="angle" min="-90" max="90" step="1"></div>
+        <div class="wm-f" id="rowGapX"><label for="gapX"><span data-i18n="w28">Jarak mendatar:</span> <b id="vGapX"></b></label><input type="range" id="gapX" min="0" max="400" step="5"></div>
+        <div class="wm-f" id="rowGapY"><label for="gapY"><span data-i18n="w29">Jarak menurun:</span> <b id="vGapY"></b></label><input type="range" id="gapY" min="0" max="400" step="5"></div>
         <div class="wm-row">
-          <div class="wm-f"><label for="font">Huruf</label>
-            <select class="field-sm wm-in" id="font"><option value="sans">Sans-serif</option><option value="serif">Serif</option><option value="mono">Monospace</option></select></div>
+          <div class="wm-f"><label for="font" data-i18n="w30">Huruf</label>
+            <select class="field-sm wm-in" id="font"><option value="sans" data-i18n="w31">Sans-serif</option><option value="serif" data-i18n="w32">Serif</option><option value="mono" data-i18n="w33">Monospace</option></select></div>
           <div class="wm-checks">
-            <label class="wm-chk"><input type="checkbox" id="bold"> Tebal</label>
-            <label class="wm-chk"><input type="checkbox" id="outline"> Garis tepi kontras</label>
+            <label class="wm-chk"><input type="checkbox" id="bold"> <span data-i18n="w34">Tebal</span></label>
+            <label class="wm-chk"><input type="checkbox" id="outline"> <span data-i18n="w35">Garis tepi kontras</span></label>
           </div>
         </div>
       </section>
 
       <section class="panel">
-        <div class="panel-head"><h2>Hasil unduhan</h2></div>
+        <div class="panel-head"><h2 data-i18n="w36">Hasil unduhan</h2></div>
         <div class="wm-row">
-          <div class="wm-f"><label for="format">Format</label>
-            <select class="field-sm wm-in" id="format"><option value="png">PNG (tajam)</option><option value="jpeg">JPEG (lebih kecil)</option><option value="webp">WebP (paling kecil)</option></select></div>
-          <div class="wm-f"><label for="maxSide">Sisi terpanjang</label>
-            <select class="field-sm wm-in" id="maxSide"><option value="0">Ukuran asli</option><option value="3000">3000 px</option><option value="2000">2000 px</option><option value="1200">1200 px</option></select></div>
+          <div class="wm-f"><label for="format" data-i18n="w37">Format</label>
+            <select class="field-sm wm-in" id="format"><option value="png" data-i18n="w38">PNG (tajam)</option><option value="jpeg" data-i18n="w39">JPEG (lebih kecil)</option><option value="webp" data-i18n="w40">WebP (paling kecil)</option></select></div>
+          <div class="wm-f"><label for="maxSide" data-i18n="w41">Sisi terpanjang</label>
+            <select class="field-sm wm-in" id="maxSide"><option value="0" data-i18n="w42">Ukuran asli</option><option value="3000">3000 px</option><option value="2000">2000 px</option><option value="1200">1200 px</option></select></div>
         </div>
-        <div class="wm-f" id="rowQ"><label for="quality">Kualitas: <b id="vQ"></b></label><input type="range" id="quality" min="40" max="100" step="1"></div>
-        <p class="small muted">Hasil unduhan tidak membawa data EXIF dari foto asli, misalnya lokasi GPS dan model kamera.</p>
+        <div class="wm-f" id="rowQ"><label for="quality"><span data-i18n="w46">Kualitas:</span> <b id="vQ"></b></label><input type="range" id="quality" min="40" max="100" step="1"></div>
+        <p class="small muted" data-i18n="w47">Hasil unduhan tidak membawa data EXIF dari foto asli, misalnya lokasi GPS dan model kamera.</p>
       </section>
     </div>
   </div>
