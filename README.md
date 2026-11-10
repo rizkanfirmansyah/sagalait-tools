@@ -35,6 +35,18 @@ signature/            app 17
 
 Folder akar adalah tampilan v2. Tampilan lama utuh di `v1/` (`tools.sagalait.cloud/v1/`) dan di tag `v1-final` serta branch `backup/v1`. Di portal, Ctrl atau Cmd + F, `/`, dan Ctrl atau Cmd + K membuka pencarian; di portal Ctrl/Cmd + F menggantikan pencarian bawaan browser, halaman app tidak terpengaruh. Kolom opsional `short` di `tools.json` adalah nama pendek untuk tampilan ponsel.
 
+## Dua bahasa (Indonesia dan Inggris)
+
+Saklar ID/EN ada di bilah atas portal dan semua app. Pilihan disimpan di `localStorage` (`sagalait-lang`); bila belum ada, dipakai bahasa browser (awalan `id` jadi Indonesia, selain itu Inggris). Halaman `v1/` tetap Indonesia.
+
+- Muat `../assets/i18n.js` tepat setelah `theme.js` di `<head>` dan beri `<html data-lang-src="lang.json">`.
+- Teks statis: `data-i18n="kunci"` pada elemen tanpa anak; atribut: `data-i18n-attr="placeholder:kunci,aria-label:kunci"`. Teks bahasa Indonesia tetap ditulis di HTML sebagai isi awal.
+- Kamus app di `<app>/lang.json` berbentuk `{ "id": {...}, "en": {...} }`. Kunci id dan en harus sama persis, begitu juga parameter `{nama}`. Teks bersama (remah roti, nama grup, tombol umum) ada di `assets/lang/*.json` dengan awalan `common.` dan `group.`.
+- Teks dari JS: `SagalaI18n.t('kunci', { param })`. Jalankan inisialisasi app di `SagalaI18n.onReady(...)` dan render ulang bagian dinamis pada event `sagalait:lang` di `document`. Format angka dan tanggal: `Intl` dengan `SagalaI18n.locale`.
+- Kunci yang hilang di Inggris memakai teks Indonesia; kunci yang tidak ada sama sekali tampil sebagai kuncinya dan memberi peringatan di console.
+- `tools.json` memakai kolom `name_en`, `description_en`, `tags_en`, `short_en`; grup memakai `name_en`; `site` memakai `title_en` dan `tagline_en`.
+- Status terjemahan isi app: Inggris penuh pada portal, `signature/`, dan `watermark/`. App lain baru menerjemahkan bilah atas, remah roti, dan judul; isinya masih Indonesia. Menambah app baru wajib dwibahasa.
+
 ## Menjalankan di lokal
 
 `tools.json` dibaca dengan `fetch`, jadi halaman harus dibuka lewat server, bukan klik dua kali pada file.
