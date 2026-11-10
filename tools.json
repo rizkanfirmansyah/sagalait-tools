@@ -1,20 +1,47 @@
 {
   "site": {
     "title": "Tools SagalaIT",
-    "tagline": [
-      "{n} tool kecil untuk pekerjaan harian.",
-      "Semua berjalan di browser, data tidak dikirim ke server."
-    ],
-    "footer": "sagalait.cloud"
+    "tagline": ["{n} tool kecil untuk pekerjaan harian.", "Semua berjalan di browser, data tidak dikirim ke server."],
+    "footer": "sagalait.cloud",
+    "title_en": "Tools SagalaIT",
+    "tagline_en": ["{n} small tools for everyday work.", "Everything runs in the browser, no data is sent to a server."]
   },
   "groups": [
-    { "id": "php", "name": "PHP dan data" },
-    { "id": "teks", "name": "Teks dan encoding" },
-    { "id": "waktu", "name": "Waktu dan fokus" },
-    { "id": "server", "name": "Server dan jaringan" },
-    { "id": "db", "name": "Database" },
-    { "id": "dev", "name": "Developer" },
-    { "id": "harian", "name": "Sehari-hari" }
+    {
+      "id": "php",
+      "name": "PHP dan data",
+      "name_en": "PHP and data"
+    },
+    {
+      "id": "teks",
+      "name": "Teks dan encoding",
+      "name_en": "Text and encoding"
+    },
+    {
+      "id": "waktu",
+      "name": "Waktu dan fokus",
+      "name_en": "Time and focus"
+    },
+    {
+      "id": "server",
+      "name": "Server dan jaringan",
+      "name_en": "Servers and networking"
+    },
+    {
+      "id": "db",
+      "name": "Database",
+      "name_en": "Database"
+    },
+    {
+      "id": "dev",
+      "name": "Developer",
+      "name_en": "Developer"
+    },
+    {
+      "id": "harian",
+      "name": "Sehari-hari",
+      "name_en": "Everyday"
+    }
   ],
   "tools": [
     {
@@ -26,7 +53,11 @@
       "path": "serialize-checker/",
       "icon": "a:",
       "tags": ["php", "serialize", "unserialize", "panjang string"],
-      "favorite": true
+      "favorite": true,
+      "name_en": "Serialize Checker",
+      "short_en": "Serialize",
+      "description_en": "Check and fix PHP serialize strings",
+      "tags_en": ["string length", "php", "serialize"]
     },
     {
       "id": "json-formatter",
@@ -36,7 +67,11 @@
       "group": "php",
       "path": "json-formatter/",
       "icon": "{}",
-      "tags": ["json", "format", "minify", "validasi"]
+      "tags": ["json", "format", "minify", "validasi"],
+      "name_en": "JSON Formatter",
+      "short_en": "Formatter",
+      "description_en": "Format and validate JSON",
+      "tags_en": ["pretty print", "minify", "validate"]
     },
     {
       "id": "hitung-byte",
@@ -47,7 +82,11 @@
       "path": "hitung-byte/",
       "icon": "B",
       "tags": ["byte", "strlen", "utf-8", "panjang", "karakter"],
-      "favorite": true
+      "favorite": true,
+      "name_en": "Byte Counter",
+      "short_en": "Byte",
+      "description_en": "String length in bytes and characters",
+      "tags_en": ["byte", "strlen", "utf-8", "length", "characters"]
     },
     {
       "id": "timer",
@@ -58,7 +97,11 @@
       "path": "timer/",
       "icon": "⏱",
       "tags": ["countdown", "hitung mundur", "alarm", "pomodoro", "fokus"],
-      "favorite": false
+      "favorite": false,
+      "name_en": "Timer",
+      "short_en": "Timer",
+      "description_en": "Countdown with custom duration and sound",
+      "tags_en": ["countdown", "alarm", "pomodoro", "focus"]
     },
     {
       "id": "jwt",
@@ -69,7 +112,11 @@
       "path": "jwt/",
       "icon": "JWT",
       "tags": ["jwt", "token", "bearer", "auth", "jws", "claims", "oauth"],
-      "favorite": false
+      "favorite": false,
+      "name_en": "JWT Decoder",
+      "short_en": "JWT",
+      "description_en": "Read the contents of a JWT and check its expiry",
+      "tags_en": ["jwt", "token", "bearer", "auth", "claims", "oauth"]
     },
     {
       "id": "cron",
@@ -80,7 +127,11 @@
       "path": "cron/",
       "icon": "*/5",
       "tags": ["cron", "crontab", "systemd", "timer", "jadwal", "scheduler"],
-      "favorite": false
+      "favorite": false,
+      "name_en": "Cron and timer",
+      "short_en": "Cron",
+      "description_en": "Build, explain, and test cron schedules or systemd timers",
+      "tags_en": ["cron", "crontab", "systemd", "timer", "schedule", "scheduler"]
     },
     {
       "id": "nginx-generator",
@@ -91,7 +142,11 @@
       "path": "nginx-generator/",
       "icon": "ng",
       "tags": ["nginx", "reverse proxy", "proxy_pass", "php-fpm", "https", "server block"],
-      "favorite": false
+      "favorite": false,
+      "name_en": "Nginx generator",
+      "short_en": "Nginx",
+      "description_en": "Build server block configs: static, reverse proxy, PHP-FPM",
+      "tags_en": ["nginx", "reverse proxy", "proxy_pass", "php-fpm", "https", "server block"]
     },
     {
       "id": "db-viewer",
@@ -102,7 +157,11 @@
       "path": "db-viewer/",
       "icon": "DB",
       "tags": ["csv", "sql", "tabel", "dump", "mysql", "json"],
-      "favorite": false
+      "favorite": false,
+      "name_en": "Database viewer",
+      "short_en": "Viewer",
+      "description_en": "View table data from CSV, JSON, or SQL dumps",
+      "tags_en": ["csv", "sql", "table", "dump", "mysql", "json"]
     },
     {
       "id": "firewall",
@@ -113,7 +172,11 @@
       "path": "firewall/",
       "icon": "fw",
       "tags": ["firewall", "mikrotik", "routeros", "nftables", "iptables", "nat", "port forward"],
-      "favorite": false
+      "favorite": false,
+      "name_en": "Firewall generator",
+      "short_en": "Firewall",
+      "description_en": "Build MikroTik or Linux (nftables) firewall rules",
+      "tags_en": ["firewall", "mikrotik", "routeros", "nftables", "iptables", "nat", "port forward"]
     },
     {
       "id": "roda-acak",
@@ -123,8 +186,12 @@
       "group": "harian",
       "path": "roda-acak/",
       "icon": "spin",
-      "tags": ["roda","spin","acak","random","undian","kelompok","grup","giliran","picker","pot"],
-      "favorite": false
+      "tags": ["roda", "spin", "acak", "random", "undian", "kelompok", "grup", "giliran", "picker", "pot"],
+      "favorite": false,
+      "name_en": "Random wheel",
+      "short_en": "Wheel",
+      "description_en": "Pick at random with a wheel, lottery balls, or flip cards; can also split groups",
+      "tags_en": ["wheel", "spin", "random", "draw", "team", "group", "turn", "picker", "pot"]
     },
     {
       "id": "db-cmd",
@@ -135,7 +202,11 @@
       "path": "db-cmd/",
       "icon": "SQL",
       "tags": ["mysql", "mariadb", "postgresql", "psql", "mysqldump", "pg_dump", "dump", "backup", "restore", "koneksi"],
-      "favorite": false
+      "favorite": false,
+      "name_en": "Database commands",
+      "short_en": "DB cmd",
+      "description_en": "Compose mysql, mysqldump, psql, and pg_dump commands",
+      "tags_en": ["mysql", "mariadb", "postgresql", "psql", "mysqldump", "pg_dump", "dump", "backup", "restore", "connection"]
     },
     {
       "id": "php-installer",
@@ -146,7 +217,11 @@
       "path": "php-installer/",
       "icon": "php",
       "tags": ["php", "apt", "ubuntu", "debian", "ondrej", "sury", "php-fpm", "install", "ppa"],
-      "favorite": false
+      "favorite": false,
+      "name_en": "PHP installer",
+      "short_en": "Installer",
+      "description_en": "Compose apt commands for PHP, packages, and the Ondřej repo",
+      "tags_en": ["php", "apt", "ubuntu", "debian", "ondrej", "sury", "php-fpm", "install", "ppa"]
     },
     {
       "id": "json-compare",
@@ -155,9 +230,13 @@
       "description": "Bandingkan dua JSON: key, nilai, tipe, dan panjang array",
       "group": "php",
       "path": "json-compare/",
-      "icon": "\u00b1",
+      "icon": "±",
       "tags": ["json", "compare", "diff", "banding", "response api", "before after", "beda"],
-      "favorite": false
+      "favorite": false,
+      "name_en": "JSON compare",
+      "short_en": "Compare",
+      "description_en": "Compare two JSON documents: keys, values, types, and array lengths",
+      "tags_en": ["json", "compare", "diff", "api response", "before after", "difference"]
     },
     {
       "id": "api-docs",
@@ -168,7 +247,11 @@
       "path": "api-docs/",
       "icon": "API",
       "tags": ["openapi", "swagger", "api docs", "dokumentasi", "rest", "yaml", "schema", "request", "response"],
-      "favorite": false
+      "favorite": false,
+      "name_en": "API documentation generator",
+      "short_en": "Docs",
+      "description_en": "Build an OpenAPI (Swagger) document from sample requests and responses",
+      "tags_en": ["openapi", "swagger", "api docs", "documentation", "rest", "yaml", "schema", "request", "response"]
     },
     {
       "id": "watermark",
@@ -179,7 +262,11 @@
       "path": "watermark/",
       "icon": "WM",
       "tags": ["watermark", "ktp", "dokumen", "gambar", "identitas", "foto", "tanda air", "privasi"],
-      "favorite": false
+      "favorite": false,
+      "name_en": "Watermark",
+      "short_en": "Watermark",
+      "description_en": "Watermark ID card photos or documents, processed in the browser",
+      "tags_en": ["watermark", "id card", "document", "image", "identity", "photo", "privacy"]
     },
     {
       "id": "converter",
@@ -188,9 +275,13 @@
       "description": "Ubah JSON, array, object, serialize PHP, tabel, CSV, dan Excel satu sama lain",
       "group": "dev",
       "path": "converter/",
-      "icon": "\u21c4",
+      "icon": "⇄",
       "tags": ["converter", "konversi", "json", "array", "object", "serialize", "unserialize", "csv", "excel", "xlsx", "tabel", "php"],
-      "favorite": false
+      "favorite": false,
+      "name_en": "Data converter",
+      "short_en": "Converter",
+      "description_en": "Convert JSON, arrays, objects, PHP serialize, tables, CSV, and Excel to one another",
+      "tags_en": ["converter", "conversion", "json", "array", "object", "serialize", "unserialize", "csv", "excel", "xlsx", "table", "php"]
     },
     {
       "id": "signature",
@@ -201,7 +292,11 @@
       "path": "signature/",
       "icon": "TT",
       "tags": ["tanda tangan", "signature", "ttd", "png", "jpg", "transparan", "gambar", "dokumen"],
-      "favorite": false
+      "favorite": false,
+      "name_en": "Signature maker",
+      "short_en": "Sign",
+      "description_en": "Draw a signature, pick a transparent, white, blue, or custom background, download PNG or JPG",
+      "tags_en": ["signature", "sign", "png", "jpg", "transparent", "drawing", "document"]
     }
   ]
 }
