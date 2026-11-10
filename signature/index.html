@@ -1,23 +1,24 @@
 <!doctype html>
-<html lang="id" data-theme="light">
+<html lang="id" data-theme="light" data-lang-src="lang.json">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="referrer" content="no-referrer">
-<title>Pembuat tanda tangan · Tools SagalaIT</title>
+<title data-i18n="title">Pembuat tanda tangan · Tools SagalaIT</title>
 <link rel="icon" href="data:,">
 <script src="../assets/theme.js"></script>
+<script src="../assets/i18n.js"></script>
 <link rel="stylesheet" href="../assets/app.css">
 <link rel="stylesheet" href="app.css">
 </head>
 <body>
 
 <header class="wrap top">
-  <a class="logo" href="../" aria-label="Tools SagalaIT, ke beranda">S</a>
-  <nav class="crumbs" aria-label="Lokasi"><a href="../">Tools</a><span aria-hidden="true">/</span><a class="crumb-g" href="../#grup-harian">Sehari-hari</a><span aria-hidden="true">/</span><span class="crumb-now" aria-current="page">Pembuat tanda tangan</span></nav>
+  <a class="logo" href="../" aria-label="Tools SagalaIT, ke beranda" data-i18n-attr="aria-label:common.home">S</a>
+  <nav class="crumbs" aria-label="Lokasi" data-i18n-attr="aria-label:common.nav"><a href="../" data-i18n="common.tools">Tools</a><span aria-hidden="true">/</span><a class="crumb-g" href="../#grup-harian" data-i18n="group.harian">Sehari-hari</a><span aria-hidden="true">/</span><span class="crumb-now" aria-current="page" data-i18n="crumb">Pembuat tanda tangan</span></nav>
   <span class="top-end">
-    <a class="top-link" href="../v1/signature/">Tampilan lama</a>
-    <button class="icon-btn" type="button" data-theme-toggle aria-label="Ganti tema terang atau gelap">
+    <a class="top-link" href="../v1/signature/" data-i18n="common.old">Tampilan lama</a>
+    <button class="icon-btn" type="button" data-theme-toggle aria-label="Ganti tema terang atau gelap" data-i18n-attr="aria-label:common.theme">
       <svg width="20" height="20" viewBox="-11 -11 22 22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle r="9"/><path d="M0 -9 A9 9 0 0 1 0 9 Z" fill="currentColor"/></svg>
     </button>
   </span>
@@ -26,28 +27,28 @@
 <main class="wrap">
   <div class="app-head">
     <div>
-      <h1>Pembuat tanda tangan</h1>
-      <p class="lead">Gambar tanda tangan dengan mouse, jari, atau pena layar, lalu unduh sebagai PNG atau JPG. Latar bisa transparan, putih, biru, atau warna lain. Semua diproses di browser dan tidak ada yang disimpan.</p>
+      <h1 data-i18n="s01">Pembuat tanda tangan</h1>
+      <p class="lead" data-i18n="s02">Gambar tanda tangan dengan mouse, jari, atau pena layar, lalu unduh sebagai PNG atau JPG. Latar bisa transparan, putih, biru, atau warna lain. Semua diproses di browser dan tidak ada yang disimpan.</p>
     </div>
   </div>
 
   <div class="sg-grid">
     <div class="stack">
       <section class="panel">
-        <div class="panel-head"><h2>Gambar di sini</h2></div>
+        <div class="panel-head"><h2 data-i18n="s03">Gambar di sini</h2></div>
         <div class="sg-pad" id="pad">
           <canvas id="cv" role="img" aria-label="Area menggambar tanda tangan"></canvas>
-          <p class="sg-hint" id="hint">Tanda tangan di sini</p>
+          <p class="sg-hint" id="hint" data-i18n="s04">Tanda tangan di sini</p>
         </div>
         <div class="sg-tools">
-          <button class="btn" type="button" id="btnUndo" disabled>Urungkan</button>
-          <button class="btn" type="button" id="btnRedo" disabled>Ulangi</button>
-          <button class="btn" type="button" id="btnClear" disabled>Hapus semua</button>
+          <button class="btn" type="button" id="btnUndo" disabled data-i18n="s05">Urungkan</button>
+          <button class="btn" type="button" id="btnRedo" disabled data-i18n="s06">Ulangi</button>
+          <button class="btn" type="button" id="btnClear" disabled data-i18n="s07">Hapus semua</button>
         </div>
       </section>
 
       <section class="panel">
-        <div class="panel-head"><h2>Hasil</h2><span class="small muted" id="info"></span></div>
+        <div class="panel-head"><h2 data-i18n="s08">Hasil</h2><span class="small muted" id="info"></span></div>
         <div class="sg-prev" id="prevBox"><canvas id="prev" role="img" aria-label="Pratinjau hasil unduhan"></canvas></div>
         <div class="sg-tools">
           <button class="btn btn-primary" type="button" id="btnDl" disabled>Unduh</button>
@@ -58,37 +59,37 @@
 
     <div class="stack">
       <section class="panel">
-        <div class="panel-head"><h2>Pena</h2></div>
-        <div class="sg-f"><span class="sg-lbl">Warna tinta</span>
-          <div class="sg-chips" id="inkChips" role="group" aria-label="Warna tinta">
-            <button type="button" class="sg-sw" data-ink="#000000" aria-label="Hitam"></button>
-            <button type="button" class="sg-sw" data-ink="#1a237e" aria-label="Biru tua"></button>
-            <label class="sg-pick" id="inkPick"><input type="color" id="ink" aria-label="Warna tinta lain"><span>Warna lain</span></label>
+        <div class="panel-head"><h2 data-i18n="s10">Pena</h2></div>
+        <div class="sg-f"><span class="sg-lbl" data-i18n="s11">Warna tinta</span>
+          <div class="sg-chips" id="inkChips" role="group" aria-label="Warna tinta" data-i18n-attr="aria-label:s12">
+            <button type="button" class="sg-sw" data-ink="#000000" aria-label="Hitam" data-i18n-attr="aria-label:s13"></button>
+            <button type="button" class="sg-sw" data-ink="#1a237e" aria-label="Biru tua" data-i18n-attr="aria-label:s14"></button>
+            <label class="sg-pick" id="inkPick"><input type="color" id="ink" aria-label="Warna tinta lain" data-i18n-attr="aria-label:s15"><span data-i18n="s16">Warna lain</span></label>
           </div></div>
-        <div class="sg-f"><label for="width">Ketebalan: <b id="vWidth"></b></label>
+        <div class="sg-f"><label for="width"><span data-i18n="s17">Ketebalan:</span> <b id="vWidth"></b></label>
           <input type="range" id="width" min="1" max="12" step="0.5"></div>
       </section>
 
       <section class="panel">
-        <div class="panel-head"><h2>Latar belakang</h2></div>
-        <div class="sg-chips" id="bgChips" role="group" aria-label="Latar belakang">
-          <button type="button" class="sg-chip" data-bg="transparent">Transparan</button>
-          <button type="button" class="sg-chip" data-bg="white">Putih</button>
-          <button type="button" class="sg-chip" data-bg="blue">Biru</button>
-          <label class="sg-pick" id="bgPick"><input type="color" id="bgColor" aria-label="Warna latar lain"><span>Warna lain</span></label>
+        <div class="panel-head"><h2 data-i18n="s18">Latar belakang</h2></div>
+        <div class="sg-chips" id="bgChips" role="group" aria-label="Latar belakang" data-i18n-attr="aria-label:s19">
+          <button type="button" class="sg-chip" data-bg="transparent" data-i18n="s20">Transparan</button>
+          <button type="button" class="sg-chip" data-bg="white" data-i18n="s21">Putih</button>
+          <button type="button" class="sg-chip" data-bg="blue" data-i18n="s22">Biru</button>
+          <label class="sg-pick" id="bgPick"><input type="color" id="bgColor" aria-label="Warna latar lain" data-i18n-attr="aria-label:s23"><span data-i18n="s24">Warna lain</span></label>
         </div>
         <p class="small muted" id="bgNote"></p>
       </section>
 
       <section class="panel">
-        <div class="panel-head"><h2>Berkas</h2></div>
-        <div class="sg-chips" id="fmtChips" role="group" aria-label="Format">
+        <div class="panel-head"><h2 data-i18n="s25">Berkas</h2></div>
+        <div class="sg-chips" id="fmtChips" role="group" aria-label="Format" data-i18n-attr="aria-label:s26">
           <button type="button" class="sg-chip" data-fmt="png">PNG</button>
           <button type="button" class="sg-chip" data-fmt="jpeg">JPG</button>
         </div>
-        <div class="sg-f"><label for="scale">Ukuran</label>
-          <select class="field-sm sg-in" id="scale"><option value="1">Normal (1×)</option><option value="2">Tajam (2×)</option><option value="3">Sangat tajam (3×)</option></select></div>
-        <label class="sg-chk"><input type="checkbox" id="crop"> Pangkas ke tanda tangan (buang ruang kosong)</label>
+        <div class="sg-f"><label for="scale" data-i18n="s29">Ukuran</label>
+          <select class="field-sm sg-in" id="scale"><option value="1" data-i18n="s30">Normal (1×)</option><option value="2" data-i18n="s31">Tajam (2×)</option><option value="3" data-i18n="s32">Sangat tajam (3×)</option></select></div>
+        <label class="sg-chk"><input type="checkbox" id="crop"> <span data-i18n="s33">Pangkas ke tanda tangan (buang ruang kosong)</span></label>
       </section>
     </div>
   </div>
