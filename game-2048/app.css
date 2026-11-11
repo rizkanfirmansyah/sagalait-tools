@@ -17,11 +17,11 @@
   --tile-4: var(--line-strong); --tx-4: var(--ink);
   --tile-8: color-mix(in srgb, var(--accent) 22%, var(--panel)); --tx-8: var(--ink);
   --tile-16: color-mix(in srgb, var(--accent) 40%, var(--panel)); --tx-16: var(--ink);
-  --tile-32: color-mix(in srgb, var(--accent) 72%, var(--ink)); --tx-32: var(--on-accent);
-  --tile-64: var(--accent); --tx-64: var(--on-accent);
-  --tile-128: color-mix(in srgb, var(--mark) 45%, var(--panel)); --tx-128: var(--on-mark);
-  --tile-256: color-mix(in srgb, var(--mark) 70%, var(--panel)); --tx-256: var(--on-mark);
-  --tile-512: color-mix(in srgb, var(--mark) 90%, var(--panel)); --tx-512: var(--on-mark);
+  --tile-32: color-mix(in srgb, var(--accent) 65%, black); --tx-32: var(--on-accent);
+  --tile-64: color-mix(in srgb, var(--accent) 82%, black); --tx-64: var(--on-accent);
+  --tile-128: color-mix(in srgb, var(--mark) 50%, white); --tx-128: var(--on-mark);
+  --tile-256: color-mix(in srgb, var(--mark) 70%, white); --tx-256: var(--on-mark);
+  --tile-512: color-mix(in srgb, var(--mark) 88%, white); --tx-512: var(--on-mark);
   --tile-1024: var(--mark); --tx-1024: var(--on-mark);
   --tile-2048: var(--mark); --tx-2048: var(--on-mark);
   --tile-super: var(--ink); --tx-super: var(--bg);
@@ -100,3 +100,5 @@
 .g2-dlg h2 { font-size: 18px; margin-bottom: 8px; }
 .g2-dlg p { color: var(--body); }
 .g2-dlg-act { display: flex; gap: 8px; justify-content: flex-end; margin-top: 20px; flex-wrap: wrap; }
+
+.g2-f .ui-seg span { min-height: 44px; }
