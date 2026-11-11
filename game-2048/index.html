@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="id" data-theme="light" data-lang-src="lang.json">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="referrer" content="no-referrer">
+<title data-i18n="title">2048 · Tools SagalaIT</title>
+<link rel="icon" href="data:,">
+<script src="../assets/theme.js"></script>
+<script src="../assets/i18n.js"></script>
+<link rel="stylesheet" href="../assets/app.css">
+<link rel="stylesheet" href="app.css">
+</head>
+<body>
+
+<header class="wrap top">
+  <a class="logo" href="../" aria-label="Tools SagalaIT, ke beranda" data-i18n-attr="aria-label:common.home">S</a>
+  <nav class="crumbs" aria-label="Lokasi" data-i18n-attr="aria-label:common.nav"><a href="../" data-i18n="common.tools">Tools</a><span aria-hidden="true">/</span><a class="crumb-g" href="../#grup-game" data-i18n="group.game">Game ringan</a><span aria-hidden="true">/</span><span class="crumb-now" aria-current="page" data-i18n="crumb">2048</span></nav>
+  <span class="top-end">
+    <button class="icon-btn" type="button" data-theme-toggle aria-label="Ganti tema terang atau gelap" data-i18n-attr="aria-label:common.theme">
+      <svg width="20" height="20" viewBox="-11 -11 22 22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle r="9"/><path d="M0 -9 A9 9 0 0 1 0 9 Z" fill="currentColor"/></svg>
+    </button>
+  </span>
+</header>
+
+<main class="wrap">
+  <div class="app-head">
+    <div>
+      <h1 data-i18n="h1">2048</h1>
+      <p class="lead" data-i18n="lead">Geser ubin, gabungkan angka yang sama, dan capai ubin target. Papan 3×3 sampai 6×6; permainan tersimpan di browser ini.</p>
+    </div>
+  </div>
+
+  <div class="g2-grid">
+    <section class="panel g2-play">
+      <div class="g2-stats">
+        <div class="g2-stat"><span class="g2-k" data-i18n="score">Skor</span><span class="g2-v" id="score">0</span></div>
+        <div class="g2-stat"><span class="g2-k" data-i18n="best">Terbaik</span><span class="g2-v" id="best">0</span></div>
+        <div class="g2-stat"><span class="g2-k" data-i18n="moves">Langkah</span><span class="g2-v" id="moves">0</span></div>
+      </div>
+
+      <div class="g2-board-wrap">
+        <div class="g2-board" id="board" tabindex="0" role="img" data-n="4">
+          <div class="g2-cells" id="cells" aria-hidden="true"></div>
+          <div class="g2-tiles" id="tiles" aria-hidden="true"></div>
+          <div class="g2-over" id="over" hidden role="dialog" aria-modal="false" aria-labelledby="overT" aria-describedby="overP">
+            <h2 id="overT"></h2>
+            <p id="overP"></p>
+            <div class="g2-over-act">
+              <button class="btn" type="button" id="btnKeep" hidden data-i18n="win_keep">Lanjut main</button>
+              <button class="btn" type="button" id="btnOverUndo"></button>
+              <button class="btn btn-primary" type="button" id="btnOverNew" data-i18n="new">Permainan baru</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="g2-bar">
+        <button class="btn" type="button" id="btnUndo"></button>
+        <button class="btn btn-primary" type="button" id="btnNew" data-i18n="new">Permainan baru</button>
+      </div>
+
+      <div class="g2-dpad" id="dpad" hidden>
+        <button class="g2-d g2-d-up" type="button" data-dir="up" aria-label="Geser ke atas" data-i18n-attr="aria-label:slide_up"><span aria-hidden="true">↑</span></button>
+        <button class="g2-d g2-d-left" type="button" data-dir="left" aria-label="Geser ke kiri" data-i18n-attr="aria-label:slide_left"><span aria-hidden="true">←</span></button>
+        <button class="g2-d g2-d-down" type="button" data-dir="down" aria-label="Geser ke bawah" data-i18n-attr="aria-label:slide_down"><span aria-hidden="true">↓</span></button>
+        <button class="g2-d g2-d-right" type="button" data-dir="right" aria-label="Geser ke kanan" data-i18n-attr="aria-label:slide_right"><span aria-hidden="true">→</span></button>
+      </div>
+      <p class="vh" id="live" aria-live="polite"></p>
+    </section>
+
+    <div class="g2-side">
+      <section class="panel">
+        <div class="panel-head"><h2 data-i18n="settings">Pengaturan</h2></div>
+        <div class="g2-f">
+          <span class="g2-lbl" id="sizeLbl" data-i18n="size">Ukuran papan</span>
+          <div class="ui-seg" role="radiogroup" aria-labelledby="sizeLbl" id="sizes">
+            <label><input type="radio" name="size" value="3"><span>3×3</span></label>
+            <label><input type="radio" name="size" value="4" checked><span>4×4</span></label>
+            <label><input type="radio" name="size" value="5"><span>5×5</span></label>
+            <label><input type="radio" name="size" value="6"><span>6×6</span></label>
+          </div>
+          <p class="small muted g2-goal" id="goal"></p>
+        </div>
+        <label class="ui-switch"><input type="checkbox" id="swDpad"><span data-i18n="dpad">Tombol di layar</span></label>
+      </section>
+
+      <section class="panel">
+        <div class="panel-head"><h2 data-i18n="how">Cara main</h2></div>
+        <ul class="g2-how">
+          <li data-i18n="how1">Panah atau WASD menggeser semua ubin.</li>
+          <li data-i18n="how2">Di ponsel, geser jari di atas papan.</li>
+          <li data-i18n="how3">Dua ubin sama yang bertabrakan bergabung, sekali per geseran.</li>
+          <li data-i18n="how4">Z atau U mengurungkan langkah terakhir (sampai 3 kali).</li>
+          <li data-i18n="how5">Skor terbaik dan permainan tersimpan di browser ini, terpisah untuk tiap ukuran papan.</li>
+        </ul>
+      </section>
+    </div>
+  </div>
+</main>
+
+<dialog class="g2-dlg" id="dlgNew" aria-labelledby="dlgT" aria-describedby="dlgP">
+  <form method="dialog">
+    <h2 id="dlgT" data-i18n="confirm_t">Mulai permainan baru?</h2>
+    <p id="dlgP"></p>
+    <div class="g2-dlg-act">
+      <button class="btn" type="submit" value="cancel" data-i18n="cancel">Batal</button>
+      <button class="btn btn-primary" type="submit" value="ok" data-i18n="confirm_ok">Mulai baru</button>
+    </div>
+  </form>
+</dialog>
+
+<script src="engine.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
