@@ -29,6 +29,7 @@ api-docs/             app 14
 watermark/            app 15
 converter/            app 16
 signature/            app 17
+game-2048/            app 18 (game; engine.js murni, tes di Node)
 ```
 
 ## Tampilan v2 dan v1
@@ -45,7 +46,7 @@ Saklar ID/EN ada di bilah atas portal dan semua app. Pilihan disimpan di `localS
 - Teks dari JS: `SagalaI18n.t('kunci', { param })`. Jalankan inisialisasi app di `SagalaI18n.onReady(...)` dan render ulang bagian dinamis pada event `sagalait:lang` di `document`. Format angka dan tanggal: `Intl` dengan `SagalaI18n.locale`.
 - Kunci yang hilang di Inggris memakai teks Indonesia; kunci yang tidak ada sama sekali tampil sebagai kuncinya dan memberi peringatan di console.
 - `tools.json` memakai kolom `name_en`, `description_en`, `tags_en`, `short_en`; grup memakai `name_en`; `site` memakai `title_en` dan `tagline_en`.
-- Status terjemahan isi app: Inggris penuh pada portal, `signature/`, dan `watermark/`. App lain baru menerjemahkan bilah atas, remah roti, dan judul; isinya masih Indonesia. Menambah app baru wajib dwibahasa.
+- Status terjemahan isi app: Inggris penuh pada portal, `signature/`, `watermark/`, dan `game-2048/`. App lain baru menerjemahkan bilah atas, remah roti, dan judul; isinya masih Indonesia. Menambah app baru wajib dwibahasa.
 
 ## Menjalankan di lokal
 
