@@ -82,12 +82,13 @@
   }
 
   /* ---------- gerakan ---------- */
-  function showOver(kind) {
+  function showOver(kind, quiet) {
     over = kind;
     $('overT').textContent = t(kind === 'win' ? 'win_t' : 'over_t');
     $('overP').textContent = kind === 'win' ? t('win_p', { target: GOAL[n] }) : t('over_p', { score: fmt(g.score) });
     $('btnKeep').hidden = kind !== 'win'; $('btnOverUndo').hidden = kind === 'win';
     overEl.hidden = false; boardEl.classList.add('is-over');
+    if (quiet) return;
     (kind === 'win' ? $('btnKeep') : ($('btnOverUndo').disabled ? $('btnOverNew') : $('btnOverUndo'))).focus();
   }
   function hideOver() { over = null; overEl.hidden = true; boardEl.classList.remove('is-over'); }
@@ -184,7 +185,7 @@
   document.addEventListener('sagalait:lang', function () {
     if (!g) return;
     stats();
-    if (over) showOver(over);
+    if (over) showOver(over, true);
     if (!$('dlgNew').open) return;
     $('dlgP').textContent = t('confirm_p', { score: fmt(g.score) });
   });
