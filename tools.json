@@ -41,6 +41,11 @@
       "id": "harian",
       "name": "Sehari-hari",
       "name_en": "Everyday"
+    },
+    {
+      "id": "game",
+      "name": "Game ringan",
+      "name_en": "Light games"
     }
   ],
   "tools": [
@@ -297,6 +302,21 @@
       "short_en": "Sign",
       "description_en": "Draw a signature, pick a transparent, white, blue, or custom background, download PNG or JPG",
       "tags_en": ["signature", "sign", "png", "jpg", "transparent", "drawing", "document"]
+    },
+    {
+      "id": "game-2048",
+      "name": "2048",
+      "short": "2048",
+      "description": "Geser dan gabungkan ubin sampai 2048, papan 3×3 sampai 6×6, ada urungkan",
+      "group": "game",
+      "path": "game-2048/",
+      "icon": "2K",
+      "tags": ["2048", "game", "puzzle", "angka", "ubin", "teka-teki"],
+      "favorite": false,
+      "name_en": "2048",
+      "short_en": "2048",
+      "description_en": "Slide and merge tiles up to 2048, boards from 3×3 to 6×6, with undo",
+      "tags_en": ["2048", "game", "puzzle", "number", "tiles"]
     }
   ]
 }
