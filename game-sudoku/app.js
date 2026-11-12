@@ -218,7 +218,8 @@
   var MOVE = { ArrowLeft: -1, ArrowRight: 1, ArrowUp: -9, ArrowDown: 9 };
   document.addEventListener('keydown', function (e) {
     if (!g || e.altKey || e.defaultPrevented || $('dlgNew').open) return;
-    if (e.target.closest && e.target.closest('input, select, textarea')) return;
+    var tg = e.target.closest ? e.target.closest('input, select, textarea') : null;
+    if (tg && !(tg.type === 'checkbox' && (e.ctrlKey || e.metaKey))) return;
     var k = e.key;
     if (e.ctrlKey || e.metaKey) {
       if (k === 'z' || k === 'Z') { e.preventDefault(); if (e.shiftKey) redo(); else undo(); }
