@@ -4,7 +4,7 @@
   var P = window.Pw, W = window.PW_WORDS, I = window.SagalaI18n, KEY = 'sagalait-password';
   var $ = function (id) { return document.getElementById(id); };
   function t(k, p) { return I.t(k, p); }
-  var DEF = { mode: 'random', length: 20, lower: true, upper: true, digit: true, symbol: true, similar: false, count: 1, words: 4, sep: '-', capital: false, number: false };
+  var DEF = { mode: 'random', length: 20, lower: true, upper: true, digit: true, symbol: true, avoidSimilar: false, count: 1, words: 4, sep: '-', capital: false, number: false };
   var o = Object.assign({}, DEF), results = [], timers = [];
 
   function load() {
@@ -16,7 +16,7 @@
       if (Number.isInteger(s.words)) o.words = clamp(s.words, P.LIMITS.minWords, P.LIMITS.maxWords);
       if ([1, 5, 10].indexOf(s.count) >= 0) o.count = s.count;
       if (P.SEPS.indexOf(s.sep) >= 0) o.sep = s.sep;
-      ['lower', 'upper', 'digit', 'symbol', 'similar', 'capital', 'number'].forEach(function (k) { if (typeof s[k] === 'boolean') o[k] = s[k]; });
+      ['lower', 'upper', 'digit', 'symbol', 'avoidSimilar', 'capital', 'number'].forEach(function (k) { if (typeof s[k] === 'boolean') o[k] = s[k]; });
     } catch (e) { /* abaikan */ }
   }
   function save() { try { localStorage.setItem(KEY, JSON.stringify(o)); } catch (e) { /* mode privat */ } }
@@ -27,7 +27,7 @@
     document.querySelector('input[name=count][value="' + o.count + '"]').checked = true;
     $('len').value = $('lenN').value = o.length; $('lenV').textContent = o.length;
     $('words').value = $('wordsN').value = o.words; $('wordsV').textContent = o.words;
-    $('oLower').checked = o.lower; $('oUpper').checked = o.upper; $('oDigit').checked = o.digit; $('oSymbol').checked = o.symbol; $('oSimilar').checked = o.similar;
+    $('oLower').checked = o.lower; $('oUpper').checked = o.upper; $('oDigit').checked = o.digit; $('oSymbol').checked = o.symbol; $('oSimilar').checked = o.avoidSimilar;
     $('sep').value = o.sep; $('oCapital').checked = o.capital; $('oNumber').checked = o.number;
     $('boxRandom').hidden = o.mode !== 'random'; $('boxPhrase').hidden = o.mode !== 'phrase';
   }
@@ -93,7 +93,7 @@
   $('wordsN').addEventListener('change', function (e) { setWords(Math.round(Number(e.target.value)) || DEF.words); });
   $('modes').addEventListener('change', function (e) { o.mode = e.target.value; $('boxRandom').hidden = o.mode !== 'random'; $('boxPhrase').hidden = o.mode !== 'phrase'; save(); generate(); });
   $('counts').addEventListener('change', function (e) { o.count = Number(e.target.value); save(); generate(); });
-  [['oLower', 'lower'], ['oUpper', 'upper'], ['oDigit', 'digit'], ['oSymbol', 'symbol'], ['oSimilar', 'similar'], ['oCapital', 'capital'], ['oNumber', 'number']].forEach(function (p) {
+  [['oLower', 'lower'], ['oUpper', 'upper'], ['oDigit', 'digit'], ['oSymbol', 'symbol'], ['oSimilar', 'avoidSimilar'], ['oCapital', 'capital'], ['oNumber', 'number']].forEach(function (p) {
     $(p[0]).addEventListener('change', function (e) { o[p[1]] = e.target.checked; save(); generate(); });
   });
   $('sep').addEventListener('change', function (e) { o.sep = e.target.value; save(); generate(); });
