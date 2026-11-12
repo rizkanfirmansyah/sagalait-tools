@@ -332,6 +332,21 @@
       "short_en": "Sudoku",
       "description_en": "9×9 Sudoku with four levels, pencil notes, hints, and a timer, every puzzle has one solution",
       "tags_en": ["sudoku", "game", "puzzle", "number", "logic"]
+    },
+    {
+      "id": "password",
+      "name": "Generator kata sandi",
+      "short": "Sandi",
+      "description": "Buat sandi acak atau frasa sandi yang kuat, lengkap dengan entropi dan perkiraan waktu tebak",
+      "group": "teks",
+      "path": "password/",
+      "icon": "pw",
+      "tags": ["sandi", "password", "kata sandi", "frasa sandi", "passphrase", "acak", "generator", "keamanan"],
+      "favorite": false,
+      "name_en": "Password generator",
+      "short_en": "Password",
+      "description_en": "Make strong random passwords or passphrases, with entropy and an estimated time to guess",
+      "tags_en": ["password", "passphrase", "random", "generator", "security"]
     }
   ]
 }
