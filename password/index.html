@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="id" data-theme="light" data-lang-src="lang.json">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="referrer" content="no-referrer">
+<title data-i18n="title">Generator kata sandi · Tools SagalaIT</title>
+<link rel="icon" href="data:,">
+<script src="../assets/theme.js"></script>
+<script src="../assets/i18n.js"></script>
+<link rel="stylesheet" href="../assets/app.css">
+<link rel="stylesheet" href="app.css">
+</head>
+<body>
+
+<header class="wrap top">
+  <a class="logo" href="../" aria-label="Tools SagalaIT, ke beranda" data-i18n-attr="aria-label:common.home">S</a>
+  <nav class="crumbs" aria-label="Lokasi" data-i18n-attr="aria-label:common.nav"><a href="../" data-i18n="common.tools">Tools</a><span aria-hidden="true">/</span><a class="crumb-g" href="../#grup-teks" data-i18n="group.teks">Teks dan encoding</a><span aria-hidden="true">/</span><span class="crumb-now" aria-current="page" data-i18n="crumb">Generator kata sandi</span></nav>
+  <span class="top-end">
+    <button class="icon-btn" type="button" data-theme-toggle aria-label="Ganti tema terang atau gelap" data-i18n-attr="aria-label:common.theme">
+      <svg width="20" height="20" viewBox="-11 -11 22 22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle r="9"/><path d="M0 -9 A9 9 0 0 1 0 9 Z" fill="currentColor"/></svg>
+    </button>
+  </span>
+</header>
+
+<main class="wrap">
+  <div class="app-head">
+    <div>
+      <h1 data-i18n="h1">Generator kata sandi</h1>
+      <p class="lead" data-i18n="lead">Buat sandi acak atau frasa sandi yang kuat. Dibuat di browser dengan crypto.getRandomValues; sandi tidak dikirim ke mana pun dan tidak disimpan.</p>
+    </div>
+  </div>
+
+  <div class="app-grid pw-grid">
+    <section class="panel">
+      <div class="panel-head"><h2 data-i18n="settings">Pengaturan</h2></div>
+
+      <div class="pw-f">
+        <span class="pw-lbl" id="lblMode" data-i18n="mode">Jenis</span>
+        <div class="ui-seg pw-seg" role="radiogroup" aria-labelledby="lblMode" id="modes">
+          <label><input type="radio" name="mode" value="random" checked><span data-i18n="m_random">Acak</span></label>
+          <label><input type="radio" name="mode" value="phrase"><span data-i18n="m_phrase">Frasa sandi</span></label>
+        </div>
+      </div>
+
+      <div id="boxRandom">
+        <div class="pw-f">
+          <label class="pw-lbl" for="len"><span data-i18n="len">Panjang</span>: <strong id="lenV">20</strong></label>
+          <div class="pw-row"><input type="range" id="len" min="8" max="128" value="20" aria-describedby="lenV"><input class="field-sm pw-num" type="number" id="lenN" min="8" max="128" value="20" inputmode="numeric" aria-label="Panjang" data-i18n-attr="aria-label:len"></div>
+        </div>
+        <label class="ui-switch"><input type="checkbox" id="oLower" checked><span data-i18n="lower">Huruf kecil (a–z)</span></label>
+        <label class="ui-switch"><input type="checkbox" id="oUpper" checked><span data-i18n="upper">Huruf besar (A–Z)</span></label>
+        <label class="ui-switch"><input type="checkbox" id="oDigit" checked><span data-i18n="digit">Angka (0–9)</span></label>
+        <label class="ui-switch"><input type="checkbox" id="oSymbol" checked><span data-i18n="symbol">Simbol (!@#…)</span></label>
+        <label class="ui-switch"><input type="checkbox" id="oSimilar"><span data-i18n="similar">Hindari karakter mirip (O, 0, I, l, 1)</span></label>
+      </div>
+
+      <div id="boxPhrase" hidden>
+        <div class="pw-f">
+          <label class="pw-lbl" for="words"><span data-i18n="words">Jumlah kata</span>: <strong id="wordsV">4</strong></label>
+          <div class="pw-row"><input type="range" id="words" min="3" max="10" value="4" aria-describedby="wordsV"><input class="field-sm pw-num" type="number" id="wordsN" min="3" max="10" value="4" inputmode="numeric" aria-label="Jumlah kata" data-i18n-attr="aria-label:words"></div>
+        </div>
+        <div class="pw-f">
+          <label class="pw-lbl" for="sep" data-i18n="sep">Pemisah</label>
+          <select class="field-sm pw-sel" id="sep">
+            <option value="-" data-i18n="sep_dash">Strip (-)</option>
+            <option value="." data-i18n="sep_dot">Titik (.)</option>
+            <option value=" " data-i18n="sep_space">Spasi</option>
+            <option value="" data-i18n="sep_none">Tanpa</option>
+          </select>
+        </div>
+        <label class="ui-switch"><input type="checkbox" id="oCapital"><span data-i18n="capital">Awali tiap kata dengan huruf besar</span></label>
+        <label class="ui-switch"><input type="checkbox" id="oNumber"><span data-i18n="number">Tambah angka 0 sampai 99 di akhir</span></label>
+        <p class="small muted" id="listNote"></p>
+      </div>
+
+      <div class="pw-f pw-count">
+        <span class="pw-lbl" id="lblCount" data-i18n="count">Jumlah hasil</span>
+        <div class="ui-seg pw-seg" role="radiogroup" aria-labelledby="lblCount" id="counts">
+          <label><input type="radio" name="count" value="1" checked><span>1</span></label>
+          <label><input type="radio" name="count" value="5"><span>5</span></label>
+          <label><input type="radio" name="count" value="10"><span>10</span></label>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel pw-results">
+      <div class="panel-head"><h2 data-i18n="result">Hasil</h2><button class="btn btn-primary" type="button" id="btnGen" data-i18n="regen">Buat ulang</button></div>
+      <div id="list" class="pw-list"></div>
+      <div class="ui-empty" id="empty" hidden>
+        <p id="emptyMsg" data-i18n="err_class">Pilih minimal satu jenis karakter untuk membuat sandi.</p>
+        <button class="btn" type="button" id="btnReset" data-i18n="reset">Pakai pengaturan bawaan</button>
+      </div>
+      <div id="info" class="pw-info">
+        <div class="pw-str"><span class="pw-lbl" data-i18n="strength">Kekuatan</span><strong id="sLabel"></strong><span class="muted" id="sBits"></span></div>
+        <div class="pw-meter" aria-hidden="true"><span id="meter"></span></div>
+        <p class="small muted" id="crack"></p>
+        <p class="small muted" data-i18n="thr">Ambang: lemah di bawah 40 bit, sedang 40 sampai 59, kuat 60 sampai 79, sangat kuat 80 atau lebih.</p>
+        <p class="small muted" data-i18n="keep">Sandi hanya ada di memori halaman ini dan tidak disimpan; yang diingat hanya pengaturan.</p>
+      </div>
+      <p class="vh" id="live" aria-live="polite"></p>
+    </section>
+  </div>
+</main>
+
+<script src="kata.js"></script>
+<script src="pw.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
