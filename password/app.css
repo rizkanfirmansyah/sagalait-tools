@@ -1,0 +1,35 @@
+/* Gaya khusus Generator kata sandi; semua warna lewat token portal */
+.pw-grid > * { min-width: 0; }
+@media (max-width: 900px) { .pw-results { order: -1; } }
+.pw-f { margin-bottom: 16px; }
+.pw-lbl { display: block; font-size: 14px; color: var(--body); margin-bottom: 6px; }
+.pw-str .pw-lbl { display: inline; margin: 0; }
+.pw-seg span { min-height: 44px; }
+.pw-row { display: flex; gap: 12px; align-items: center; }
+.pw-row input[type=range] { flex: 1 1 auto; min-width: 0; height: 44px; margin: 0; accent-color: var(--accent); }
+.pw-num { width: 84px; height: 44px; font-size: 16px; text-align: center; flex: none; }
+.pw-sel { width: 100%; height: 44px; font-size: 16px; }
+.pw-count { margin: 16px 0 0; }
+#listNote { margin: 4px 0 12px; }
+
+.pw-list { display: grid; gap: 8px; }
+.pw-list[hidden], .pw-info[hidden] { display: none; }
+.pw-item { display: flex; gap: 8px; align-items: stretch; }
+.pw-val { flex: 1 1 auto; min-width: 0; display: block; padding: 10px 12px; border-radius: var(--r-md); border: 1px solid var(--line); background: var(--well); color: var(--ink); font-family: var(--mono); font-size: 16px; line-height: 1.5; white-space: pre-wrap; overflow-wrap: anywhere; user-select: all; }
+.pw-d { color: var(--link); }
+.pw-s { color: var(--warn); }
+.pw-copy { flex: none; align-self: flex-start; min-width: 84px; }
+.pw-info { margin-top: 16px; }
+.pw-str { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 12px; margin-bottom: 8px; }
+.pw-str strong { font-size: 18px; }
+.pw-meter { height: 10px; border-radius: 999px; background: var(--line); overflow: hidden; margin-bottom: 10px; }
+.pw-meter span { display: block; height: 100%; border-radius: inherit; background: var(--err); transition: width var(--t-base) var(--ease); }
+.pw-info[data-level="fair"] .pw-meter span { background: var(--warn); }
+.pw-info[data-level="strong"] .pw-meter span { background: var(--accent); }
+.pw-info[data-level="very"] .pw-meter span { background: var(--ok); }
+.pw-info[data-level="weak"] #sLabel { color: var(--err); }
+.pw-info[data-level="fair"] #sLabel { color: var(--warn); }
+.pw-info[data-level="very"] #sLabel { color: var(--ok); }
+.pw-info p { margin-top: 6px; }
+.ui-empty .btn { margin-top: 12px; }
+@media (prefers-reduced-motion: reduce) { .pw-meter span { transition: none; } }
