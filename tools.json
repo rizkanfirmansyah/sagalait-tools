@@ -317,6 +317,21 @@
       "short_en": "2048",
       "description_en": "Slide and merge tiles up to 2048, boards from 3×3 to 6×6, with undo",
       "tags_en": ["2048", "game", "puzzle", "number", "tiles"]
+    },
+    {
+      "id": "game-sudoku",
+      "name": "Sudoku",
+      "short": "Sudoku",
+      "description": "Sudoku 9×9 empat tingkat dengan catatan pensil, petunjuk, dan pewaktu, soal berjawaban satu",
+      "group": "game",
+      "path": "game-sudoku/",
+      "icon": "9×9",
+      "tags": ["sudoku", "game", "puzzle", "angka", "teka-teki", "logika"],
+      "favorite": false,
+      "name_en": "Sudoku",
+      "short_en": "Sudoku",
+      "description_en": "9×9 Sudoku with four levels, pencil notes, hints, and a timer, every puzzle has one solution",
+      "tags_en": ["sudoku", "game", "puzzle", "number", "logic"]
     }
   ]
 }
