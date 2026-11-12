@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="id" data-theme="light" data-lang-src="lang.json">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="referrer" content="no-referrer">
+<title data-i18n="title">Sudoku · Tools SagalaIT</title>
+<link rel="icon" href="data:,">
+<script src="../assets/theme.js"></script>
+<script src="../assets/i18n.js"></script>
+<link rel="stylesheet" href="../assets/app.css">
+<link rel="stylesheet" href="app.css">
+</head>
+<body>
+
+<header class="wrap top">
+  <a class="logo" href="../" aria-label="Tools SagalaIT, ke beranda" data-i18n-attr="aria-label:common.home">S</a>
+  <nav class="crumbs" aria-label="Lokasi" data-i18n-attr="aria-label:common.nav"><a href="../" data-i18n="common.tools">Tools</a><span aria-hidden="true">/</span><a class="crumb-g" href="../#grup-game" data-i18n="group.game">Game ringan</a><span aria-hidden="true">/</span><span class="crumb-now" aria-current="page" data-i18n="crumb">Sudoku</span></nav>
+  <span class="top-end">
+    <button class="icon-btn" type="button" data-theme-toggle aria-label="Ganti tema terang atau gelap" data-i18n-attr="aria-label:common.theme">
+      <svg width="20" height="20" viewBox="-11 -11 22 22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle r="9"/><path d="M0 -9 A9 9 0 0 1 0 9 Z" fill="currentColor"/></svg>
+    </button>
+  </span>
+</header>
+
+<main class="wrap">
+  <div class="app-head">
+    <div>
+      <h1 data-i18n="h1">Sudoku</h1>
+      <p class="lead" data-i18n="lead">Isi kotak 9×9 sampai tiap baris, kolom, dan kotak 3×3 berisi angka 1 sampai 9 tepat sekali. Soal dibuat di browser dan dijamin punya satu jawaban.</p>
+    </div>
+  </div>
+
+  <div class="sd-grid">
+    <section class="panel sd-play">
+      <div class="sd-stats">
+        <div class="sd-stat"><span class="sd-k" data-i18n="time">Waktu</span><span class="sd-v" id="time">0:00</span></div>
+        <div class="sd-stat"><span class="sd-k" data-i18n="hints_used">Petunjuk</span><span class="sd-v" id="hintsUsed">0</span></div>
+        <div class="sd-stat"><span class="sd-k" data-i18n="record">Rekor</span><span class="sd-v" id="rec">–</span></div>
+      </div>
+
+      <div class="sd-board-wrap">
+        <div class="sd-board" id="board" role="grid" aria-label="Papan Sudoku" data-i18n-attr="aria-label:board"></div>
+        <div class="sd-over" id="over" hidden role="dialog" aria-labelledby="overT" aria-describedby="overP">
+          <h2 id="overT"></h2>
+          <p id="overP"></p>
+          <p id="overP2" class="small"></p>
+          <div class="sd-over-act">
+            <button class="btn" type="button" id="btnResume" data-i18n="resume">Lanjut</button>
+            <button class="btn btn-primary" type="button" id="btnOverNew" data-i18n="new">Permainan baru</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="sd-pad" id="pad" role="group" aria-label="Papan angka" data-i18n-attr="aria-label:pad_l"></div>
+      <div class="sd-tools">
+        <button class="sd-t" type="button" id="btnPencil" aria-pressed="false" data-i18n="pencil">Pensil</button>
+        <button class="sd-t" type="button" id="btnUndo" data-i18n="undo">Urungkan</button>
+        <button class="sd-t" type="button" id="btnRedo" data-i18n="redo">Ulangi</button>
+        <button class="sd-t" type="button" id="btnHint" data-i18n="hint">Petunjuk</button>
+        <button class="sd-t" type="button" id="btnPause" data-i18n="pause">Jeda</button>
+      </div>
+      <p class="vh" id="live" aria-live="polite"></p>
+    </section>
+
+    <div class="sd-side">
+      <section class="panel">
+        <div class="panel-head"><h2 data-i18n="game">Permainan</h2></div>
+        <div class="sd-f">
+          <span class="sd-lbl" id="lvLbl" data-i18n="level">Tingkat</span>
+          <div class="ui-seg sd-seg" role="radiogroup" aria-labelledby="lvLbl" id="levels">
+            <label><input type="radio" name="level" value="easy" checked><span data-i18n="lv_easy">Mudah</span></label>
+            <label><input type="radio" name="level" value="medium"><span data-i18n="lv_medium">Sedang</span></label>
+            <label><input type="radio" name="level" value="hard"><span data-i18n="lv_hard">Sulit</span></label>
+            <label><input type="radio" name="level" value="expert"><span data-i18n="lv_expert">Ahli</span></label>
+          </div>
+          <p class="small muted sd-ld" id="lvDesc"></p>
+        </div>
+        <button class="btn btn-primary sd-new" type="button" id="btnNew" data-i18n="new">Permainan baru</button>
+        <label class="ui-switch"><input type="checkbox" id="swAuto" checked><span data-i18n="auto">Periksa otomatis</span></label>
+        <p class="small muted sd-sw-d" data-i18n="auto_d">Tandai angka ganda</p>
+      </section>
+
+      <section class="panel">
+        <div class="panel-head"><h2 data-i18n="share">Bagikan dan muat</h2></div>
+        <label class="sd-lbl" for="cur" data-i18n="share_cur">Soal ini (81 karakter, 0 untuk kosong)</label>
+        <div class="sd-row"><input class="field-sm sd-in sd-mono" id="cur" readonly spellcheck="false"><button class="btn btn-sm" type="button" id="btnCopy" data-i18n="copy_q">Salin soal</button></div>
+        <label class="sd-lbl sd-gap" for="load" data-i18n="load_l">Tempel soal untuk dimainkan</label>
+        <div class="sd-row"><input class="field-sm sd-in sd-mono" id="load" spellcheck="false" autocomplete="off" inputmode="numeric"><button class="btn btn-sm" type="button" id="btnLoad" data-i18n="load_b">Muat soal</button></div>
+        <p class="small sd-msg" id="loadMsg" role="status"></p>
+      </section>
+
+      <section class="panel">
+        <div class="panel-head"><h2 data-i18n="how">Cara main</h2></div>
+        <ul class="sd-how">
+          <li data-i18n="how1">Pilih kotak, lalu ketuk angka di bawah papan atau tekan 1 sampai 9.</li>
+          <li data-i18n="how2">Panah memindah pilihan; Backspace atau Delete menghapus.</li>
+          <li data-i18n="how3">P menyalakan mode pensil untuk catatan kecil.</li>
+          <li data-i18n="how4">Ctrl+Z urungkan, Ctrl+Y ulangi, H petunjuk.</li>
+          <li data-i18n="how5">Waktu berhenti saat tab disembunyikan atau saat dijeda.</li>
+          <li data-i18n="how6">Petunjuk mengisi satu kotak dari jawaban dan dihitung.</li>
+        </ul>
+      </section>
+    </div>
+  </div>
+</main>
+
+<dialog class="sd-dlg" id="dlgNew" aria-labelledby="dlgT" aria-describedby="dlgP">
+  <form method="dialog">
+    <h2 id="dlgT" data-i18n="confirm_t">Mulai permainan baru?</h2>
+    <p id="dlgP" data-i18n="confirm_p">Kemajuan permainan ini akan hilang.</p>
+    <div class="sd-dlg-act">
+      <button class="btn" type="submit" value="cancel" data-i18n="cancel">Batal</button>
+      <button class="btn btn-primary" type="submit" value="ok" data-i18n="confirm_ok">Mulai baru</button>
+    </div>
+  </form>
+</dialog>
+
+<script src="engine.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
