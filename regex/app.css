@@ -1,0 +1,40 @@
+/* Gaya khusus Penguji regex; semua warna lewat token portal */
+.rx-grid > *, .rx-col > * { min-width: 0; }
+.rx-col { display: grid; gap: 20px; align-content: start; }
+.rx-lbl { display: block; font-size: 14px; color: var(--body); margin-bottom: 6px; }
+.rx-gap { margin-top: 16px; }
+.rx-pat { display: flex; align-items: center; gap: 8px; font-family: var(--mono); font-size: 18px; color: var(--muted); }
+.field-sm.rx-in { flex: 1 1 auto; min-width: 0; width: 100%; height: 44px; font-size: 16px; font-family: var(--mono); }
+.rx-flags { display: flex; flex-wrap: wrap; gap: 8px; }
+.rx-flag { min-height: 44px; min-width: 44px; justify-content: center; font-family: var(--mono); font-size: 16px; font-weight: 600; }
+.rx-seg span { min-height: 44px; }
+.rx-ta { width: 100%; min-height: 220px; resize: vertical; font-family: var(--mono); font-size: 16px; line-height: 1.5; }
+.rx-ex { display: flex; flex-wrap: wrap; gap: 8px; }
+.rx-ex .ui-chip { min-height: 44px; }
+.rx-warn { margin-bottom: 12px; font-weight: 500; }
+.rx-warn[hidden] { display: none; }
+.rx-h3 { font-size: 14px; font-weight: 600; margin: 16px 0 8px; }
+.rx-col .panel > .rx-h3:first-of-type { margin-top: 0; }
+#out > div:first-child .rx-h3 { margin-top: 0; }
+.rx-hrow { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.rx-hrow .btn { height: 44px; }
+.rx-pre { margin: 0; padding: 12px; border: 1px solid var(--line); border-radius: var(--r-md); background: var(--well); color: var(--ink); font-family: var(--mono); font-size: 14.5px; line-height: 1.6; white-space: pre-wrap; overflow-wrap: anywhere; max-height: 320px; overflow: auto; }
+.rx-m { background: var(--hl); color: var(--ink); border-radius: 3px; padding: 0 1px; box-shadow: 0 -2px 0 var(--mark) inset; }
+.rx-g1 { background: color-mix(in srgb, var(--accent) 28%, var(--panel)); box-shadow: 0 -2px 0 var(--accent) inset; color: var(--ink); }
+.rx-g2 { background: color-mix(in srgb, var(--ok) 30%, var(--panel)); box-shadow: 0 -2px 0 var(--ok) inset; color: var(--ink); }
+.rx-g3 { background: color-mix(in srgb, var(--warn) 30%, var(--panel)); box-shadow: 0 -2px 0 var(--warn) inset; color: var(--ink); }
+.rx-g4 { background: color-mix(in srgb, var(--err) 26%, var(--panel)); box-shadow: 0 -2px 0 var(--err) inset; color: var(--ink); }
+.rx-g5 { background: color-mix(in srgb, var(--g-php) 30%, var(--panel)); box-shadow: 0 -2px 0 var(--g-php) inset; color: var(--ink); }
+.rx-g6 { background: color-mix(in srgb, var(--g-teks) 30%, var(--panel)); box-shadow: 0 -2px 0 var(--g-teks) inset; color: var(--ink); }
+.rx-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; max-height: 480px; overflow: auto; }
+.rx-list > li { padding: 10px 12px; border: 1px solid var(--line); border-radius: var(--r-md); background: var(--panel); min-width: 0; }
+.rx-mh { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 12px; }
+.rx-code { font-family: var(--mono); font-size: 14.5px; background: var(--well); padding: 1px 6px; border-radius: 6px; white-space: pre-wrap; overflow-wrap: anywhere; }
+.rx-gl { display: grid; grid-template-columns: max-content minmax(0, 1fr); gap: 4px 12px; margin: 8px 0 0; font-size: 14px; }
+.rx-gl dt { color: var(--muted); }
+.rx-gl dt.rx-gk { border-radius: 4px; padding: 0 6px; color: var(--ink); }
+.rx-gl dd { margin: 0; min-width: 0; }
+.rx-cheat { margin: 0; display: grid; gap: 6px; }
+.rx-cheat > div { display: grid; grid-template-columns: 7.5em minmax(0, 1fr); gap: 12px; align-items: baseline; font-size: 14.5px; }
+.rx-cheat dt code { font-family: var(--mono); background: var(--well); padding: 1px 6px; border-radius: 6px; }
+.rx-cheat dd { margin: 0; color: var(--body); }
