@@ -362,6 +362,21 @@
       "short_en": "Regex",
       "description_en": "Test regular expressions: highlight matches and groups, replace, split, with a backtracking time limit",
       "tags_en": ["regex", "regexp", "regular expression", "pattern", "match", "replace", "split"]
+    },
+    {
+      "id": "kompres-gambar",
+      "name": "Kompres gambar",
+      "short": "Kompres",
+      "description": "Perkecil ukuran gambar: pilih format, kualitas, dan sisi terpanjang, bandingkan sebelum dan sesudah, unduh ZIP",
+      "group": "harian",
+      "path": "kompres-gambar/",
+      "icon": "img",
+      "tags": ["kompres", "gambar", "foto", "jpeg", "jpg", "webp", "png", "perkecil", "ukuran", "resize", "zip"],
+      "favorite": false,
+      "name_en": "Image compressor",
+      "short_en": "Compress",
+      "description_en": "Shrink images: pick a format, quality, and longest side, compare before and after, download a ZIP",
+      "tags_en": ["compress", "image", "photo", "jpeg", "jpg", "webp", "png", "resize", "size", "zip"]
     }
   ]
 }
