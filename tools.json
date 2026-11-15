@@ -347,6 +347,21 @@
       "short_en": "Password",
       "description_en": "Make strong random passwords or passphrases, with entropy and an estimated time to guess",
       "tags_en": ["password", "passphrase", "random", "generator", "security"]
+    },
+    {
+      "id": "regex",
+      "name": "Penguji regex",
+      "short": "Regex",
+      "description": "Uji ekspresi reguler: sorot kecocokan dan grup, ganti, pisah, dengan batas waktu anti backtracking",
+      "group": "dev",
+      "path": "regex/",
+      "icon": ".*",
+      "tags": ["regex", "regexp", "ekspresi reguler", "pola", "cocok", "ganti", "pisah", "split", "replace"],
+      "favorite": false,
+      "name_en": "Regex tester",
+      "short_en": "Regex",
+      "description_en": "Test regular expressions: highlight matches and groups, replace, split, with a backtracking time limit",
+      "tags_en": ["regex", "regexp", "regular expression", "pattern", "match", "replace", "split"]
     }
   ]
 }
