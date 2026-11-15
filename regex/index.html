@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="id" data-theme="light" data-lang-src="lang.json">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="referrer" content="no-referrer">
+<title data-i18n="title">Penguji regex · Tools SagalaIT</title>
+<link rel="icon" href="data:,">
+<script src="../assets/theme.js"></script>
+<script src="../assets/i18n.js"></script>
+<link rel="stylesheet" href="../assets/app.css">
+<link rel="stylesheet" href="app.css">
+</head>
+<body>
+
+<header class="wrap top">
+  <a class="logo" href="../" aria-label="Tools SagalaIT, ke beranda" data-i18n-attr="aria-label:common.home">S</a>
+  <nav class="crumbs" aria-label="Lokasi" data-i18n-attr="aria-label:common.nav"><a href="../" data-i18n="common.tools">Tools</a><span aria-hidden="true">/</span><a class="crumb-g" href="../#grup-dev" data-i18n="group.dev">Developer</a><span aria-hidden="true">/</span><span class="crumb-now" aria-current="page" data-i18n="crumb">Penguji regex</span></nav>
+  <span class="top-end">
+    <button class="icon-btn" type="button" data-theme-toggle aria-label="Ganti tema terang atau gelap" data-i18n-attr="aria-label:common.theme">
+      <svg width="20" height="20" viewBox="-11 -11 22 22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle r="9"/><path d="M0 -9 A9 9 0 0 1 0 9 Z" fill="currentColor"/></svg>
+    </button>
+  </span>
+</header>
+
+<main class="wrap">
+  <div class="app-head">
+    <div>
+      <h1 data-i18n="h1">Penguji regex</h1>
+      <p class="lead" data-i18n="lead">Uji ekspresi reguler JavaScript pada teks: sorot kecocokan, lihat grup tangkap, ganti, atau pisah. Pencocokan berjalan di Web Worker dengan batas waktu 1,5 detik.</p>
+    </div>
+    <div class="actions"><button class="btn" type="button" id="btnSample" data-i18n="common.sample">Coba dengan contoh</button><button class="btn" type="button" id="btnClear" data-i18n="common.clear">Bersihkan</button></div>
+  </div>
+
+  <div class="app-grid rx-grid">
+    <div class="rx-col">
+      <section class="panel">
+        <div class="panel-head"><h2 data-i18n="pat_h">Pola dan flag</h2></div>
+        <label class="rx-lbl" for="pat" data-i18n="pat_l">Pola (tanpa garis miring)</label>
+        <div class="rx-pat"><span aria-hidden="true">/</span><input class="field-sm rx-in" id="pat" spellcheck="false" autocomplete="off" autocapitalize="off" placeholder="mis. (\\d+)-(\\d+)" data-i18n-attr="placeholder:pat_ph"><span aria-hidden="true">/</span></div>
+        <span class="rx-lbl rx-gap" id="lblFlags" data-i18n="flags">Flag</span>
+        <div class="rx-flags" role="group" aria-labelledby="lblFlags">
+          <button class="ui-chip rx-flag" type="button" data-f="g" aria-pressed="true" title="g, cocokkan semua" aria-label="g, cocokkan semua" data-i18n-attr="title:f_g,aria-label:f_g">g</button>
+          <button class="ui-chip rx-flag" type="button" data-f="i" aria-pressed="false" title="i, abaikan besar kecil huruf" aria-label="i, abaikan besar kecil huruf" data-i18n-attr="title:f_i,aria-label:f_i">i</button>
+          <button class="ui-chip rx-flag" type="button" data-f="m" aria-pressed="false" title="m, ^ dan $ berlaku per baris" aria-label="m, ^ dan $ berlaku per baris" data-i18n-attr="title:f_m,aria-label:f_m">m</button>
+          <button class="ui-chip rx-flag" type="button" data-f="s" aria-pressed="false" title="s, titik cocok dengan baris baru" aria-label="s, titik cocok dengan baris baru" data-i18n-attr="title:f_s,aria-label:f_s">s</button>
+          <button class="ui-chip rx-flag" type="button" data-f="u" aria-pressed="false" title="u, mode Unicode" aria-label="u, mode Unicode" data-i18n-attr="title:f_u,aria-label:f_u">u</button>
+          <button class="ui-chip rx-flag" type="button" data-f="y" aria-pressed="false" title="y, lekat pada posisi" aria-label="y, lekat pada posisi" data-i18n-attr="title:f_y,aria-label:f_y">y</button>
+          
+        </div>
+        <span class="rx-lbl rx-gap" id="lblMode" data-i18n="mode">Mode</span>
+        <div class="ui-seg rx-seg" role="radiogroup" aria-labelledby="lblMode" id="modes">
+          <label><input type="radio" name="mode" value="match" checked><span data-i18n="m_match">Cocokkan</span></label>
+          <label><input type="radio" name="mode" value="replace"><span data-i18n="m_replace">Ganti</span></label>
+          <label><input type="radio" name="mode" value="split"><span data-i18n="m_split">Pisah</span></label>
+        </div>
+        <div id="boxRepl" hidden>
+          <label class="rx-lbl rx-gap" for="repl" data-i18n="repl_l">Pengganti</label>
+          <input class="field-sm rx-in rx-mono" id="repl" spellcheck="false" autocomplete="off" placeholder="mis. $2/$1, $&lt;nama&gt;, atau $&amp;" data-i18n-attr="placeholder:repl_ph">
+        </div>
+      </section>
+
+      <section class="panel">
+        <div class="panel-head"><h2 data-i18n="text_h">Teks uji</h2></div>
+        <label class="vh" for="txt" data-i18n="text_l">Teks uji</label>
+        <textarea class="field rx-ta" id="txt" spellcheck="false" autocomplete="off" placeholder="Tempel teks yang mau diuji di sini" data-i18n-attr="placeholder:text_ph"></textarea>
+      </section>
+
+      <section class="panel">
+        <div class="panel-head"><h2 data-i18n="ex_h">Contoh siap pakai</h2></div>
+        <div class="rx-ex">
+          <button class="ui-chip" type="button" data-ex="email" data-i18n="ex_email">Email</button>
+          <button class="ui-chip" type="button" data-ex="url" data-i18n="ex_url">URL</button>
+          <button class="ui-chip" type="button" data-ex="date" data-i18n="ex_date">Tanggal dd/mm/yyyy</button>
+          <button class="ui-chip" type="button" data-ex="ip" data-i18n="ex_ip">IPv4</button>
+        </div>
+      </section>
+    </div>
+
+    <div class="rx-col">
+      <section class="panel">
+        <div class="panel-head"><h2 data-i18n="res_h">Hasil</h2><span class="small muted" id="stat" role="status"></span></div>
+        <div class="banner bad rx-warn" id="warn" hidden role="alert"></div>
+        <div class="ui-empty" id="empty"><p data-i18n="empty">Mulai dengan menulis pola, atau coba contoh.</p><button class="btn" type="button" id="btnSample2" data-i18n="common.sample">Coba dengan contoh</button></div>
+        <div id="out" hidden>
+          <div id="boxHl">
+            <h3 class="rx-h3" data-i18n="hl_h">Teks dengan sorotan</h3>
+            <pre class="rx-pre" id="hl" tabindex="0"></pre>
+          </div>
+          <div id="boxRes" hidden>
+            <div class="rx-hrow"><h3 class="rx-h3" id="resH"></h3><button class="btn btn-sm" type="button" id="btnCopy" data-i18n="common.copy">Salin</button></div>
+            <pre class="rx-pre" id="res" tabindex="0"></pre>
+          </div>
+          <div id="boxList">
+            <h3 class="rx-h3" id="listH" data-i18n="list_h">Daftar kecocokan</h3>
+            <ol class="rx-list" id="list"></ol>
+          </div>
+        </div>
+      </section>
+
+      <section class="panel">
+        <div class="panel-head"><h2 data-i18n="cheat_h">Contekan</h2></div>
+        <h3 class="rx-h3" data-i18n="ch_chars">Karakter</h3>
+        <dl class="rx-cheat">
+          <div><dt><code>.</code></dt><dd data-i18n="k1">karakter apa saja, kecuali baris baru</dd></div>
+          <div><dt><code>\d</code></dt><dd data-i18n="k2">satu angka</dd></div>
+          <div><dt><code>\w</code></dt><dd data-i18n="k3">huruf, angka, atau garis bawah</dd></div>
+          <div><dt><code>\s</code></dt><dd data-i18n="k4">spasi, tab, atau baris baru</dd></div>
+          <div><dt><code>[abc]</code></dt><dd data-i18n="k5">salah satu dari a, b, c</dd></div>
+          <div><dt><code>[^abc]</code></dt><dd data-i18n="k6">karakter apa saja selain a, b, c</dd></div>
+        </dl>
+        <h3 class="rx-h3" data-i18n="ch_quant">Kuantifier</h3>
+        <dl class="rx-cheat">
+          <div><dt><code>*</code></dt><dd data-i18n="k7">nol kali atau lebih</dd></div>
+          <div><dt><code>+</code></dt><dd data-i18n="k8">satu kali atau lebih</dd></div>
+          <div><dt><code>?</code></dt><dd data-i18n="k9">nol atau satu kali</dd></div>
+          <div><dt><code>{n,m}</code></dt><dd data-i18n="k10">n sampai m kali</dd></div>
+          <div><dt><code>*?</code></dt><dd data-i18n="k11">seminimal mungkin (lazy)</dd></div>
+        </dl>
+        <h3 class="rx-h3" data-i18n="ch_anchor">Jangkar</h3>
+        <dl class="rx-cheat">
+          <div><dt><code>^</code></dt><dd data-i18n="k12">awal teks, atau awal baris dengan flag m</dd></div>
+          <div><dt><code>$</code></dt><dd data-i18n="k13">akhir teks, atau akhir baris dengan flag m</dd></div>
+          <div><dt><code>\b</code></dt><dd data-i18n="k14">batas kata</dd></div>
+        </dl>
+        <h3 class="rx-h3" data-i18n="ch_group">Grup dan lookahead</h3>
+        <dl class="rx-cheat">
+          <div><dt><code>(x)</code></dt><dd data-i18n="k15">grup tangkap</dd></div>
+          <div><dt><code>(?&lt;nama&gt;x)</code></dt><dd data-i18n="k16">grup bernama</dd></div>
+          <div><dt><code>(?:x)</code></dt><dd data-i18n="k17">grup tanpa tangkap</dd></div>
+          <div><dt><code>a|b</code></dt><dd data-i18n="k18">a atau b</dd></div>
+          <div><dt><code>x(?=y)</code></dt><dd data-i18n="k19">x hanya bila diikuti y</dd></div>
+          <div><dt><code>x(?!y)</code></dt><dd data-i18n="k20">x hanya bila tidak diikuti y</dd></div>
+          <div><dt><code>(?&lt;=y)x</code></dt><dd data-i18n="k21">x hanya bila didahului y</dd></div>
+        </dl>
+      </section>
+    </div>
+  </div>
+</main>
+
+<script src="rx.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
