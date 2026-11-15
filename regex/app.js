@@ -114,13 +114,13 @@
   }
 
   function show(req, res, ms, inline) {
-    last = { req: req, res: res };
+    last = { req: req, res: res, ms: ms };
     var warn = $('warn'), stat = $('stat');
-    warn.hidden = true;
+    warn.hidden = true; warn.className = 'banner bad rx-warn';
     if (res.slow) { view('out'); $('boxHl').hidden = $('boxRes').hidden = $('boxList').hidden = true; warn.textContent = t('slow'); warn.hidden = false; stat.textContent = ''; return; }
     if (!res.ok) { view('out'); $('boxHl').hidden = $('boxRes').hidden = $('boxList').hidden = true; warn.textContent = t('err', { msg: res.error }); warn.hidden = false; stat.textContent = ''; return; }
     view('out');
-    if (inline) { warn.textContent = t('noworker'); warn.hidden = false; warn.classList.remove('bad'); }
+    if (inline) { warn.textContent = t('noworker'); warn.hidden = false; warn.className = 'banner rx-warn'; }
     var line;
     if (res.op === 'match') {
       var n = res.matches.length;
@@ -171,6 +171,6 @@
   });
 
   I.onReady(function () { load(); toUi(); run(); });
-  document.addEventListener('sagalait:lang', function () { if (last) show(last.req, last.res, 1); });
+  document.addEventListener('sagalait:lang', function () { if (last) show(last.req, last.res, last.ms); });
   window.addEventListener('pagehide', kill);
 })();
