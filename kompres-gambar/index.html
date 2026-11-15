@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="id" data-theme="light" data-lang-src="lang.json">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="referrer" content="no-referrer">
+<title data-i18n="title">Kompres gambar · Tools SagalaIT</title>
+<link rel="icon" href="data:,">
+<script src="../assets/theme.js"></script>
+<script src="../assets/i18n.js"></script>
+<link rel="stylesheet" href="../assets/app.css">
+<link rel="stylesheet" href="app.css">
+</head>
+<body>
+
+<header class="wrap top">
+  <a class="logo" href="../" aria-label="Tools SagalaIT, ke beranda" data-i18n-attr="aria-label:common.home">S</a>
+  <nav class="crumbs" aria-label="Lokasi" data-i18n-attr="aria-label:common.nav"><a href="../" data-i18n="common.tools">Tools</a><span aria-hidden="true">/</span><a class="crumb-g" href="../#grup-harian" data-i18n="group.harian">Sehari-hari</a><span aria-hidden="true">/</span><span class="crumb-now" aria-current="page" data-i18n="crumb">Kompres gambar</span></nav>
+  <span class="top-end">
+    <button class="icon-btn" type="button" data-theme-toggle aria-label="Ganti tema terang atau gelap" data-i18n-attr="aria-label:common.theme">
+      <svg width="20" height="20" viewBox="-11 -11 22 22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle r="9"/><path d="M0 -9 A9 9 0 0 1 0 9 Z" fill="currentColor"/></svg>
+    </button>
+  </span>
+</header>
+
+<main class="wrap">
+  <div class="app-head">
+    <div>
+      <h1 data-i18n="h1">Kompres gambar</h1>
+      <p class="lead" data-i18n="lead">Perkecil ukuran gambar langsung di browser: pilih format, kualitas, dan ukuran maksimum. Gambar tidak diunggah dan tidak disimpan.</p>
+    </div>
+    <div class="actions"><button class="btn" type="button" id="btnSample" data-i18n="common.sample">Coba dengan contoh</button></div>
+  </div>
+
+  <div class="app-grid kg-grid">
+    <div class="kg-col">
+      <section class="panel">
+        <div class="panel-head"><h2 data-i18n="add_h">Tambah gambar</h2></div>
+        <label class="kg-drop" id="drop" for="file">
+          <span class="kg-drop-t" data-i18n="drop">Tarik gambar ke sini, klik untuk memilih, atau tempel dengan Ctrl+V.</span>
+          <span class="btn kg-choose" data-i18n="choose">Pilih gambar</span>
+          <input class="vh" type="file" id="file" accept="image/*" multiple>
+        </label>
+      </section>
+
+      <section class="panel">
+        <div class="panel-head"><h2 data-i18n="set_h">Pengaturan</h2></div>
+        <div class="kg-f">
+          <span class="kg-lbl" id="lblFmt" data-i18n="fmt">Format keluaran</span>
+          <div class="ui-seg kg-seg" role="radiogroup" aria-labelledby="lblFmt" id="fmts">
+            <label><input type="radio" name="fmt" value="jpeg" checked><span>JPEG</span></label>
+            <label><input type="radio" name="fmt" value="webp"><span>WebP</span></label>
+            <label><input type="radio" name="fmt" value="png"><span>PNG</span></label>
+          </div>
+        </div>
+        <div class="kg-f" id="boxQ">
+          <label class="kg-lbl" for="q"><span data-i18n="q">Kualitas</span>: <strong id="qV">80</strong></label>
+          <input type="range" id="q" min="40" max="100" value="80" aria-describedby="qV">
+        </div>
+        <p class="small muted" id="qPng" hidden data-i18n="q_png">PNG tidak kehilangan kualitas, jadi pengaturan kualitas tidak berlaku. Perkecil lewat sisi terpanjang.</p>
+        <div class="kg-f">
+          <label class="kg-lbl" for="side" data-i18n="side">Sisi terpanjang</label>
+          <select class="field-sm kg-sel" id="side"></select>
+        </div>
+        <p class="small muted" data-i18n="meta">Metadata (EXIF, lokasi kamera) ikut terhapus karena gambar digambar ulang di kanvas.</p>
+      </section>
+    </div>
+
+    <div class="kg-col">
+      <section class="panel">
+        <div class="panel-head"><h2 data-i18n="res_h">Hasil</h2><span class="small muted" id="sum" role="status"></span></div>
+        <div class="ui-empty" id="empty"><p data-i18n="empty">Belum ada gambar. Tambahkan gambar di sebelah kiri.</p></div>
+        <div id="resBox" hidden>
+          <div class="kg-bar"><button class="btn btn-primary" type="button" id="btnZip" data-i18n="dl_all">Unduh semua (.zip)</button><button class="btn" type="button" id="btnClear" data-i18n="common.clear">Bersihkan</button></div>
+          <ul class="kg-list" id="list"></ul>
+        </div>
+        <p class="vh" id="live" aria-live="polite"></p>
+      </section>
+
+      <section class="panel" id="cmpPanel">
+        <div class="panel-head"><h2 data-i18n="cmp_h">Bandingkan</h2></div>
+        <p class="small muted" id="cmpHint" data-i18n="pick">Pilih gambar dari daftar untuk membandingkan.</p>
+        <div id="cmpBox" hidden>
+          <div class="kg-cmp" id="cmp"><img id="imgAfter" alt=""><img id="imgBefore" alt=""><span class="kg-tag kg-tag-b" data-i18n="before">Sebelum</span><span class="kg-tag kg-tag-a" data-i18n="after">Sesudah</span></div>
+          <input type="range" id="cmpRange" min="0" max="100" value="50" aria-label="Geser untuk membandingkan sebelum dan sesudah" data-i18n-attr="aria-label:cmp_range">
+        </div>
+      </section>
+    </div>
+  </div>
+</main>
+
+<script src="kompres.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
