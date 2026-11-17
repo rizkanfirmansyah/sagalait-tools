@@ -437,6 +437,21 @@
       "short_en": "Subnet",
       "description_en": "Work out IPv4 networks from CIDR or netmask, split subnets, check an IP in a network, and summarize CIDR lists",
       "tags_en": ["subnet", "cidr", "ipv4", "netmask", "wildcard", "broadcast", "network", "vlsm", "supernet", "ip"]
+    },
+    {
+      "id": "waktu",
+      "name": "Konverter waktu",
+      "short": "Waktu",
+      "description": "Ubah Unix timestamp, ISO 8601, dan tanggal ke WIB, WITA, WIT, UTC, dan zona browser, plus jam hidup dan selisih dua waktu",
+      "group": "waktu",
+      "path": "waktu/",
+      "icon": "🕒",
+      "tags": ["waktu", "unix", "timestamp", "epoch", "iso 8601", "wib", "wita", "wit", "utc", "zona waktu", "selisih", "tanggal"],
+      "favorite": false,
+      "name_en": "Time converter",
+      "short_en": "Time",
+      "description_en": "Convert Unix timestamps, ISO 8601, and dates to WIB, WITA, WIT, UTC, and your browser zone, with a live clock and time difference",
+      "tags_en": ["time", "unix", "timestamp", "epoch", "iso 8601", "timezone", "utc", "difference", "date"]
     }
   ]
 }
