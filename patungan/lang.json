@@ -85,7 +85,9 @@
   "ex_i2": "Roti bakar",
   "ex_i3": "Nasi goreng",
   "ex_i4": "Es teh",
-  "ex_i5": "Kentang goreng (berbagi)"
+  "ex_i5": "Kentang goreng (berbagi)",
+  "owes": "{from} masih perlu menyetor {amount} ke {to}.",
+  "refund": "{to} perlu mengembalikan {amount} ke {from}."
  },
  "en": {
   "title": "Bill splitter · Tools SagalaIT",
@@ -173,6 +175,8 @@
   "ex_i2": "Toast",
   "ex_i3": "Fried rice",
   "ex_i4": "Iced tea",
-  "ex_i5": "Fries (shared)"
+  "ex_i5": "Fries (shared)",
+  "owes": "{from} still needs to pay {amount} to {to}.",
+  "refund": "{to} needs to give back {amount} to {from}."
  }
 }
