@@ -1,0 +1,49 @@
+/* Gaya khusus Tebak kata; warna ubin lewat token portal, penanda huruf tampil bersama warna */
+.tk-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(260px, 340px); gap: 20px; align-items: start; padding-bottom: 72px; }
+.tk-grid > *, .tk-side > * { min-width: 0; }
+.tk-side { display: grid; gap: 20px; }
+@media (max-width: 900px) { .tk-grid { grid-template-columns: minmax(0, 1fr); } }
+.tk-play { display: flex; flex-direction: column; align-items: center; }
+.tk-msg { min-height: 1.6em; margin: 0 0 8px; font-weight: 600; color: var(--ink); text-align: center; white-space: pre-line; }
+.tk-board { display: grid; gap: 6px; width: min(100%, 340px); }
+.tk-row { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; }
+.tk-t { position: relative; aspect-ratio: 1; display: grid; place-items: center; border: 2px solid var(--line-strong); border-radius: var(--r-sm); background: var(--panel); color: var(--ink); font-size: clamp(22px, 7vw, 30px); font-weight: 800; line-height: 1; }
+.tk-t b { font: inherit; }
+.tk-t i { position: absolute; right: 5px; bottom: 2px; font-style: normal; font-size: 13px; font-weight: 700; }
+.tk-t[data-s="t"] { border-color: var(--ink); }
+.tk-t[data-s="c"] { background: var(--ok); border-color: var(--ok); color: var(--bg); }
+.tk-t[data-s="p"] { background: var(--mark); border-color: var(--mark); color: var(--on-mark); }
+.tk-t[data-s="a"] { background: var(--line-strong); border-color: var(--line-strong); color: var(--ink); }
+:root[data-theme="dark"] .tk-t[data-s="c"] { color: var(--on-mark); }
+.tk-sm { width: 40px; height: 40px; aspect-ratio: auto; flex: none; font-size: 18px; }
+.tk-row.is-shake { animation: tk-shake 300ms; }
+@keyframes tk-shake { 20%, 60% { transform: translateX(-6px); } 40%, 80% { transform: translateX(6px); } }
+@media (prefers-reduced-motion: reduce) { .tk-row.is-shake { animation: none; } }
+.tk-end { width: 100%; max-width: 340px; margin-top: 14px; text-align: center; }
+.tk-result { font-weight: 700; margin: 0 0 10px; }
+.tk-end-act { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; }
+.tk-end-act [hidden] { display: none; }
+.tk-kb { width: min(100%, 520px); margin-top: 18px; display: grid; gap: 6px; }
+.tk-krow { display: flex; gap: 5px; justify-content: center; }
+.tk-k { flex: 1 1 0; min-width: 0; height: 54px; border-radius: var(--r-sm); border: 1px solid var(--line-strong); background: var(--panel); color: var(--ink); font: inherit; font-weight: 700; font-size: 17px; text-transform: uppercase; cursor: pointer; touch-action: manipulation; padding: 0; }
+.tk-k.tk-wide { flex: 1.6 1 0; font-size: 13px; text-transform: none; }
+.tk-k:hover:not(:disabled) { border-color: var(--accent); }
+.tk-k:disabled { opacity: .5; cursor: default; }
+.tk-k[data-s="c"] { background: var(--ok); border-color: var(--ok); color: var(--bg); }
+.tk-k[data-s="p"] { background: var(--mark); border-color: var(--mark); color: var(--on-mark); }
+.tk-k[data-s="a"] { background: var(--line); color: var(--muted); }
+:root[data-theme="dark"] .tk-k[data-s="c"] { color: var(--on-mark); }
+@media (max-width: 400px) { .tk-krow { gap: 3px; } .tk-k { height: 50px; font-size: 15px; } }
+.tk-seg span { min-height: 44px; }
+.tk-h3 { font-size: 14px; font-weight: 600; margin: 16px 0 8px; }
+.tk-legend { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+.tk-legend li { display: flex; align-items: center; gap: 10px; font-size: 14.5px; color: var(--body); }
+.tk-stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; text-align: center; }
+.tk-stat { display: flex; flex-direction: column; gap: 2px; padding: 8px 2px; border: 1px solid var(--line); border-radius: var(--r-md); background: var(--well); }
+.tk-stat strong { font-size: 20px; }
+.tk-stat span { font-size: 12px; color: var(--muted); }
+.tk-dist { list-style: none; margin: 0; padding: 0; display: grid; gap: 4px; }
+.tk-dist li { display: grid; grid-template-columns: 1.2em 1fr 2em; gap: 8px; align-items: center; font-size: 13px; }
+.tk-bar { display: block; height: 16px; background: var(--well); border-radius: 4px; overflow: hidden; }
+.tk-bar span { display: block; height: 100%; background: var(--accent); border-radius: 4px; }
+.tk-how { margin: 0; padding-left: 18px; display: grid; gap: 8px; color: var(--body); font-size: 14.5px; }
