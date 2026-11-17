@@ -10,6 +10,7 @@
 .sn-seg span { min-height: 44px; padding: 0 14px; }
 .sn-warn { background: var(--warn-t); color: var(--warn); margin-bottom: 12px; font-weight: 500; }
 .sn-warn[hidden] { display: none; }
+.sn-kv { display: block; margin: 0; }
 .sn-kv > div { display: grid; grid-template-columns: minmax(8em, 11em) minmax(0, 1fr); gap: 12px; padding: 8px 0; border-bottom: 1px solid var(--line); }
 .sn-kv > div:last-child { border-bottom: 0; }
 .sn-kv dt { color: var(--muted); }
@@ -17,7 +18,7 @@
 .sn-code { font-family: var(--mono); font-size: 15px; overflow-wrap: anywhere; white-space: pre-wrap; }
 .sn-h3 { font-size: 14px; font-weight: 600; margin: 20px 0 8px; }
 .sn-bin { display: grid; gap: 8px; margin-bottom: 8px; overflow-x: auto; }
-.sn-bline { display: flex; align-items: baseline; gap: 12px; flex-wrap: nowrap; }
+.sn-bline { display: flex; align-items: baseline; gap: 4px 12px; flex-wrap: wrap; }
 .sn-blabel { flex: none; width: 5.5em; font-size: 13px; color: var(--muted); }
 .sn-bits { font-family: var(--mono); font-size: 15px; white-space: nowrap; }
 .sn-oct { display: inline-flex; }
@@ -33,9 +34,11 @@
 .sn-act { display: flex; flex-wrap: wrap; gap: 8px; }
 .sn-res { margin: 10px 0 4px; font-weight: 600; min-height: 1.4em; }
 .sn-two { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
-@media (max-width: 560px) { .sn-two { grid-template-columns: minmax(0, 1fr); } .sn-kv > div { grid-template-columns: minmax(0, 1fr); gap: 2px; } }
+@media (max-width: 560px) { .sn-two { grid-template-columns: minmax(0, 1fr); } .sn-kv { display: block; margin: 0; }
+.sn-kv > div { grid-template-columns: minmax(0, 1fr); gap: 2px; } }
 .sn-ta { width: 100%; min-height: 150px; font-family: var(--mono); font-size: 16px; resize: vertical; }
 .sn-bad { color: var(--err); margin: 6px 0; padding-left: 18px; }
 .sn-bad:empty { display: none; }
 .sn-pre { margin: 8px 0 12px; padding: 12px; border: 1px solid var(--line); border-radius: var(--r-md); background: var(--well); font-family: var(--mono); font-size: 15px; white-space: pre-wrap; min-height: 3em; }
 .sn-in .btn-sm, .sn-sec .btn-sm { height: 44px; }
+@media (max-width: 480px) { .sn-bits { font-size: 13px; } .sn-dot { padding: 0 1px; } .sn-blabel { width: 100%; } }
