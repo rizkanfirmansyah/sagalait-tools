@@ -392,6 +392,21 @@
       "short_en": "Words",
       "description_en": "Guess a 5-letter Indonesian word in 6 tries, daily word and random mode",
       "tags_en": ["word guess", "wordle", "game", "word", "puzzle", "daily"]
+    },
+    {
+      "id": "patungan",
+      "name": "Patungan (bagi tagihan)",
+      "short": "Patungan",
+      "description": "Bagi tagihan kafe per orang, termasuk harga berkoma, PPN, service, diskon, dan pembulatan",
+      "group": "harian",
+      "path": "patungan/",
+      "icon": "÷",
+      "tags": ["patungan", "bagi tagihan", "split bill", "kafe", "restoran", "ppn", "pajak", "service", "iuran", "uang"],
+      "favorite": false,
+      "name_en": "Split the bill",
+      "short_en": "Split",
+      "description_en": "Split a cafe bill per person, with decimal prices, VAT, service charge, discount, and rounding",
+      "tags_en": ["split bill", "bill", "cafe", "restaurant", "vat", "tax", "service", "tip", "money"]
     }
   ]
 }
