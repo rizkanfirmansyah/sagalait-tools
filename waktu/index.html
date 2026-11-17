@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="id" data-theme="light" data-lang-src="lang.json">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="referrer" content="no-referrer">
+<title data-i18n="title">Konverter waktu · Tools SagalaIT</title>
+<link rel="icon" href="data:,">
+<script src="../assets/theme.js"></script>
+<script src="../assets/i18n.js"></script>
+<link rel="stylesheet" href="../assets/app.css">
+<link rel="stylesheet" href="app.css">
+</head>
+<body>
+
+<header class="wrap top">
+  <a class="logo" href="../" aria-label="Tools SagalaIT, ke beranda" data-i18n-attr="aria-label:common.home">S</a>
+  <nav class="crumbs" aria-label="Lokasi" data-i18n-attr="aria-label:common.nav"><a href="../" data-i18n="common.tools">Tools</a><span aria-hidden="true">/</span><a class="crumb-g" href="../#grup-waktu" data-i18n="group.waktu">Waktu dan fokus</a><span aria-hidden="true">/</span><span class="crumb-now" aria-current="page" data-i18n="crumb">Konverter waktu</span></nav>
+  <span class="top-end">
+    <button class="icon-btn" type="button" data-theme-toggle aria-label="Ganti tema terang atau gelap" data-i18n-attr="aria-label:common.theme">
+      <svg width="20" height="20" viewBox="-11 -11 22 22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle r="9"/><path d="M0 -9 A9 9 0 0 1 0 9 Z" fill="currentColor"/></svg>
+    </button>
+  </span>
+</header>
+
+<main class="wrap">
+  <div class="app-head">
+    <div>
+      <h1 data-i18n="h1">Konverter waktu</h1>
+      <p class="lead" data-i18n="lead">Ubah Unix timestamp (detik atau milidetik, terdeteksi otomatis), ISO 8601, dan tanggal biasa ke WIB, WITA, WIT, UTC, dan zona browser. Ada jam hidup dan selisih dua waktu.</p>
+    </div>
+  </div>
+
+  <div class="app-grid wk-grid">
+    <div class="wk-col">
+      <section class="panel">
+        <div class="panel-head"><h2 data-i18n="now_h">Sekarang</h2><label class="ui-switch"><input type="checkbox" id="live" checked><span data-i18n="live">Perbarui tiap detik</span></label></div>
+        <div class="wk-now" id="nowBox">
+          <div class="wk-nowrow"><span class="wk-k" data-i18n="now_s">Unix detik</span><code id="nowS"></code><button class="btn btn-sm" type="button" data-copy="nowS" data-i18n="common.copy">Salin</button></div>
+          <div class="wk-nowrow"><span class="wk-k" data-i18n="now_ms">Unix milidetik</span><code id="nowMs"></code><button class="btn btn-sm" type="button" data-copy="nowMs" data-i18n="common.copy">Salin</button></div>
+          <p class="wk-clock" id="nowWib"></p>
+        </div>
+        <button class="btn" type="button" id="btnNow" data-i18n="use_now">Pakai waktu sekarang</button>
+      </section>
+      <section class="panel">
+        <div class="panel-head"><h2 data-i18n="in_h">Waktu masukan</h2><button class="btn btn-sm" type="button" id="btnSample" data-i18n="sample">Coba dengan contoh</button></div>
+        <label class="wk-lbl" for="inp" data-i18n="in_l">Timestamp, ISO 8601, atau tanggal</label>
+        <input class="field-sm wk-field" id="inp" spellcheck="false" autocomplete="off" placeholder="mis. 1700000000 atau 2026-11-18T10:00:00+07:00" data-i18n-attr="placeholder:in_ph">
+        <p class="small wk-err" id="err" role="alert"></p>
+        <p class="small muted" id="kind"></p>
+        <div class="wk-ex"><span class="small muted" data-i18n="ex">Contoh</span>
+          <button class="ui-chip" type="button" data-ex="0">0</button><button class="ui-chip" type="button" data-ex="1700000000">1700000000</button><button class="ui-chip" type="button" data-ex="1700000000000">1700000000000</button><button class="ui-chip" type="button" data-ex="2147483647">2147483647</button><button class="ui-chip" type="button" data-ex="2024-02-29T12:00:00Z">2024-02-29T12:00:00Z</button><button class="ui-chip" type="button" data-ex="18/11/2026 10:00">18/11/2026 10:00</button></div>
+        <label class="wk-lbl wk-gap" for="zone" data-i18n="zone_l">Tanggal tanpa zona dibaca sebagai</label>
+        <select class="field-sm wk-field wk-sel" id="zone"></select>
+      </section>
+    </div>
+    <div class="wk-col">
+      <section class="panel">
+        <div class="panel-head"><h2 data-i18n="res_h">Hasil</h2></div>
+        <div class="ui-empty" id="empty"><p data-i18n="empty">Ketik timestamp atau tanggal untuk melihat hasilnya, atau pakai contoh.</p></div>
+        <div id="out" hidden>
+          <div class="banner wk-warn" id="warn32" hidden></div>
+          <div class="wk-unix">
+            <div class="wk-urow"><span class="wk-k" data-i18n="r_s">Unix (detik)</span><code id="rS"></code><button class="btn btn-sm" type="button" data-copy="rS" data-i18n="common.copy">Salin</button></div>
+            <div class="wk-urow"><span class="wk-k" data-i18n="r_ms">Unix (milidetik)</span><code id="rMs"></code><button class="btn btn-sm" type="button" data-copy="rMs" data-i18n="common.copy">Salin</button></div>
+          </div>
+          <ul class="wk-zones" id="zones"></ul>
+        </div>
+      </section>
+      <section class="panel">
+        <div class="panel-head"><h2 data-i18n="diff_h">Selisih dua waktu</h2></div>
+        <div class="wk-two">
+          <div class="wk-f"><label class="wk-lbl" for="dA" data-i18n="diff_a">Waktu A</label><input class="field-sm wk-field" id="dA" spellcheck="false" autocomplete="off"><button class="btn btn-sm wk-mini" type="button" data-now="dA" data-i18n="diff_now">Sekarang</button></div>
+          <div class="wk-f"><label class="wk-lbl" for="dB" data-i18n="diff_b">Waktu B</label><input class="field-sm wk-field" id="dB" spellcheck="false" autocomplete="off"><button class="btn btn-sm wk-mini" type="button" data-now="dB" data-i18n="diff_now">Sekarang</button></div>
+        </div>
+        <p class="wk-dres" id="dRes" role="status"></p>
+        <p class="small muted" id="dTot"></p>
+      </section>
+    </div>
+  </div>
+</main>
+
+<script src="waktu.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
