@@ -422,6 +422,21 @@
       "short_en": "In words",
       "description_en": "Turn numbers into Indonesian rupiah words and Rp format, in bulk with CSV download",
       "tags_en": ["rupiah", "number to words", "spell", "receipt", "cheque", "money", "currency"]
+    },
+    {
+      "id": "subnet",
+      "name": "Kalkulator subnet",
+      "short": "Subnet",
+      "description": "Hitung jaringan IPv4 dari CIDR atau netmask, bagi subnet, periksa IP di jaringan, dan ringkas daftar CIDR",
+      "group": "server",
+      "path": "subnet/",
+      "icon": "/24",
+      "tags": ["subnet", "cidr", "ipv4", "netmask", "wildcard", "broadcast", "jaringan", "vlsm", "supernet", "ip", "mikrotik"],
+      "favorite": false,
+      "name_en": "Subnet calculator",
+      "short_en": "Subnet",
+      "description_en": "Work out IPv4 networks from CIDR or netmask, split subnets, check an IP in a network, and summarize CIDR lists",
+      "tags_en": ["subnet", "cidr", "ipv4", "netmask", "wildcard", "broadcast", "network", "vlsm", "supernet", "ip"]
     }
   ]
 }
