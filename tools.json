@@ -407,6 +407,21 @@
       "short_en": "Split",
       "description_en": "Split a cafe bill per person, with decimal prices, VAT, service charge, discount, and rounding",
       "tags_en": ["split bill", "bill", "cafe", "restaurant", "vat", "tax", "service", "tip", "money"]
+    },
+    {
+      "id": "terbilang",
+      "name": "Terbilang rupiah",
+      "short": "Terbilang",
+      "description": "Ubah angka jadi tulisan terbilang rupiah dan format Rp, bisa banyak angka sekaligus dan unduh CSV",
+      "group": "teks",
+      "path": "terbilang/",
+      "icon": "Rp",
+      "tags": ["terbilang", "rupiah", "angka", "kuitansi", "kwitansi", "cek", "huruf", "ejaan", "uang"],
+      "favorite": false,
+      "name_en": "Rupiah in words",
+      "short_en": "In words",
+      "description_en": "Turn numbers into Indonesian rupiah words and Rp format, in bulk with CSV download",
+      "tags_en": ["rupiah", "number to words", "spell", "receipt", "cheque", "money", "currency"]
     }
   ]
 }
