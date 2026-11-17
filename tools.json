@@ -377,6 +377,21 @@
       "short_en": "Compress",
       "description_en": "Shrink images: pick a format, quality, and longest side, compare before and after, download a ZIP",
       "tags_en": ["compress", "image", "photo", "jpeg", "jpg", "webp", "png", "resize", "size", "zip"]
+    },
+    {
+      "id": "tebak-kata",
+      "name": "Tebak kata",
+      "short": "Tebak",
+      "description": "Tebak kata bahasa Indonesia 5 huruf dalam 6 kesempatan, kata harian dan mode acak",
+      "group": "game",
+      "path": "tebak-kata/",
+      "icon": "W5",
+      "tags": ["tebak kata", "wordle", "game", "kata", "puzzle", "harian"],
+      "favorite": false,
+      "name_en": "Word guess",
+      "short_en": "Words",
+      "description_en": "Guess a 5-letter Indonesian word in 6 tries, daily word and random mode",
+      "tags_en": ["word guess", "wordle", "game", "word", "puzzle", "daily"]
     }
   ]
 }
