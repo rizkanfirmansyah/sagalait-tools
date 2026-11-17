@@ -1,0 +1,27 @@
+/* Gaya khusus Konverter waktu; semua warna lewat token portal */
+.wk-grid > *, .wk-col > * { min-width: 0; }
+.wk-col { display: grid; gap: 20px; align-content: start; }
+.wk-lbl { display: block; font-size: 14px; color: var(--body); margin-bottom: 6px; }
+.wk-gap { margin-top: 16px; }
+.field-sm.wk-field { width: 100%; height: 48px; font-size: 16px; font-family: var(--mono); }
+.field-sm.wk-sel { font-family: inherit; }
+.wk-err { color: var(--err); min-height: 1.4em; margin: 6px 0 0; }
+.wk-ex { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin-top: 4px; }
+.wk-ex .ui-chip { min-height: 44px; font-family: var(--mono); font-size: 13px; }
+.wk-now { display: grid; gap: 8px; margin-bottom: 12px; }
+.wk-nowrow, .wk-urow { display: grid; grid-template-columns: 8em minmax(0, 1fr) auto; gap: 8px; align-items: center; }
+.wk-k { font-size: 13px; color: var(--muted); }
+.wk-now code, .wk-unix code { font-family: var(--mono); font-size: 18px; font-weight: 700; color: var(--ink); overflow-wrap: anywhere; }
+.wk-clock { margin: 4px 0 0; font-size: 14px; color: var(--body); overflow-wrap: anywhere; }
+.wk-warn { background: var(--warn-t); color: var(--warn); margin-bottom: 12px; font-weight: 500; }
+.wk-warn[hidden] { display: none; }
+.wk-unix { display: grid; gap: 8px; padding-bottom: 12px; margin-bottom: 12px; border-bottom: 1px solid var(--line); }
+.wk-zones { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
+.wk-zone { padding: 10px 12px; border: 1px solid var(--line); border-radius: var(--r-md); background: var(--well); min-width: 0; }
+.wk-zhead { display: flex; justify-content: space-between; align-items: center; gap: 8px; margin-bottom: 4px; }
+.wk-iso { display: block; font-family: var(--mono); font-size: 15px; color: var(--ink); overflow-wrap: anywhere; }
+.wk-two { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+.wk-mini { margin-top: 6px; }
+.wk-dres { margin: 12px 0 4px; font-weight: 600; min-height: 1.4em; overflow-wrap: anywhere; }
+.wk-grid .btn-sm { height: 44px; }
+@media (max-width: 560px) { .wk-two { grid-template-columns: minmax(0, 1fr); } .wk-nowrow, .wk-urow { grid-template-columns: minmax(0, 1fr) auto; } .wk-k { grid-column: 1 / -1; } }
