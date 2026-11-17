@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="id" data-theme="light" data-lang-src="lang.json">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="referrer" content="no-referrer">
+<title data-i18n="title">Tebak kata · Tools SagalaIT</title>
+<link rel="icon" href="data:,">
+<script src="../assets/theme.js"></script>
+<script src="../assets/i18n.js"></script>
+<link rel="stylesheet" href="../assets/app.css">
+<link rel="stylesheet" href="app.css">
+</head>
+<body>
+
+<header class="wrap top">
+  <a class="logo" href="../" aria-label="Tools SagalaIT, ke beranda" data-i18n-attr="aria-label:common.home">S</a>
+  <nav class="crumbs" aria-label="Lokasi" data-i18n-attr="aria-label:common.nav"><a href="../" data-i18n="common.tools">Tools</a><span aria-hidden="true">/</span><a class="crumb-g" href="../#grup-game" data-i18n="group.game">Game ringan</a><span aria-hidden="true">/</span><span class="crumb-now" aria-current="page" data-i18n="crumb">Tebak kata</span></nav>
+  <span class="top-end">
+    <button class="icon-btn" type="button" data-theme-toggle aria-label="Ganti tema terang atau gelap" data-i18n-attr="aria-label:common.theme">
+      <svg width="20" height="20" viewBox="-11 -11 22 22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle r="9"/><path d="M0 -9 A9 9 0 0 1 0 9 Z" fill="currentColor"/></svg>
+    </button>
+  </span>
+</header>
+
+<main class="wrap">
+  <div class="app-head">
+    <div>
+      <h1 data-i18n="h1">Tebak kata</h1>
+      <p class="lead" data-i18n="lead">Tebak kata bahasa Indonesia 5 huruf dalam 6 kesempatan. Kata harian sama untuk semua orang pada tanggal yang sama. Semua berjalan di browser.</p>
+    </div>
+  </div>
+
+  <div class="app-grid tk-grid">
+    <section class="panel tk-play">
+      <p class="tk-msg" id="msg" role="status" aria-live="polite"></p>
+      <div class="tk-board" id="board" role="grid" aria-label="Papan tebakan" data-i18n-attr="aria-label:board"></div>
+      <div class="tk-end" id="end" hidden>
+        <p class="tk-result" id="result"></p>
+        <div class="tk-end-act">
+          <button class="btn btn-primary" type="button" id="btnShare" data-i18n="share">Bagikan hasil</button>
+          <button class="btn" type="button" id="btnNew" data-i18n="new_random">Main acak lagi</button>
+          <button class="btn" type="button" id="btnDaily" data-i18n="to_daily" hidden>Ke kata harian</button>
+        </div>
+      </div>
+      <div class="tk-kb" id="kb" role="group" aria-label="Papan ketik" data-i18n-attr="aria-label:keys"></div>
+    </section>
+
+    <div class="tk-side">
+      <section class="panel">
+        <div class="panel-head"><h2 data-i18n="mode">Mode</h2></div>
+        <div class="ui-seg tk-seg" role="radiogroup" aria-label="Mode" data-i18n-attr="aria-label:mode" id="modes">
+          <label><input type="radio" name="mode" value="daily" checked><span data-i18n="m_daily">Harian</span></label>
+          <label><input type="radio" name="mode" value="random"><span data-i18n="m_random">Acak</span></label>
+        </div>
+        <h3 class="tk-h3" data-i18n="legend">Arti penanda</h3>
+        <ul class="tk-legend">
+          <li><span class="tk-t tk-sm" data-s="c" aria-hidden="true"><b>A</b><i>✓</i></span><span data-i18n="lg_c">Huruf tepat dan di tempat yang benar</span></li>
+          <li><span class="tk-t tk-sm" data-s="p" aria-hidden="true"><b>A</b><i>~</i></span><span data-i18n="lg_p">Huruf ada, tetapi di tempat lain</span></li>
+          <li><span class="tk-t tk-sm" data-s="a" aria-hidden="true"><b>A</b><i>×</i></span><span data-i18n="lg_a">Huruf tidak ada di kata ini</span></li>
+        </ul>
+      </section>
+      <section class="panel">
+        <div class="panel-head"><h2 data-i18n="stats">Statistik harian</h2></div>
+        <div class="tk-stats" id="stats"></div>
+        <h3 class="tk-h3" data-i18n="dist">Sebaran jumlah tebakan</h3>
+        <ol class="tk-dist" id="dist"></ol>
+      </section>
+      <section class="panel">
+        <div class="panel-head"><h2 data-i18n="how">Cara main</h2></div>
+        <ul class="tk-how"><li data-i18n="how1">Ketik atau ketuk huruf, lalu Enter. Kata harus ada di daftar kata.</li><li data-i18n="how2">Penanda ✓ ~ × tampil bersama warna, jadi tetap terbaca tanpa warna.</li><li data-i18n="how3">Statistik hanya dihitung untuk mode harian dan disimpan di browser ini.</li></ul>
+      </section>
+    </div>
+  </div>
+</main>
+
+<script src="kata.js"></script>
+<script src="wordle.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
