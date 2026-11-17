@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="id" data-theme="light" data-lang-src="lang.json">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="referrer" content="no-referrer">
+<title data-i18n="title">Kalkulator subnet · Tools SagalaIT</title>
+<link rel="icon" href="data:,">
+<script src="../assets/theme.js"></script>
+<script src="../assets/i18n.js"></script>
+<link rel="stylesheet" href="../assets/app.css">
+<link rel="stylesheet" href="app.css">
+</head>
+<body>
+
+<header class="wrap top">
+  <a class="logo" href="../" aria-label="Tools SagalaIT, ke beranda" data-i18n-attr="aria-label:common.home">S</a>
+  <nav class="crumbs" aria-label="Lokasi" data-i18n-attr="aria-label:common.nav"><a href="../" data-i18n="common.tools">Tools</a><span aria-hidden="true">/</span><a class="crumb-g" href="../#grup-server" data-i18n="group.server">Server dan jaringan</a><span aria-hidden="true">/</span><span class="crumb-now" aria-current="page" data-i18n="crumb">Kalkulator subnet</span></nav>
+  <span class="top-end">
+    <button class="icon-btn" type="button" data-theme-toggle aria-label="Ganti tema terang atau gelap" data-i18n-attr="aria-label:common.theme">
+      <svg width="20" height="20" viewBox="-11 -11 22 22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle r="9"/><path d="M0 -9 A9 9 0 0 1 0 9 Z" fill="currentColor"/></svg>
+    </button>
+  </span>
+</header>
+
+<main class="wrap">
+  <div class="app-head">
+    <div>
+      <h1 data-i18n="h1">Kalkulator subnet</h1>
+      <p class="lead" data-i18n="lead">Hitung jaringan IPv4 dari CIDR atau IP dan netmask, bagi jadi subnet, periksa apakah IP ada di jaringan, dan ringkas daftar CIDR. Semua di browser.</p>
+    </div>
+  </div>
+
+  <section class="panel sn-in">
+    <div class="panel-head"><h2 data-i18n="net_h">Alamat</h2><button class="btn btn-sm" type="button" id="btnSample" data-i18n="sample">Coba dengan contoh</button></div>
+    <label class="sn-lbl" for="inp" data-i18n="in_l">CIDR, atau IP dan netmask</label>
+    <input class="field-sm sn-field" id="inp" spellcheck="false" autocomplete="off" autocapitalize="off" placeholder="mis. 192.168.88.0/24" data-i18n-attr="placeholder:in_ph">
+    <p class="small sn-err" id="err" role="alert"></p>
+    <div class="sn-ex"><span class="small muted" data-i18n="ex">Contoh</span>
+      <button class="ui-chip" type="button" data-ex="192.168.88.0/24">192.168.88.0/24</button><button class="ui-chip" type="button" data-ex="172.16.5.130/26">172.16.5.130/26</button><button class="ui-chip" type="button" data-ex="10.0.0.1 255.255.0.0">10.0.0.1 255.255.0.0</button><button class="ui-chip" type="button" data-ex="10.1.1.0/31">10.1.1.0/31</button></div>
+    <span class="sn-lbl sn-gap" id="lblTabs" data-i18n="tabs">Fungsi</span>
+    <div class="ui-seg sn-seg" role="radiogroup" aria-labelledby="lblTabs" id="tabs">
+      <label><input type="radio" name="tab" value="calc" checked><span data-i18n="t_calc">Hitung</span></label>
+      <label><input type="radio" name="tab" value="split"><span data-i18n="t_split">Bagi</span></label>
+      <label><input type="radio" name="tab" value="check"><span data-i18n="t_check">Periksa</span></label>
+      <label><input type="radio" name="tab" value="sum"><span data-i18n="t_sum">Ringkas</span></label>
+    </div>
+  </section>
+
+  <div class="ui-empty" id="empty"><p data-i18n="empty">Ketik alamat untuk melihat hasilnya, atau pakai contoh.</p></div>
+
+  <section class="panel sn-sec" id="pCalc" hidden>
+    <div class="panel-head"><h2 data-i18n="calc_h">Hasil</h2><button class="btn btn-sm" type="button" id="btnCopyAll" data-i18n="copy_all">Salin ringkasan</button></div>
+    <div class="banner sn-warn" id="notNet" hidden></div>
+    <dl class="kv sn-kv" id="kv"></dl>
+    <p class="small muted" id="special"></p>
+    <h3 class="sn-h3" data-i18n="bin_h">Biner</h3>
+    <div class="sn-bin" id="bin"></div>
+    <p class="small muted" data-i18n="bin_legend">Bit jaringan tebal dan bergaris bawah; bit host tipis.</p>
+  </section>
+
+  <section class="panel sn-sec" id="pSplit" hidden>
+    <div class="panel-head"><h2 data-i18n="split_h">Bagi jadi subnet</h2></div>
+    <span class="sn-lbl" id="lblBy" data-i18n="by">Bagi berdasarkan</span>
+    <div class="ui-seg sn-seg" role="radiogroup" aria-labelledby="lblBy" id="by">
+      <label><input type="radio" name="by" value="prefix" checked><span data-i18n="by_prefix">Panjang prefiks baru</span></label>
+      <label><input type="radio" name="by" value="count"><span data-i18n="by_count">Jumlah subnet</span></label>
+    </div>
+    <div class="sn-f" id="boxPrefix"><label class="sn-lbl" for="newp" data-i18n="new_prefix">Prefiks baru</label><select class="field-sm sn-field" id="newp"></select></div>
+    <div class="sn-f" id="boxCount" hidden><label class="sn-lbl" for="cnt" data-i18n="count">Jumlah subnet</label><input class="field-sm sn-field" id="cnt" type="number" min="1" step="1" value="4" inputmode="numeric"><p class="small muted" id="cntNote"></p></div>
+    <p class="small sn-err" id="splitErr" role="alert"></p>
+    <p class="small muted" id="splitStat"></p>
+    <div class="sn-tablewrap"><table class="sn-table"><thead><tr><th scope="col" data-i18n="c_cidr">CIDR</th><th scope="col" data-i18n="c_range">Rentang host</th><th scope="col" data-i18n="c_bc">Broadcast</th><th scope="col" data-i18n="c_hosts">Host</th></tr></thead><tbody id="rows"></tbody></table></div>
+    <div class="sn-act"><button class="btn" type="button" id="btnCsvCopy" data-i18n="csv_copy">Salin CSV</button><button class="btn" type="button" id="btnCsvDl" data-i18n="csv_dl">Unduh CSV</button></div>
+  </section>
+
+  <section class="panel sn-sec" id="pCheck" hidden>
+    <div class="panel-head"><h2 data-i18n="chk_h">Periksa</h2></div>
+    <label class="sn-lbl" for="chkIp" data-i18n="chk_ip">Apakah IP ada di jaringan di atas?</label>
+    <input class="field-sm sn-field" id="chkIp" spellcheck="false" autocomplete="off" placeholder="mis. 192.168.88.200" data-i18n-attr="placeholder:chk_ip_ph">
+    <p class="sn-res" id="chkIpRes" role="status"></p>
+    <h3 class="sn-h3" data-i18n="chk_rel">Hubungan dua CIDR</h3>
+    <div class="sn-two"><div class="sn-f"><label class="sn-lbl" for="relA" data-i18n="chk_a">CIDR A</label><input class="field-sm sn-field" id="relA" spellcheck="false" autocomplete="off" placeholder="192.168.0.0/24"></div>
+    <div class="sn-f"><label class="sn-lbl" for="relB" data-i18n="chk_b">CIDR B</label><input class="field-sm sn-field" id="relB" spellcheck="false" autocomplete="off" placeholder="192.168.0.0/16"></div></div>
+    <p class="sn-res" id="relRes" role="status"></p>
+  </section>
+
+  <section class="panel sn-sec" id="pSum" hidden>
+    <div class="panel-head"><h2 data-i18n="sum_h">Ringkas daftar CIDR</h2></div>
+    <label class="sn-lbl" for="sumIn" data-i18n="sum_l">Satu CIDR per baris</label>
+    <textarea class="field sn-ta" id="sumIn" spellcheck="false" autocomplete="off" placeholder="192.168.0.0/24&#10;192.168.1.0/24" data-i18n-attr="placeholder:sum_ph"></textarea>
+    <ul class="sn-bad small" id="sumBad"></ul>
+    <p class="small muted" id="sumStat"></p>
+    <pre class="sn-pre" id="sumOut"></pre>
+    <div class="sn-act"><button class="btn" type="button" id="btnSumCopy" data-i18n="sum_copy">Salin hasil</button></div>
+  </section>
+</main>
+
+<script src="cidr.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
