@@ -1,0 +1,49 @@
+/* Gaya khusus Patungan; semua warna lewat token portal */
+.pt-grid > *, .pt-col > * { min-width: 0; }
+.pt-col { display: grid; gap: 20px; align-content: start; }
+.pt-lbl { display: block; font-size: 14px; color: var(--body); margin-bottom: 6px; }
+.field-sm.pt-in { width: 100%; height: 44px; font-size: 16px; }
+.pt-f { margin-bottom: 12px; min-width: 0; }
+.pt-two { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+.pt-seg span { min-height: 44px; }
+.pt-seg { margin-bottom: 12px; }
+.pt-err { color: var(--err); min-height: 0; margin: 4px 0 0; }
+.pt-err:empty { display: none; }
+.pt-people { display: grid; gap: 8px; margin-bottom: 12px; }
+.pt-prow { display: flex; gap: 8px; }
+.pt-rm { flex: none; width: 44px; padding: 0; font-size: 20px; }
+.pt-items { display: grid; gap: 12px; margin-bottom: 12px; }
+.pt-item { border: 1px solid var(--line); border-radius: var(--r-md); padding: 12px; background: var(--well); }
+.pt-ihead { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
+.pt-chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.pt-chip { min-height: 44px; }
+.pt-item .ui-empty, .ui-empty.pt-empty { padding: 16px; }
+.pt-totals { display: grid; gap: 4px; margin-bottom: 12px; }
+.pt-line { display: flex; justify-content: space-between; gap: 12px; align-items: baseline; }
+.pt-amt { font-variant-numeric: tabular-nums; text-align: right; }
+.pt-big { font-size: 20px; font-weight: 800; color: var(--ink); padding-bottom: 6px; margin-bottom: 4px; border-bottom: 1px solid var(--line); }
+.pt-warn { color: var(--warn); margin: 0 0 12px; }
+.pt-cards { display: grid; gap: 10px; }
+.pt-card { border: 1px solid var(--line); border-radius: var(--r-md); padding: 12px; background: var(--panel); }
+.pt-chead { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; margin-bottom: 6px; }
+.pt-chead strong { overflow-wrap: anywhere; }
+.pt-ctot { font-size: 22px; font-weight: 800; font-variant-numeric: tabular-nums; color: var(--ink); }
+.pt-lines { list-style: none; margin: 0 0 6px; padding: 0; display: grid; gap: 2px; color: var(--body); }
+.pt-h3 { font-size: 14px; font-weight: 600; margin: 20px 0 8px; }
+.pt-paid { display: grid; gap: 8px; }
+.pt-pd { display: grid; grid-template-columns: minmax(70px, 1fr) minmax(90px, 1.3fr) auto; gap: 8px; align-items: center; }
+.pt-pd .pt-st { grid-column: 1 / -1; }
+.pt-pn { overflow-wrap: anywhere; font-weight: 600; }
+.pt-fill { padding: 0 12px; }
+.pt-short { color: var(--err); font-weight: 600; }
+.pt-over { color: var(--warn); font-weight: 600; }
+.pt-ok { color: var(--ok); font-weight: 600; }
+.pt-group { margin: 12px 0 4px; font-weight: 600; }
+.pt-settle { margin: 0 0 12px; padding-left: 18px; display: grid; gap: 4px; color: var(--body); }
+.pt-act { display: flex; flex-wrap: wrap; gap: 8px; }
+.pt-dlg { border: 1px solid var(--line-strong); border-radius: var(--r-lg); background: var(--panel); color: var(--ink); padding: 24px; max-width: min(92vw, 400px); box-shadow: var(--shadow-pop); }
+.pt-dlg::backdrop { background: var(--scrim); }
+.pt-dlg h2 { font-size: 18px; margin-bottom: 8px; }
+.pt-dlg p { color: var(--body); }
+.pt-dlg-act { display: flex; gap: 8px; justify-content: flex-end; margin-top: 20px; flex-wrap: wrap; }
+@media (max-width: 480px) { .pt-two { grid-template-columns: minmax(0, 1fr) 96px; } }
