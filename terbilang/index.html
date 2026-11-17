@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="id" data-theme="light" data-lang-src="lang.json">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="referrer" content="no-referrer">
+<title data-i18n="title">Terbilang rupiah · Tools SagalaIT</title>
+<link rel="icon" href="data:,">
+<script src="../assets/theme.js"></script>
+<script src="../assets/i18n.js"></script>
+<link rel="stylesheet" href="../assets/app.css">
+<link rel="stylesheet" href="app.css">
+</head>
+<body>
+
+<header class="wrap top">
+  <a class="logo" href="../" aria-label="Tools SagalaIT, ke beranda" data-i18n-attr="aria-label:common.home">S</a>
+  <nav class="crumbs" aria-label="Lokasi" data-i18n-attr="aria-label:common.nav"><a href="../" data-i18n="common.tools">Tools</a><span aria-hidden="true">/</span><a class="crumb-g" href="../#grup-teks" data-i18n="group.teks">Teks dan encoding</a><span aria-hidden="true">/</span><span class="crumb-now" aria-current="page" data-i18n="crumb">Terbilang rupiah</span></nav>
+  <span class="top-end">
+    <button class="icon-btn" type="button" data-theme-toggle aria-label="Ganti tema terang atau gelap" data-i18n-attr="aria-label:common.theme">
+      <svg width="20" height="20" viewBox="-11 -11 22 22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle r="9"/><path d="M0 -9 A9 9 0 0 1 0 9 Z" fill="currentColor"/></svg>
+    </button>
+  </span>
+</header>
+
+<main class="wrap">
+  <div class="app-head">
+    <div>
+      <h1 data-i18n="h1">Terbilang rupiah</h1>
+      <p class="lead" data-i18n="lead">Ubah angka menjadi tulisan terbilang dan format Rp, untuk kuitansi, cek, atau surat. Masukan boleh 1.250.000,50 atau 1250000.5.</p>
+    </div>
+  </div>
+
+  <div class="app-grid tb-grid">
+    <div class="tb-col">
+      <section class="panel">
+        <div class="panel-head"><h2 data-i18n="in_h">Angka</h2><button class="btn btn-sm" type="button" id="btnSample" data-i18n="sample">Coba dengan contoh</button></div>
+        <label class="tb-lbl" for="num" data-i18n="num_l">Angka</label>
+        <input class="field-sm tb-num" id="num" inputmode="decimal" autocomplete="off" spellcheck="false" placeholder="mis. 1.250.000,50" data-i18n-attr="placeholder:num_ph">
+        <p class="small tb-err" id="err" role="alert"></p>
+        <p class="small muted" data-i18n="rule">Cara membaca angka: koma adalah desimal dan titik adalah ribuan (1.250,50). Satu titik yang diikuti tepat tiga digit dibaca ribuan (12.500), selain itu desimal (12.5). Maksimal 15 digit.</p>
+        <span class="tb-lbl tb-gap" id="lblCase" data-i18n="case_l">Huruf</span>
+        <div class="ui-seg tb-seg" role="radiogroup" aria-labelledby="lblCase" id="cases">
+          <label><input type="radio" name="kap" value="lower"><span data-i18n="c_lower">huruf kecil</span></label>
+          <label><input type="radio" name="kap" value="sentence" checked><span data-i18n="c_sentence">Awal kalimat</span></label>
+          <label><input type="radio" name="kap" value="title"><span data-i18n="c_title">Tiap Kata</span></label>
+          <label><input type="radio" name="kap" value="upper"><span data-i18n="c_upper">HURUF BESAR</span></label>
+        </div>
+        <label class="ui-switch"><input type="checkbox" id="swRp" checked><span data-i18n="sw_rupiah">Tulis kata "rupiah"</span></label>
+        <label class="ui-switch"><input type="checkbox" id="swSen" checked><span data-i18n="sw_sen">Tulis sen bila ada</span></label>
+      </section>
+      <section class="panel">
+        <div class="panel-head"><h2 data-i18n="batch_h">Banyak angka sekaligus</h2></div>
+        <label class="tb-lbl" for="batch" data-i18n="batch_l">Satu angka per baris</label>
+        <textarea class="field tb-ta" id="batch" spellcheck="false" autocomplete="off" placeholder="1000&#10;2.500.000&#10;12,5" data-i18n-attr="placeholder:batch_ph"></textarea>
+        <p class="small muted" data-i18n="batch_note">Baris kosong dilewati.</p>
+        <div class="tb-tablewrap" id="bwrap" hidden><table class="tb-table"><thead><tr><th scope="col" data-i18n="col_num">Angka</th><th scope="col" data-i18n="col_fmt">Format</th><th scope="col" data-i18n="col_words">Terbilang</th></tr></thead><tbody id="brows"></tbody></table></div>
+        <div class="tb-act"><button class="btn" type="button" id="btnBCopy" data-i18n="batch_copy">Salin tabel</button><button class="btn" type="button" id="btnBCsv" data-i18n="batch_csv">Unduh CSV</button></div>
+      </section>
+    </div>
+    <div class="tb-col">
+      <section class="panel">
+        <div class="panel-head"><h2 data-i18n="res_h">Hasil</h2></div>
+        <div class="ui-empty" id="empty"><p data-i18n="empty">Ketik angka untuk melihat terbilangnya.</p></div>
+        <div id="out" hidden>
+          <span class="tb-lbl" data-i18n="words_l">Terbilang</span>
+          <p class="tb-words" id="words" lang="id"></p>
+          <div class="tb-act"><button class="btn btn-primary" type="button" id="btnCopyW" data-i18n="common.copy">Salin</button></div>
+          <span class="tb-lbl tb-gap" data-i18n="fmt_l">Format</span>
+          <p class="tb-fmt" id="fmt"></p>
+          <div class="tb-act"><button class="btn" type="button" id="btnCopyF" data-i18n="common.copy">Salin</button></div>
+          <p class="small muted tb-gap" data-i18n="note_id">Terbilang selalu ditulis dalam bahasa Indonesia.</p>
+        </div>
+      </section>
+      <section class="panel">
+        <div class="panel-head"><h2 data-i18n="hist_h">Riwayat</h2><button class="btn btn-sm" type="button" id="btnHClear" data-i18n="common.clear">Bersihkan</button></div>
+        <p class="small muted" data-i18n="hist_note">10 terakhir, hanya di halaman ini dan tidak disimpan.</p>
+        <ul class="tb-hist" id="hist"></ul>
+        <p class="small muted" id="histEmpty" data-i18n="hist_empty">Belum ada riwayat.</p>
+      </section>
+    </div>
+  </div>
+</main>
+
+<script src="terbilang.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
