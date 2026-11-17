@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="id" data-theme="light" data-lang-src="lang.json">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="referrer" content="no-referrer">
+<title data-i18n="title">Patungan · Tools SagalaIT</title>
+<link rel="icon" href="data:,">
+<script src="../assets/theme.js"></script>
+<script src="../assets/i18n.js"></script>
+<link rel="stylesheet" href="../assets/app.css">
+<link rel="stylesheet" href="app.css">
+</head>
+<body>
+
+<header class="wrap top">
+  <a class="logo" href="../" aria-label="Tools SagalaIT, ke beranda" data-i18n-attr="aria-label:common.home">S</a>
+  <nav class="crumbs" aria-label="Lokasi" data-i18n-attr="aria-label:common.nav"><a href="../" data-i18n="common.tools">Tools</a><span aria-hidden="true">/</span><a class="crumb-g" href="../#grup-harian" data-i18n="group.harian">Sehari-hari</a><span aria-hidden="true">/</span><span class="crumb-now" aria-current="page" data-i18n="crumb">Patungan</span></nav>
+  <span class="top-end">
+    <button class="icon-btn" type="button" data-theme-toggle aria-label="Ganti tema terang atau gelap" data-i18n-attr="aria-label:common.theme">
+      <svg width="20" height="20" viewBox="-11 -11 22 22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle r="9"/><path d="M0 -9 A9 9 0 0 1 0 9 Z" fill="currentColor"/></svg>
+    </button>
+  </span>
+</header>
+
+<main class="wrap">
+  <div class="app-head">
+    <div>
+      <h1 data-i18n="h1">Patungan, bagi tagihan</h1>
+      <p class="lead" data-i18n="lead">Bagi tagihan kafe atau restoran dengan adil, termasuk harga berkoma, PPN, service, dan pembulatan. Semua dihitung di browser dan tidak ada yang dikirim.</p>
+    </div>
+  </div>
+
+  <div class="app-grid pt-grid">
+    <div class="pt-col">
+      <section class="panel">
+        <div class="panel-head"><h2 data-i18n="people_h">Orang</h2></div>
+        <div id="people" class="pt-people"></div>
+        <button class="btn" type="button" id="btnAddP" data-i18n="add_person">Tambah orang</button>
+        <p class="small muted" id="pMax" hidden></p>
+      </section>
+      <section class="panel">
+        <div class="panel-head"><h2 data-i18n="items_h">Pesanan</h2></div>
+        <div id="items" class="pt-items"></div>
+        <p class="ui-empty" id="itemsEmpty" data-i18n="items_empty">Belum ada item. Tambahkan pesanan pertama.</p>
+        <button class="btn btn-primary" type="button" id="btnAddI" data-i18n="add_item">Tambah item</button>
+      </section>
+      <section class="panel">
+        <div class="panel-head"><h2 data-i18n="extra_h">Biaya tambahan</h2></div>
+        <span class="pt-lbl" id="lblDisc" data-i18n="disc">Diskon atau voucher</span>
+        <div class="ui-seg pt-seg" role="radiogroup" aria-labelledby="lblDisc" id="dtype">
+          <label><input type="radio" name="dtype" value="none" checked><span data-i18n="d_none">Tidak ada</span></label>
+          <label><input type="radio" name="dtype" value="amount"><span data-i18n="d_amount">Nominal</span></label>
+          <label><input type="radio" name="dtype" value="percent"><span data-i18n="d_percent">Persen</span></label>
+        </div>
+        <div class="pt-f" id="boxDisc" hidden><label class="pt-lbl" for="dval" data-i18n="disc_val">Besar diskon</label><input class="field-sm pt-in" id="dval" inputmode="decimal" autocomplete="off"><p class="small pt-err" id="dErr"></p></div>
+        <div class="pt-two">
+          <div class="pt-f"><label class="pt-lbl" for="svc" data-i18n="svc">Service charge (%)</label><input class="field-sm pt-in" id="svc" inputmode="decimal" autocomplete="off" value="0"><p class="small pt-err" id="svcErr"></p></div>
+          <div class="pt-f"><label class="pt-lbl" for="tax" data-i18n="tax">Pajak (%)</label><input class="field-sm pt-in" id="tax" inputmode="decimal" autocomplete="off" value="11"><p class="small pt-err" id="taxErr"></p></div>
+        </div>
+        <p class="small muted" data-i18n="tax_hint">PPN biasanya 11, PB1 10.</p>
+        <label class="ui-switch"><input type="checkbox" id="incl"><span data-i18n="incl">Harga menu sudah termasuk pajak dan service</span></label>
+        <div class="pt-f"><label class="pt-lbl" for="base" data-i18n="base">Pajak dihitung atas</label>
+          <select class="field-sm pt-in" id="base"><option value="subService" data-i18n="base_ss">Subtotal + service (umum di restoran)</option><option value="sub" data-i18n="base_s">Subtotal saja</option></select></div>
+        <div class="pt-f"><label class="pt-lbl" for="round" data-i18n="round">Pembulatan setoran per orang</label>
+          <select class="field-sm pt-in" id="round"></select></div>
+        <p class="small muted" data-i18n="order">Urutan hitung: subtotal, diskon, service, pajak, lalu pembulatan.</p>
+      </section>
+    </div>
+
+    <div class="pt-col">
+      <section class="panel pt-res">
+        <div class="panel-head"><h2 data-i18n="result_h">Hasil</h2><span class="small muted" id="match" role="status"></span></div>
+        <div class="ui-empty" id="resEmpty"><p data-i18n="no_items">Tambahkan item pesanan untuk melihat pembagian.</p></div>
+        <div id="resBox" hidden>
+          <div class="pt-totals" id="totals"></div>
+          <p class="small pt-warn" id="ignored" hidden></p>
+          <div id="cards" class="pt-cards"></div>
+          <h3 class="pt-h3" data-i18n="paid_h">Uang masuk</h3>
+          <div class="pt-f"><label class="pt-lbl" for="payer" data-i18n="payer">Yang membayar di kasir</label><select class="field-sm pt-in" id="payer"></select></div>
+          <div id="paid" class="pt-paid"></div>
+          <p class="pt-group" id="group" role="status"></p>
+          <ul class="pt-settle" id="settle"></ul>
+          <div class="pt-act"><button class="btn btn-primary" type="button" id="btnCopy" data-i18n="copy">Salin ringkasan</button><button class="btn" type="button" id="btnDl" data-i18n="dl">Unduh .txt</button></div>
+        </div>
+      </section>
+      <section class="panel"><div class="pt-act"><button class="btn" type="button" id="btnSample" data-i18n="sample">Coba dengan contoh</button><button class="btn" type="button" id="btnNew" data-i18n="new">Mulai baru</button></div></section>
+    </div>
+  </div>
+  <dialog class="pt-dlg" id="dlgNew" aria-labelledby="dlgT" aria-describedby="dlgP"><form method="dialog"><h2 id="dlgT" data-i18n="confirm_t">Mulai baru?</h2><p id="dlgP" data-i18n="confirm_p">Semua orang, item, dan pengaturan di halaman ini akan dihapus.</p><div class="pt-dlg-act"><button class="btn" type="submit" value="cancel" data-i18n="cancel">Batal</button><button class="btn btn-primary" type="submit" value="ok" data-i18n="confirm_ok">Hapus dan mulai baru</button></div></form></dialog>
+</main>
+
+<script src="bagi.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
