@@ -71,7 +71,7 @@
     var d = W.diff(pa.ms, pb.ms);
     if (!d.sign) { res.textContent = t('diff_same'); return; }
     var text = t('diff_text', { d: num(d.days), h: d.hours, m: d.minutes, s: d.seconds + (d.ms ? '.' + String(d.ms).padStart(3, '0') : '') });
-    res.textContent = t(d.sign > 0 ? 'diff_after' : 'diff_before', { n: '', text: text }).replace(/\s{2,}/g, ' ');
+    res.textContent = t(d.sign > 0 ? 'diff_after' : 'diff_before', { text: text });
     tot.textContent = t('diff_tot', { s: num(d.totalSeconds, 3), m: num(d.totalMinutes, 2), h: num(d.totalHours, 2), d: num(d.totalDays, 3) });
   }
   $('dA').addEventListener('input', diff); $('dB').addEventListener('input', diff);
