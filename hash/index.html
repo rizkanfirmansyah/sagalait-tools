@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="id" data-theme="light" data-lang-src="lang.json">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="referrer" content="no-referrer">
+<title data-i18n="title">Penguji hash dan HMAC · Tools SagalaIT</title>
+<link rel="icon" href="data:,">
+<script src="../assets/theme.js"></script>
+<script src="../assets/i18n.js"></script>
+<link rel="stylesheet" href="../assets/app.css">
+<link rel="stylesheet" href="app.css">
+</head>
+<body>
+
+<header class="wrap top">
+  <a class="logo" href="../" aria-label="Tools SagalaIT, ke beranda" data-i18n-attr="aria-label:common.home">S</a>
+  <nav class="crumbs" aria-label="Lokasi" data-i18n-attr="aria-label:common.nav"><a href="../" data-i18n="common.tools">Tools</a><span aria-hidden="true">/</span><a class="crumb-g" href="../#grup-dev" data-i18n="group.dev">Developer</a><span aria-hidden="true">/</span><span class="crumb-now" aria-current="page" data-i18n="crumb">Hash dan HMAC</span></nav>
+  <span class="top-end">
+    <button class="icon-btn" type="button" data-theme-toggle aria-label="Ganti tema terang atau gelap" data-i18n-attr="aria-label:common.theme">
+      <svg width="20" height="20" viewBox="-11 -11 22 22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle r="9"/><path d="M0 -9 A9 9 0 0 1 0 9 Z" fill="currentColor"/></svg>
+    </button>
+  </span>
+</header>
+
+<main class="wrap">
+  <div class="app-head">
+    <div>
+      <h1 data-i18n="h1">Penguji hash dan HMAC</h1>
+      <p class="lead" data-i18n="lead">Hitung MD5, SHA-1, SHA-256, SHA-384, dan SHA-512 dari teks atau berkas, hitung HMAC, lalu cocokkan dengan hash yang diharapkan. Teks, berkas, dan kunci tidak dikirim ke mana pun.</p>
+    </div>
+  </div>
+
+  <div class="app-grid hs-grid">
+    <div class="hs-col">
+      <section class="panel">
+        <div class="panel-head"><h2 data-i18n="src_h">Masukan</h2><button class="btn btn-sm" type="button" id="btnSample" data-i18n="sample">Coba dengan contoh</button></div>
+        <div class="ui-seg hs-seg" role="radiogroup" aria-label="Masukan" data-i18n-attr="aria-label:src_h" id="modes">
+          <label><input type="radio" name="mode" value="text" checked><span data-i18n="m_text">Teks</span></label>
+          <label><input type="radio" name="mode" value="file"><span data-i18n="m_file">Berkas</span></label>
+        </div>
+        <div id="boxText"><label class="hs-lbl" for="txt" data-i18n="text_l">Teks (UTF-8)</label><textarea class="field hs-ta" id="txt" spellcheck="false" autocomplete="off" placeholder="Ketik atau tempel teks" data-i18n-attr="placeholder:text_ph"></textarea></div>
+        <div id="boxFile" hidden>
+          <label class="hs-drop" id="drop" for="file"><span class="btn hs-choose" data-i18n="file_choose">Pilih berkas</span><span class="small muted" data-i18n="file_drop">atau tarik berkas ke sini</span><input class="vh" type="file" id="file"></label>
+          <p class="small hs-fileinfo" id="fileInfo"></p>
+          <div class="hs-prog" id="prog" hidden><div class="hs-bar"><span id="bar"></span></div><span class="small" id="progTxt"></span><button class="btn btn-sm" type="button" id="btnCancel" data-i18n="cancel">Batal</button></div>
+        </div>
+        <p class="small hs-err" id="err" role="alert"></p>
+      </section>
+      <section class="panel">
+        <div class="panel-head"><h2 data-i18n="hmac_h">HMAC</h2></div>
+        <label class="hs-lbl" for="key" data-i18n="key_l">Kunci</label>
+        <input class="field-sm hs-field" id="key" spellcheck="false" autocomplete="off" placeholder="kunci rahasia" data-i18n-attr="placeholder:key_ph">
+        <span class="hs-lbl hs-gap" id="lblKf" data-i18n="key_fmt">Format kunci</span>
+        <div class="ui-seg hs-seg" role="radiogroup" aria-labelledby="lblKf" id="kfmt">
+          <label><input type="radio" name="kf" value="text" checked><span data-i18n="k_text">Teks</span></label>
+          <label><input type="radio" name="kf" value="hex"><span data-i18n="k_hex">Hex</span></label>
+        </div>
+        <label class="hs-lbl hs-gap" for="halgo" data-i18n="hmac_algo">Algoritma</label>
+        <select class="field-sm hs-field hs-sel" id="halgo"></select>
+        <p class="small hs-err" id="keyErr" role="alert"></p>
+        <p class="small muted" id="keyWarn"></p>
+        <span class="hs-lbl hs-gap" data-i18n="hmac_out">Hasil HMAC</span>
+        <div class="hs-row"><code class="hs-val" id="hmacOut"></code><button class="btn btn-sm" type="button" data-copy="hmacOut" data-i18n="common.copy">Salin</button></div>
+        <p class="small muted" data-i18n="hmac_note">Pesan yang ditandatangani adalah masukan di atas. Kunci tidak disimpan.</p>
+      </section>
+    </div>
+    <div class="hs-col">
+      <section class="panel">
+        <div class="panel-head"><h2 data-i18n="out_h">Hash</h2><span class="small muted" id="stat" role="status"></span></div>
+        <span class="hs-lbl" id="lblFmt" data-i18n="fmt_l">Format</span>
+        <div class="ui-seg hs-seg" role="radiogroup" aria-labelledby="lblFmt" id="fmts">
+          <label><input type="radio" name="fmt" value="hex" checked><span data-i18n="f_hex">hex</span></label>
+          <label><input type="radio" name="fmt" value="upper"><span data-i18n="f_upper">HEX</span></label>
+          <label><input type="radio" name="fmt" value="base64"><span data-i18n="f_b64">base64</span></label>
+        </div>
+        <label class="hs-lbl hs-gap" for="exp" data-i18n="exp_l">Hash yang diharapkan (opsional)</label>
+        <input class="field-sm hs-field" id="exp" spellcheck="false" autocomplete="off" placeholder="tempel hash untuk dicocokkan" data-i18n-attr="placeholder:exp_ph">
+        <p class="small" id="expMsg" role="status"></p>
+        <p class="small hs-warn" id="subtleErr" role="alert"></p>
+        <ul class="hs-list" id="list"></ul>
+      </section>
+      <section class="panel">
+        <div class="panel-head"><h2 data-i18n="cmp_h">Bandingkan dua hash</h2></div>
+        <label class="hs-lbl" for="cA" data-i18n="cmp_a">Hash A</label><input class="field-sm hs-field" id="cA" spellcheck="false" autocomplete="off">
+        <label class="hs-lbl hs-gap" for="cB" data-i18n="cmp_b">Hash B</label><input class="field-sm hs-field" id="cB" spellcheck="false" autocomplete="off">
+        <p class="hs-res" id="cRes" role="status"></p>
+      </section>
+    </div>
+  </div>
+</main>
+
+<script src="hash.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
