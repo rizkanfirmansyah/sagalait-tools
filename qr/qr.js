@@ -194,6 +194,7 @@
       if (str.length % 2) pushBits(bits, ALNUM.indexOf(str[str.length - 1]), 6);
     } else bytes.forEach(function (b) { pushBits(bits, b, 8); });
     cap = dataCodewords(ver, ecc) * 8;
+    var used = Math.ceil(bits.length / 8);
     pushBits(bits, 0, Math.min(4, cap - bits.length));
     while (bits.length % 8) bits.push(0);
     for (var pad = 0xEC; bits.length < cap; pad ^= 0xEC ^ 0x11) pushBits(bits, pad, 8);
@@ -210,11 +211,19 @@
       }
     }
     g.applyMask(mask); g.drawFormat(ecc, mask);
-    return { version: ver, size: g.size, modules: g.m, ecc: ecc, mask: mask, mode: mode, count: mode === 'byte' ? bytes.length : str.length, capacityBytes: cap / 8, usedBytes: Math.ceil(bits.length / 8), isFunction: g.fn };
+    return { version: ver, size: g.size, modules: g.m, ecc: ecc, mask: mask, mode: mode, count: mode === 'byte' ? bytes.length : str.length, capacityBytes: cap / 8, usedBytes: used, isFunction: g.fn };
   }
 
-  /* kapasitas maksimum (karakter byte) untuk tingkat ECC tertentu: versi 40 */
-  function maxBytes(ecc) { return dataCodewords(40, ecc) - 3; }
+  /* jumlah karakter maksimum untuk mode dan tingkat ECC tertentu (versi 40): angka, alfanumerik, atau byte */
+  function maxChars(mode, ecc) {
+    var cap = dataCodewords(40, ecc) * 8, lo = 0, hi = 9000;
+    while (lo < hi) {
+      var mid = (lo + hi + 1) >> 1, bits = 4 + ccBits(mode, 40) + (mode === 'num' ? Math.floor(mid / 3) * 10 + (mid % 3 ? (mid % 3) * 3 + 1 : 0) : mode === 'alnum' ? Math.floor(mid / 2) * 11 + (mid % 2) * 6 : mid * 8);
+      if (bits <= cap) lo = mid; else hi = mid - 1;
+    }
+    return lo;
+  }
+  function maxBytes(ecc) { return maxChars('byte', ecc); }
 
   /* ---------- pembuat isi ---------- */
   function escWifi(s) { return String(s).replace(/([\\;,:"])/g, '\\$1'); }
@@ -329,7 +338,7 @@
   }
   function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
 
-  var api = { encode: encode, build: build, toSvg: toSvg, logoBox: logoBox, isFinderZone: isFinderZone, readability: readability, contrast: contrast, maxBytes: maxBytes, pickMode: pickMode, dataCodewords: dataCodewords, alignPositions: alignPositions, hexOk: hexOk, ECC: ECC, ALNUM: ALNUM };
+  var api = { encode: encode, build: build, toSvg: toSvg, logoBox: logoBox, isFinderZone: isFinderZone, readability: readability, contrast: contrast, maxBytes: maxBytes, maxChars: maxChars, pickMode: pickMode, dataCodewords: dataCodewords, alignPositions: alignPositions, hexOk: hexOk, ECC: ECC, ALNUM: ALNUM };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   root.QrLab = api;
 })(typeof globalThis !== 'undefined' ? globalThis : this);
