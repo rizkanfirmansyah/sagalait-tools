@@ -452,6 +452,21 @@
       "short_en": "Time",
       "description_en": "Convert Unix timestamps, ISO 8601, and dates to WIB, WITA, WIT, UTC, and your browser zone, with a live clock and time difference",
       "tags_en": ["time", "unix", "timestamp", "epoch", "iso 8601", "timezone", "utc", "difference", "date"]
+    },
+    {
+      "id": "hash",
+      "name": "Penguji hash dan HMAC",
+      "short": "Hash",
+      "description": "Hitung MD5, SHA-1, SHA-256, SHA-384, SHA-512 dan HMAC dari teks atau berkas, cocokkan dengan hash yang diharapkan",
+      "group": "dev",
+      "path": "hash/",
+      "icon": "#",
+      "tags": ["hash", "hmac", "md5", "sha1", "sha256", "sha512", "checksum", "checksum berkas", "digest", "verifikasi", "kunci"],
+      "favorite": false,
+      "name_en": "Hash and HMAC checker",
+      "short_en": "Hash",
+      "description_en": "Compute MD5, SHA-1, SHA-256, SHA-384, SHA-512 and HMAC of text or a file, and match an expected hash",
+      "tags_en": ["hash", "hmac", "md5", "sha1", "sha256", "sha512", "checksum", "digest", "verify", "key"]
     }
   ]
 }
