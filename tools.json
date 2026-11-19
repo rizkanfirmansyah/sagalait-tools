@@ -467,6 +467,21 @@
       "short_en": "Hash",
       "description_en": "Compute MD5, SHA-1, SHA-256, SHA-384, SHA-512 and HMAC of text or a file, and match an expected hash",
       "tags_en": ["hash", "hmac", "md5", "sha1", "sha256", "sha512", "checksum", "digest", "verify", "key"]
+    },
+    {
+      "id": "qr",
+      "name": "Pembuat QR Code",
+      "short": "QR",
+      "description": "Buat QR Code dari tautan, teks, WiFi, kontak, email, SMS, telepon, WhatsApp, lokasi, atau acara, dengan warna dan logo, unduh PNG atau SVG",
+      "group": "harian",
+      "path": "qr/",
+      "icon": "▦",
+      "tags": ["qr", "qr code", "barcode", "kode qr", "tautan", "wifi", "vcard", "kontak", "whatsapp", "logo", "png", "svg", "pindai"],
+      "favorite": false,
+      "name_en": "QR Code maker",
+      "short_en": "QR",
+      "description_en": "Make a QR Code from a link, text, WiFi, contact, email, SMS, phone, WhatsApp, location, or event, with colors and a logo, download PNG or SVG",
+      "tags_en": ["qr", "qr code", "barcode", "link", "wifi", "vcard", "contact", "whatsapp", "logo", "png", "svg", "scan"]
     }
   ]
 }
