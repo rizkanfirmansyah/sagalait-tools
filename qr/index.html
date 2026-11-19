@@ -1,0 +1,173 @@
+<!doctype html>
+<html lang="id" data-theme="light" data-lang-src="lang.json">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="referrer" content="no-referrer">
+<title data-i18n="title">Pembuat QR · Tools SagalaIT</title>
+<link rel="icon" href="data:,">
+<script src="../assets/theme.js"></script>
+<script src="../assets/i18n.js"></script>
+<link rel="stylesheet" href="../assets/app.css">
+<link rel="stylesheet" href="app.css">
+</head>
+<body>
+
+<header class="wrap top">
+  <a class="logo" href="../" aria-label="Tools SagalaIT, ke beranda" data-i18n-attr="aria-label:common.home">S</a>
+  <nav class="crumbs" aria-label="Lokasi" data-i18n-attr="aria-label:common.nav"><a href="../" data-i18n="common.tools">Tools</a><span aria-hidden="true">/</span><a class="crumb-g" href="../#grup-harian" data-i18n="group.harian">Sehari-hari</a><span aria-hidden="true">/</span><span class="crumb-now" aria-current="page" data-i18n="crumb">Pembuat QR</span></nav>
+  <span class="top-end">
+    <button class="icon-btn" type="button" data-theme-toggle aria-label="Ganti tema terang atau gelap" data-i18n-attr="aria-label:common.theme">
+      <svg width="20" height="20" viewBox="-11 -11 22 22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle r="9"/><path d="M0 -9 A9 9 0 0 1 0 9 Z" fill="currentColor"/></svg>
+    </button>
+  </span>
+</header>
+
+<main class="wrap">
+  <div class="app-head">
+    <div>
+      <h1 data-i18n="h1">Pembuat QR Code</h1>
+      <p class="lead" data-i18n="lead">Buat QR Code dari tautan, teks, WiFi, kontak, email, SMS, telepon, WhatsApp, lokasi, atau acara. Bisa diberi warna dan logo di tengah, lalu diunduh sebagai PNG atau SVG. Semua dibuat di browser Anda; isi tidak dikirim ke mana pun.</p>
+    </div>
+  </div>
+
+  <div class="qr-grid">
+    <section class="panel qr-in">
+      <div class="panel-head"><h2 data-i18n="in_h">Isi QR</h2><button class="btn btn-sm" type="button" id="btnSample" data-i18n="sample">Coba dengan contoh</button></div>
+      <span class="qr-lbl" id="lblType" data-i18n="type_l">Jenis isi</span>
+      <div class="qr-chips" role="group" aria-labelledby="lblType" id="chips">
+          <button class="ui-chip qr-chip" type="button" data-type="url" aria-pressed="true" data-i18n="t_url">Tautan</button>
+          <button class="ui-chip qr-chip" type="button" data-type="text" aria-pressed="false" data-i18n="t_text">Teks</button>
+          <button class="ui-chip qr-chip" type="button" data-type="wifi" aria-pressed="false" data-i18n="t_wifi">WiFi</button>
+          <button class="ui-chip qr-chip" type="button" data-type="vcard" aria-pressed="false" data-i18n="t_vcard">Kontak</button>
+          <button class="ui-chip qr-chip" type="button" data-type="email" aria-pressed="false" data-i18n="t_email">Email</button>
+          <button class="ui-chip qr-chip" type="button" data-type="sms" aria-pressed="false" data-i18n="t_sms">SMS</button>
+          <button class="ui-chip qr-chip" type="button" data-type="tel" aria-pressed="false" data-i18n="t_tel">Telepon</button>
+          <button class="ui-chip qr-chip" type="button" data-type="wa" aria-pressed="false" data-i18n="t_wa">WhatsApp</button>
+          <button class="ui-chip qr-chip" type="button" data-type="geo" aria-pressed="false" data-i18n="t_geo">Lokasi</button>
+          <button class="ui-chip qr-chip" type="button" data-type="event" aria-pressed="false" data-i18n="t_event">Acara</button>
+      </div>
+      <div id="forms">
+        <div class="qr-fs" data-for="url">
+          <div class="qr-f"><label class="qr-lbl" for="f-url" data-i18n="l_url">Alamat tautan</label><input class="field-sm qr-field" id="f-url" type="text" autocomplete="off" spellcheck="false" placeholder="contoh.com atau https://contoh.com/halaman" data-i18n-attr="placeholder:ph_url" inputmode="url"><p class="small qr-err" id="e-url" role="alert"></p></div>
+        </div>
+        <div class="qr-fs" data-for="text" hidden>
+          <div class="qr-f"><label class="qr-lbl" for="f-text" data-i18n="l_text">Teks</label><textarea class="field qr-ta" id="f-text" rows="6" spellcheck="false" autocomplete="off" placeholder="Ketik atau tempel teks apa saja" data-i18n-attr="placeholder:ph_text"></textarea><p class="small qr-err" id="e-text" role="alert"></p></div>
+        </div>
+        <div class="qr-fs" data-for="wifi" hidden>
+          <div class="qr-f"><label class="qr-lbl" for="f-ssid" data-i18n="l_ssid">Nama jaringan (SSID)</label><input class="field-sm qr-field" id="f-ssid" type="text" autocomplete="off" spellcheck="false"><p class="small qr-err" id="e-ssid" role="alert"></p></div>
+          <div class="qr-f"><label class="qr-lbl" for="f-pass" data-i18n="l_pass">Kata sandi</label><input class="field-sm qr-field" id="f-pass" type="text" autocomplete="off" spellcheck="false"><p class="small qr-err" id="e-pass" role="alert"></p></div>
+          <div class="qr-f"><label class="qr-lbl" for="f-sec" data-i18n="l_sec">Keamanan</label><select class="field-sm qr-field qr-sel" id="f-sec"><option value="WPA" data-i18n="sec_wpa">WPA, WPA2, atau WPA3</option><option value="WEP" data-i18n="sec_wep">WEP</option><option value="nopass" data-i18n="sec_none">Tanpa kata sandi</option></select></div>
+          <label class="ui-switch"><input type="checkbox" id="f-hidden"><span data-i18n="l_hidden">Jaringan tersembunyi</span></label>
+        </div>
+        <div class="qr-fs" data-for="vcard" hidden>
+          <div class="qr-f"><label class="qr-lbl" for="f-first" data-i18n="l_first">Nama depan</label><input class="field-sm qr-field" id="f-first" type="text" autocomplete="off" spellcheck="false"><p class="small qr-err" id="e-first" role="alert"></p></div>
+          <div class="qr-f"><label class="qr-lbl" for="f-last" data-i18n="l_last">Nama belakang</label><input class="field-sm qr-field" id="f-last" type="text" autocomplete="off" spellcheck="false"><p class="small qr-err" id="e-last" role="alert"></p></div>
+          <div class="qr-f"><label class="qr-lbl" for="f-org" data-i18n="l_org">Organisasi</label><input class="field-sm qr-field" id="f-org" type="text" autocomplete="off" spellcheck="false"><p class="small qr-err" id="e-org" role="alert"></p></div>
+          <div class="qr-f"><label class="qr-lbl" for="f-title" data-i18n="l_title">Jabatan</label><input class="field-sm qr-field" id="f-title" type="text" autocomplete="off" spellcheck="false"><p class="small qr-err" id="e-title" role="alert"></p></div>
+          <div class="qr-f"><label class="qr-lbl" for="f-vtel" data-i18n="l_tel">Nomor telepon</label><input class="field-sm qr-field" id="f-vtel" type="tel" autocomplete="off" spellcheck="false" placeholder="+62 812 3456 7890" data-i18n-attr="placeholder:ph_tel" inputmode="tel"><p class="small qr-err" id="e-vtel" role="alert"></p></div>
+          <div class="qr-f"><label class="qr-lbl" for="f-vemail" data-i18n="l_email">Email</label><input class="field-sm qr-field" id="f-vemail" type="email" autocomplete="off" spellcheck="false" inputmode="email"><p class="small qr-err" id="e-vemail" role="alert"></p></div>
+          <div class="qr-f"><label class="qr-lbl" for="f-vurl" data-i18n="l_vurl">Situs web</label><input class="field-sm qr-field" id="f-vurl" type="text" autocomplete="off" spellcheck="false" inputmode="url"><p class="small qr-err" id="e-vurl" role="alert"></p></div>
+          <div class="qr-f"><label class="qr-lbl" for="f-addr" data-i18n="l_addr">Alamat</label><textarea class="field qr-ta" id="f-addr" rows="2" spellcheck="false" autocomplete="off"></textarea><p class="small qr-err" id="e-addr" role="alert"></p></div>
+        </div>
+        <div class="qr-fs" data-for="email" hidden>
+          <div class="qr-f"><label class="qr-lbl" for="f-to" data-i18n="l_to">Email tujuan</label><input class="field-sm qr-field" id="f-to" type="email" autocomplete="off" spellcheck="false" inputmode="email"><p class="small qr-err" id="e-to" role="alert"></p></div>
+          <div class="qr-f"><label class="qr-lbl" for="f-subject" data-i18n="l_subject">Subjek (opsional)</label><input class="field-sm qr-field" id="f-subject" type="text" autocomplete="off" spellcheck="false"><p class="small qr-err" id="e-subject" role="alert"></p></div>
+          <div class="qr-f"><label class="qr-lbl" for="f-body" data-i18n="l_body">Isi pesan (opsional)</label><textarea class="field qr-ta" id="f-body" rows="4" spellcheck="false" autocomplete="off"></textarea><p class="small qr-err" id="e-body" role="alert"></p></div>
+        </div>
+        <div class="qr-fs" data-for="sms" hidden>
+          <div class="qr-f"><label class="qr-lbl" for="f-stel" data-i18n="l_tel">Nomor telepon</label><input class="field-sm qr-field" id="f-stel" type="tel" autocomplete="off" spellcheck="false" placeholder="+62 812 3456 7890" data-i18n-attr="placeholder:ph_tel" inputmode="tel"><p class="small qr-err" id="e-stel" role="alert"></p></div>
+          <div class="qr-f"><label class="qr-lbl" for="f-smsg" data-i18n="l_msg">Pesan (opsional)</label><textarea class="field qr-ta" id="f-smsg" rows="3" spellcheck="false" autocomplete="off"></textarea><p class="small qr-err" id="e-smsg" role="alert"></p></div>
+        </div>
+        <div class="qr-fs" data-for="tel" hidden>
+          <div class="qr-f"><label class="qr-lbl" for="f-ttel" data-i18n="l_tel">Nomor telepon</label><input class="field-sm qr-field" id="f-ttel" type="tel" autocomplete="off" spellcheck="false" placeholder="+62 812 3456 7890" data-i18n-attr="placeholder:ph_tel" inputmode="tel"><p class="small qr-err" id="e-ttel" role="alert"></p></div>
+        </div>
+        <div class="qr-fs" data-for="wa" hidden>
+          <div class="qr-f"><label class="qr-lbl" for="f-wtel" data-i18n="l_tel">Nomor telepon</label><input class="field-sm qr-field" id="f-wtel" type="tel" autocomplete="off" spellcheck="false" placeholder="+62 812 3456 7890" data-i18n-attr="placeholder:ph_tel" inputmode="tel"><p class="small qr-err" id="e-wtel" role="alert"></p></div>
+          <p class="small muted qr-hint" data-i18n="h_wa">Awali dengan kode negara tanpa 0, misalnya 62 untuk Indonesia.</p>
+          <div class="qr-f"><label class="qr-lbl" for="f-wmsg" data-i18n="l_msg">Pesan (opsional)</label><textarea class="field qr-ta" id="f-wmsg" rows="3" spellcheck="false" autocomplete="off"></textarea><p class="small qr-err" id="e-wmsg" role="alert"></p></div>
+        </div>
+        <div class="qr-fs" data-for="geo" hidden>
+          <div class="qr-f"><label class="qr-lbl" for="f-lat" data-i18n="l_lat">Lintang (latitude)</label><input class="field-sm qr-field" id="f-lat" type="text" autocomplete="off" spellcheck="false" inputmode="decimal"><p class="small qr-err" id="e-lat" role="alert"></p></div>
+          <div class="qr-f"><label class="qr-lbl" for="f-lon" data-i18n="l_lon">Bujur (longitude)</label><input class="field-sm qr-field" id="f-lon" type="text" autocomplete="off" spellcheck="false" inputmode="decimal"><p class="small qr-err" id="e-lon" role="alert"></p></div>
+          <p class="small muted qr-hint" data-i18n="h_geo">Contoh: -6,2088 dan 106,8456. Titik atau koma sama saja.</p>
+        </div>
+        <div class="qr-fs" data-for="event" hidden>
+          <div class="qr-f"><label class="qr-lbl" for="f-etitle" data-i18n="l_etitle">Nama acara</label><input class="field-sm qr-field" id="f-etitle" type="text" autocomplete="off" spellcheck="false"><p class="small qr-err" id="e-etitle" role="alert"></p></div>
+          <div class="qr-f"><label class="qr-lbl" for="f-start" data-i18n="l_start">Mulai</label><input class="field-sm qr-field" id="f-start" type="datetime-local" autocomplete="off" spellcheck="false"><p class="small qr-err" id="e-start" role="alert"></p></div>
+          <div class="qr-f"><label class="qr-lbl" for="f-end" data-i18n="l_end">Selesai (opsional)</label><input class="field-sm qr-field" id="f-end" type="datetime-local" autocomplete="off" spellcheck="false"><p class="small qr-err" id="e-end" role="alert"></p></div>
+          <div class="qr-f"><label class="qr-lbl" for="f-place" data-i18n="l_place">Tempat (opsional)</label><input class="field-sm qr-field" id="f-place" type="text" autocomplete="off" spellcheck="false"><p class="small qr-err" id="e-place" role="alert"></p></div>
+          <div class="qr-f"><label class="qr-lbl" for="f-desc" data-i18n="l_desc">Keterangan (opsional)</label><textarea class="field qr-ta" id="f-desc" rows="3" spellcheck="false" autocomplete="off"></textarea><p class="small qr-err" id="e-desc" role="alert"></p></div>
+          <p class="small muted qr-hint" data-i18n="h_event">Waktu mengikuti zona waktu browser Anda.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel qr-pre" aria-live="polite">
+      <div class="panel-head"><h2 data-i18n="prev_h">Pratinjau</h2></div>
+      <p class="qr-empty muted" id="empty" data-i18n="empty">Isi data di formulir untuk membuat QR.</p>
+      <p class="qr-bad" id="bad" role="alert" hidden></p>
+      <div id="out" hidden>
+        <div class="qr-stage" id="stage"><canvas id="cv" width="720" height="720" role="img"></canvas></div>
+        <p class="small qr-info" id="info"></p>
+        <p class="small muted" id="used"></p>
+        <ul class="qr-warns" id="warns"></ul>
+        <div class="qr-actions">
+          <button class="btn btn-primary" type="button" id="btnPng" data-i18n="dl_png">Unduh PNG</button>
+          <button class="btn" type="button" id="btnSvg" data-i18n="dl_svg">Unduh SVG</button>
+          <button class="btn" type="button" id="btnCopyImg" data-i18n="copy_img">Salin gambar</button>
+          <button class="btn" type="button" id="btnCopyTxt" data-i18n="copy_text">Salin isi</button>
+        </div>
+        <details class="qr-pay"><summary data-i18n="payload">Isi yang dikodekan</summary><pre class="qr-code" id="payload"></pre></details>
+      </div>
+    </section>
+
+    <section class="panel qr-style">
+      <div class="panel-head"><h2 data-i18n="style_h">Tampilan</h2></div>
+      <span class="qr-lbl" id="lblEcc" data-i18n="ecc_l">Tingkat koreksi galat</span>
+      <div class="ui-seg qr-seg" role="radiogroup" aria-labelledby="lblEcc" id="eccSeg">
+        <label><input type="radio" name="ecc" value="L"><span>L</span></label>
+        <label><input type="radio" name="ecc" value="M" checked><span>M</span></label>
+        <label><input type="radio" name="ecc" value="Q"><span>Q</span></label>
+        <label><input type="radio" name="ecc" value="H"><span>H</span></label>
+      </div>
+      <p class="small muted qr-hint" id="eccHint" data-i18n="ecc_hint">L 7%, M 15%, Q 25%, H 30% bagian kode boleh rusak dan tetap terbaca. Makin tinggi, kode makin padat.</p>
+
+      <div class="qr-row2">
+        <div class="qr-f"><label class="qr-lbl" for="fg" data-i18n="fg_l">Warna modul</label><input class="qr-color" type="color" id="fg" value="#000000"></div>
+        <div class="qr-f"><label class="qr-lbl" for="bg" data-i18n="bg_l">Warna latar</label><input class="qr-color" type="color" id="bg" value="#ffffff"></div>
+        <button class="btn btn-sm qr-swap" type="button" id="btnSwap" data-i18n="swap">Tukar warna</button>
+      </div>
+
+      <span class="qr-lbl qr-gap" id="lblShape" data-i18n="shape_l">Bentuk modul</span>
+      <div class="ui-seg qr-seg" role="radiogroup" aria-labelledby="lblShape" id="shapeSeg">
+        <label><input type="radio" name="shape" value="square" checked><span data-i18n="sh_sq">Kotak</span></label>
+        <label><input type="radio" name="shape" value="dots"><span data-i18n="sh_dot">Titik</span></label>
+      </div>
+      <p class="small muted qr-hint" data-i18n="sh_note">Tiga kotak penanda sudut tetap berbentuk kotak agar mudah dikenali pemindai.</p>
+
+      <div class="qr-row2 qr-gap">
+        <div class="qr-f"><label class="qr-lbl" for="size" data-i18n="size_l">Ukuran PNG</label><select class="field-sm qr-field qr-sel" id="size"><option value="256">256 px</option><option value="512" selected>512 px</option><option value="1024">1024 px</option><option value="2048">2048 px</option></select></div>
+        <div class="qr-f"><label class="qr-lbl" for="margin" data-i18n="margin_l">Margin (modul)</label><input class="field-sm qr-field" id="margin" type="number" min="0" max="10" step="1" value="4" inputmode="numeric"></div>
+      </div>
+
+      <h3 class="qr-h3 qr-gap" data-i18n="logo_h">Logo atau gambar di tengah</h3>
+      <label class="qr-drop" id="drop" for="logoFile"><span class="btn qr-choose" data-i18n="logo_choose">Pilih gambar</span><span class="small muted" data-i18n="logo_drop">atau tarik gambar ke sini</span><input class="vh" type="file" id="logoFile" accept="image/*"></label>
+      <p class="small qr-err" id="logoErr" role="alert"></p>
+      <div class="qr-logo" id="logoBox" hidden>
+        <img class="qr-thumb" id="logoThumb" alt="">
+        <div class="qr-logo-b"><p class="small" id="logoName"></p>
+          <label class="qr-lbl" for="logoPct"><span data-i18n="logo_size">Ukuran logo</span>: <output id="logoPctOut">20</output>%</label>
+          <input class="qr-range" type="range" id="logoPct" min="10" max="25" step="1" value="20">
+          <button class="btn btn-sm" type="button" id="btnLogoDel" data-i18n="logo_remove">Hapus logo</button></div>
+      </div>
+      <p class="small muted qr-hint" data-i18n="logo_note">Gambar diperkecil di browser dan tidak diunggah. Isi QR tidak berisi gambar, hanya dihiasi di tengahnya.</p>
+      <p class="small muted qr-hint" id="eccLocked" hidden data-i18n="ecc_locked">Dikunci ke H karena ada logo.</p>
+    </section>
+  </div>
+</main>
+
+<script src="qr.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
