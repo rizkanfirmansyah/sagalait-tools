@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="id" data-theme="light" data-lang-src="lang.json">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="referrer" content="no-referrer">
+<title data-i18n="title">Memory cards · Tools SagalaIT</title>
+<link rel="icon" href="data:,">
+<script src="../assets/theme.js"></script>
+<script src="../assets/i18n.js"></script>
+<link rel="stylesheet" href="../assets/app.css">
+<link rel="stylesheet" href="app.css">
+</head>
+<body>
+
+<header class="wrap top">
+  <a class="logo" href="../" aria-label="Tools SagalaIT, ke beranda" data-i18n-attr="aria-label:common.home">S</a>
+  <nav class="crumbs" aria-label="Lokasi" data-i18n-attr="aria-label:common.nav"><a href="../" data-i18n="common.tools">Tools</a><span aria-hidden="true">/</span><a class="crumb-g" href="../#grup-game" data-i18n="group.game">Game ringan</a><span aria-hidden="true">/</span><span class="crumb-now" aria-current="page" data-i18n="crumb">Memory cards</span></nav>
+  <span class="top-end">
+    <button class="icon-btn" type="button" data-theme-toggle aria-label="Ganti tema terang atau gelap" data-i18n-attr="aria-label:common.theme">
+      <svg width="20" height="20" viewBox="-11 -11 22 22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle r="9"/><path d="M0 -9 A9 9 0 0 1 0 9 Z" fill="currentColor"/></svg>
+    </button>
+  </span>
+</header>
+
+<main class="wrap">
+  <div class="app-head">
+    <div>
+      <h1 data-i18n="h1">Memory cards</h1>
+      <p class="lead" data-i18n="lead">Cari pasangan kartu bergambar yang sama dengan langkah sesedikit mungkin. Pilih papan 4×4, 4×5, atau 6×6. Bisa dimainkan dengan sentuhan atau keyboard, dan rekor tiap papan disimpan di browser ini.</p>
+    </div>
+  </div>
+
+  <section class="panel mc-top">
+    <div class="mc-ctl">
+      <div><span class="mc-lbl" id="lblSize" data-i18n="size_l">Ukuran papan</span>
+        <div class="ui-seg mc-seg" role="radiogroup" aria-labelledby="lblSize" id="sizes">
+          <label><input type="radio" name="size" value="4x4" checked><span>4×4</span></label>
+          <label><input type="radio" name="size" value="4x5"><span>4×5</span></label>
+          <label><input type="radio" name="size" value="6x6"><span>6×6</span></label>
+        </div></div>
+      <button class="btn btn-primary" type="button" id="btnNew" data-i18n="new">Permainan baru</button>
+    </div>
+    <div class="mc-stats">
+      <div><span class="mc-k" data-i18n="moves">Langkah</span><strong id="sMoves">0</strong></div>
+      <div><span class="mc-k" data-i18n="time">Waktu</span><strong id="sTime">0:00</strong></div>
+      <div><span class="mc-k" data-i18n="pairs">Pasangan</span><strong id="sPairs">0/8</strong></div>
+      <div><span class="mc-k" data-i18n="best">Rekor</span><strong id="sBest">-</strong></div>
+    </div>
+  </section>
+
+  <p class="vh" id="live" role="status" aria-live="polite"></p>
+  <div class="mc-win banner ok" id="win" role="status" hidden>
+    <div><strong data-i18n="win_h">Selesai!</strong> <span id="winText"></span> <span id="winRec"></span></div>
+    <button class="btn btn-sm" type="button" id="btnAgain" data-i18n="win_again">Main lagi</button>
+  </div>
+
+  <div class="mc-wrap"><div class="mc-board" id="board" role="group"></div></div>
+
+  <section class="panel mc-help">
+    <div class="panel-head"><h2 data-i18n="help_h">Cara main</h2></div>
+    <p class="small" data-i18n="help">Balik dua kartu. Kalau gambarnya sama, keduanya tetap terbuka. Kalau beda, keduanya menutup lagi, jadi ingat letaknya. Permainan selesai saat semua pasangan ditemukan. Di keyboard, tombol panah memindahkan fokus dan Enter atau Spasi membalik kartu.</p>
+  </section>
+</main>
+
+<script src="engine.js"></script>
+<script src="ikon.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
