@@ -23,7 +23,11 @@
   }
   function cmp(a, b) { return toDay(a) - toDay(b); }
 
-  function addDays(t, n) { return fromDay(toDay(t) + n); }
+  function addDays(t, n) {
+    var r = fromDay(toDay(t) + n);
+    if (r.y < 1 || r.y > 9999) throw new RangeError('tahun di luar 1 sampai 9999');
+    return r;
+  }
   /* tambah bulan; bila hari tujuan tidak ada, mundur ke hari terakhir bulan itu (31 Jan + 1 bulan = 28/29 Feb) */
   function addMonths(t, n) {
     var idx = t.y * 12 + (t.m - 1) + n, y = Math.floor(idx / 12), m = idx - y * 12 + 1;
