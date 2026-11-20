@@ -42,6 +42,7 @@ waktu/                app 27 (waktu.js murni: epoch, ISO 8601, zona, selisih)
 hash/                 app 28 (hash.js murni: MD5 sendiri, HMAC)
 qr/                   app 29 (qr.js murni: pengode QR sendiri, pembuat isi, SVG)
 tanggal/              app 30 (tanggal.js murni: selisih, hari kerja, libur 2026, umur)
+memory/               app 31 (game; engine.js murni, ikon.js data bentuk)
 ```
 
 ## Tampilan v2 dan v1
@@ -58,7 +59,7 @@ Saklar ID/EN ada di bilah atas portal dan semua app. Pilihan disimpan di `localS
 - Teks dari JS: `SagalaI18n.t('kunci', { param })`. Jalankan inisialisasi app di `SagalaI18n.onReady(...)` dan render ulang bagian dinamis pada event `sagalait:lang` di `document`. Format angka dan tanggal: `Intl` dengan `SagalaI18n.locale`.
 - Kunci yang hilang di Inggris memakai teks Indonesia; kunci yang tidak ada sama sekali tampil sebagai kuncinya dan memberi peringatan di console.
 - `tools.json` memakai kolom `name_en`, `description_en`, `tags_en`, `short_en`; grup memakai `name_en`; `site` memakai `title_en` dan `tagline_en`.
-- Status terjemahan isi app: Inggris penuh pada portal, `signature/`, `watermark/`, `game-2048/`, `game-sudoku/`, `password/`, `regex/`, `kompres-gambar/`, `tebak-kata/`, `patungan/`, `terbilang/`, `subnet/`, `waktu/`, `hash/`, `qr/`, dan `tanggal/`. App lain baru menerjemahkan bilah atas, remah roti, dan judul; isinya masih Indonesia. Menambah app baru wajib dwibahasa.
+- Status terjemahan isi app: Inggris penuh pada portal, `signature/`, `watermark/`, `game-2048/`, `game-sudoku/`, `password/`, `regex/`, `kompres-gambar/`, `tebak-kata/`, `patungan/`, `terbilang/`, `subnet/`, `waktu/`, `hash/`, `qr/`, `tanggal/`, dan `memory/`. App lain baru menerjemahkan bilah atas, remah roti, dan judul; isinya masih Indonesia. Menambah app baru wajib dwibahasa.
 
 ## Menjalankan di lokal
 
