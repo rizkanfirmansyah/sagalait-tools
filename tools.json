@@ -497,6 +497,21 @@
       "short_en": "Date",
       "description_en": "Find the difference between dates, add or subtract days, months, and working days (with 2026 Indonesian holidays), age, and weekday",
       "tags_en": ["date", "difference", "working days", "business days", "holidays", "age", "weekday", "iso week", "add days", "calendar"]
+    },
+    {
+      "id": "memory",
+      "name": "Memory cards",
+      "short": "Memory",
+      "description": "Cari pasangan kartu bergambar yang sama di papan 4×4, 4×5, atau 6×6, hitung langkah dan waktu, dengan rekor tiap papan",
+      "group": "game",
+      "path": "memory/",
+      "icon": "🃏",
+      "tags": ["memory", "kartu", "pasangan", "game", "ingatan", "puzzle", "permainan"],
+      "favorite": false,
+      "name_en": "Memory cards",
+      "short_en": "Memory",
+      "description_en": "Find matching picture card pairs on a 4×4, 4×5, or 6×6 board, with move and time counters and a record for each board",
+      "tags_en": ["memory", "cards", "pairs", "game", "matching", "puzzle"]
     }
   ]
 }
