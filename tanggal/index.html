@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="id" data-theme="light" data-lang-src="lang.json">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="referrer" content="no-referrer">
+<title data-i18n="title">Kalkulator tanggal · Tools SagalaIT</title>
+<link rel="icon" href="data:,">
+<script src="../assets/theme.js"></script>
+<script src="../assets/i18n.js"></script>
+<link rel="stylesheet" href="../assets/app.css">
+<link rel="stylesheet" href="app.css">
+</head>
+<body>
+
+<header class="wrap top">
+  <a class="logo" href="../" aria-label="Tools SagalaIT, ke beranda" data-i18n-attr="aria-label:common.home">S</a>
+  <nav class="crumbs" aria-label="Lokasi" data-i18n-attr="aria-label:common.nav"><a href="../" data-i18n="common.tools">Tools</a><span aria-hidden="true">/</span><a class="crumb-g" href="../#grup-waktu" data-i18n="group.waktu">Waktu dan fokus</a><span aria-hidden="true">/</span><span class="crumb-now" aria-current="page" data-i18n="crumb">Kalkulator tanggal</span></nav>
+  <span class="top-end">
+    <button class="icon-btn" type="button" data-theme-toggle aria-label="Ganti tema terang atau gelap" data-i18n-attr="aria-label:common.theme">
+      <svg width="20" height="20" viewBox="-11 -11 22 22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle r="9"/><path d="M0 -9 A9 9 0 0 1 0 9 Z" fill="currentColor"/></svg>
+    </button>
+  </span>
+</header>
+
+<main class="wrap">
+  <div class="app-head">
+    <div>
+      <h1 data-i18n="h1">Kalkulator tanggal</h1>
+      <p class="lead" data-i18n="lead">Hitung selisih dua tanggal, tambah atau kurangi hari, bulan, dan hari kerja, cari umur, dan lihat hari dalam minggu. Hari kerja mengecualikan akhir pekan dan libur nasional Indonesia 2026 yang bisa Anda ubah. Semua dihitung di browser Anda.</p>
+    </div>
+  </div>
+
+  <div class="tg-grid">
+    <section class="panel tg-main">
+      <div class="panel-head"><h2 data-i18n="res_h">Hasil</h2><button class="btn btn-sm" type="button" id="btnSample" data-i18n="sample">Coba dengan contoh</button></div>
+      <div class="tg-tabs" role="group" aria-label="Mode" id="tabs">
+        <button class="ui-chip tg-tab" type="button" data-tab="diff" aria-pressed="true" data-i18n="tab_diff">Selisih</button>
+        <button class="ui-chip tg-tab" type="button" data-tab="add" aria-pressed="false" data-i18n="tab_add">Tambah atau kurang</button>
+        <button class="ui-chip tg-tab" type="button" data-tab="age" aria-pressed="false" data-i18n="tab_age">Umur</button>
+        <button class="ui-chip tg-tab" type="button" data-tab="info" aria-pressed="false" data-i18n="tab_info">Info tanggal</button>
+      </div>
+
+      <div class="tg-pane" data-pane="diff">
+        <div class="tg-f"><label class="tg-lbl" for="a" data-i18n="d_a">Tanggal awal</label><div class="tg-datew"><input class="field-sm tg-field" type="date" id="a" min="0001-01-01" max="9999-12-31"><button class="btn btn-sm tg-today" type="button" data-today="a" data-i18n="today">Hari ini</button></div><p class="small tg-err" id="e-a" role="alert"></p></div>
+        <div class="tg-f"><label class="tg-lbl" for="b" data-i18n="d_b">Tanggal akhir</label><div class="tg-datew"><input class="field-sm tg-field" type="date" id="b" min="0001-01-01" max="9999-12-31"><button class="btn btn-sm tg-today" type="button" data-today="b" data-i18n="today">Hari ini</button></div><p class="small tg-err" id="e-b" role="alert"></p></div>
+        <div class="tg-tools"><button class="btn btn-sm" type="button" id="btnSwap" data-i18n="swap">Tukar tanggal</button>
+        <label class="ui-switch"><input type="checkbox" id="inc"><span data-i18n="d_inc">Hitung tanggal awal juga (untuk hari kerja)</span></label></div>
+      </div>
+
+      <div class="tg-pane" data-pane="add" hidden>
+        <div class="tg-f"><label class="tg-lbl" for="base" data-i18n="a_base">Tanggal dasar</label><div class="tg-datew"><input class="field-sm tg-field" type="date" id="base" min="0001-01-01" max="9999-12-31"><button class="btn btn-sm tg-today" type="button" data-today="base" data-i18n="today">Hari ini</button></div><p class="small tg-err" id="e-base" role="alert"></p></div>
+        <span class="tg-lbl" id="lblDir" data-i18n="a_dir">Arah</span>
+        <div class="ui-seg tg-seg" role="radiogroup" aria-labelledby="lblDir" id="dirSeg"><label><input type="radio" name="dir" value="add" checked><span data-i18n="a_plus">Tambah</span></label><label><input type="radio" name="dir" value="sub"><span data-i18n="a_minus">Kurang</span></label></div>
+        <span class="tg-lbl tg-gap" id="lblKind" data-i18n="a_kind">Satuan</span>
+        <div class="ui-seg tg-seg" role="radiogroup" aria-labelledby="lblKind" id="kindSeg"><label><input type="radio" name="kind" value="cal" checked><span data-i18n="a_cal">Kalender</span></label><label><input type="radio" name="kind" value="work"><span data-i18n="a_work">Hari kerja</span></label></div>
+        <div class="tg-nums tg-gap" id="numsCal">
+          <div class="tg-f"><label class="tg-lbl" for="n-years" data-i18n="a_years">Tahun</label><input class="field-sm tg-field" type="number" id="n-years" min="0" max="9999" step="1" inputmode="numeric" placeholder="0"><p class="small tg-err" id="e-n-years" role="alert"></p></div><div class="tg-f"><label class="tg-lbl" for="n-months" data-i18n="a_months">Bulan</label><input class="field-sm tg-field" type="number" id="n-months" min="0" max="120000" step="1" inputmode="numeric" placeholder="0"><p class="small tg-err" id="e-n-months" role="alert"></p></div><div class="tg-f"><label class="tg-lbl" for="n-weeks" data-i18n="a_weeks">Minggu</label><input class="field-sm tg-field" type="number" id="n-weeks" min="0" max="500000" step="1" inputmode="numeric" placeholder="0"><p class="small tg-err" id="e-n-weeks" role="alert"></p></div><div class="tg-f"><label class="tg-lbl" for="n-days" data-i18n="a_days">Hari</label><input class="field-sm tg-field" type="number" id="n-days" min="0" max="3000000" step="1" inputmode="numeric" placeholder="0"><p class="small tg-err" id="e-n-days" role="alert"></p></div>
+        </div>
+        <div class="tg-nums tg-gap" id="numsWork" hidden>
+          <div class="tg-f"><label class="tg-lbl" for="n-work" data-i18n="a_wdays">Hari kerja</label><input class="field-sm tg-field" type="number" id="n-work" min="0" max="1000000" step="1" inputmode="numeric" placeholder="0"><p class="small tg-err" id="e-n-work" role="alert"></p></div>
+        </div>
+      </div>
+
+      <div class="tg-pane" data-pane="age" hidden>
+        <div class="tg-f"><label class="tg-lbl" for="birth" data-i18n="g_birth">Tanggal lahir</label><div class="tg-datew"><input class="field-sm tg-field" type="date" id="birth" min="0001-01-01" max="9999-12-31"></div><p class="small tg-err" id="e-birth" role="alert"></p></div>
+        <div class="tg-f"><label class="tg-lbl" for="ref" data-i18n="g_ref">Dihitung pada tanggal</label><div class="tg-datew"><input class="field-sm tg-field" type="date" id="ref" min="0001-01-01" max="9999-12-31"><button class="btn btn-sm tg-today" type="button" data-today="ref" data-i18n="today">Hari ini</button></div><p class="small tg-err" id="e-ref" role="alert"></p></div>
+      </div>
+
+      <div class="tg-pane" data-pane="info" hidden>
+        <div class="tg-f"><label class="tg-lbl" for="idate" data-i18n="i_date">Tanggal</label><div class="tg-datew"><input class="field-sm tg-field" type="date" id="idate" min="0001-01-01" max="9999-12-31"><button class="btn btn-sm tg-today" type="button" data-today="idate" data-i18n="today">Hari ini</button></div><p class="small tg-err" id="e-idate" role="alert"></p></div>
+      </div>
+
+      <p class="tg-empty muted" id="empty" data-i18n="empty">Pilih tanggal untuk melihat hasil.</p>
+      <div class="tg-res" id="res" hidden>
+        <p class="tg-big" id="big"></p>
+        <div class="tg-kv" id="kv"></div>
+        <ul class="tg-notes small" id="notes"></ul>
+        <details class="tg-det" id="holDet" hidden><summary id="holSum"></summary><ul class="tg-hl" id="holList"></ul></details>
+        <button class="btn btn-sm" type="button" id="btnCopy" data-i18n="copy_res">Salin hasil</button>
+      </div>
+    </section>
+
+    <section class="panel tg-side">
+      <div class="panel-head"><h2 data-i18n="s_h">Hari kerja dan libur</h2></div>
+      <label class="tg-lbl" for="weekend" data-i18n="s_weekend">Hari libur mingguan</label>
+      <select class="field-sm tg-field tg-sel" id="weekend"><option value="sat-sun" data-i18n="s_we_sat">Sabtu dan Minggu</option><option value="sun" data-i18n="s_we_sun">Hanya Minggu</option></select>
+      <label class="ui-switch tg-gap"><input type="checkbox" id="cuti" checked><span data-i18n="s_cuti">Anggap cuti bersama sebagai libur</span></label>
+      <label class="tg-lbl tg-gap" for="hol" data-i18n="s_hol">Daftar libur (satu per baris)</label>
+      <textarea class="field tg-ta" id="hol" rows="12" spellcheck="false" autocomplete="off" wrap="off"></textarea>
+      <p class="small muted tg-hint" data-i18n="s_hint">Format: YYYY-MM-DD Nama. Awali nama dengan [cuti] untuk cuti bersama. Baris berawalan # diabaikan.</p>
+      <ul class="tg-herr small" id="holErr"></ul>
+      <p class="small tg-count" id="holCount"></p>
+      <button class="btn btn-sm" type="button" id="btnReset" data-i18n="s_reset">Kembalikan ke daftar 2026</button>
+      <p class="small muted tg-hint tg-gap" data-i18n="s_note">Daftar bawaan mengikuti SKB 3 Menteri tentang libur nasional dan cuti bersama 2026. Daftar ini bisa salah ketik atau berubah; periksa SKB resmi sebelum dipakai untuk keputusan penting. Daftar yang Anda ubah disimpan di browser ini.</p>
+    </section>
+  </div>
+</main>
+
+<script src="tanggal.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
