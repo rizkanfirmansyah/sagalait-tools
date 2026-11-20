@@ -482,6 +482,21 @@
       "short_en": "QR",
       "description_en": "Make a QR Code from a link, text, WiFi, contact, email, SMS, phone, WhatsApp, location, or event, with colors and a logo, download PNG or SVG",
       "tags_en": ["qr", "qr code", "barcode", "link", "wifi", "vcard", "contact", "whatsapp", "logo", "png", "svg", "scan"]
+    },
+    {
+      "id": "tanggal",
+      "name": "Kalkulator tanggal",
+      "short": "Tanggal",
+      "description": "Hitung selisih tanggal, tambah atau kurang hari, bulan, dan hari kerja (dengan libur nasional 2026), umur, dan hari dalam minggu",
+      "group": "waktu",
+      "path": "tanggal/",
+      "icon": "📅",
+      "tags": ["tanggal", "selisih", "hari kerja", "libur nasional", "cuti bersama", "umur", "hari dalam minggu", "minggu iso", "tambah hari", "kalender", "hitung hari"],
+      "favorite": false,
+      "name_en": "Date calculator",
+      "short_en": "Date",
+      "description_en": "Find the difference between dates, add or subtract days, months, and working days (with 2026 Indonesian holidays), age, and weekday",
+      "tags_en": ["date", "difference", "working days", "business days", "holidays", "age", "weekday", "iso week", "add days", "calendar"]
     }
   ]
 }
