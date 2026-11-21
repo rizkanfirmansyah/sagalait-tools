@@ -1,4 +1,4 @@
-# Tools SagalaIT Tools
+# Tools SagalaIT Tools by Rizkan Firmansyah
 
 Portal kecil untuk kumpulan tool. Halaman utama (`index.html`) membaca daftar tool dari `tools.json`, jadi menambah atau mengurangi tool cukup mengubah satu file JSON. Tidak ada backend.
 
