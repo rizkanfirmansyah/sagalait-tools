@@ -46,6 +46,7 @@ memory/               app 31 (game; engine.js murni, ikon.js data bentuk)
 ketik-cepat/          app 32 (game; ketik.js murni: rumus WPM, akurasi, konsistensi, penyimpanan; grafik.js SVG; daftar kata id dan en)
 diff-teks/            app 33 (grup teks; diff.js murni: Myers sendiri, diff baris dan kata, format diff terpadu)
 kontras/              app 34 (grup dev; kontras.js murni: rasio WCAG, parser hex/rgb/hsl, saran warna terdekat)
+htaccess/             app 35 (grup server; gen.js murni: .htaccess Apache 2.4 dan php.ini, diuji dengan Apache dan php nyata)
 ```
 
 ## Tampilan v2 dan v1
@@ -62,7 +63,7 @@ Saklar ID/EN ada di bilah atas portal dan semua app. Pilihan disimpan di `localS
 - Teks dari JS: `SagalaI18n.t('kunci', { param })`. Jalankan inisialisasi app di `SagalaI18n.onReady(...)` dan render ulang bagian dinamis pada event `sagalait:lang` di `document`. Format angka dan tanggal: `Intl` dengan `SagalaI18n.locale`.
 - Kunci yang hilang di Inggris memakai teks Indonesia; kunci yang tidak ada sama sekali tampil sebagai kuncinya dan memberi peringatan di console.
 - `tools.json` memakai kolom `name_en`, `description_en`, `tags_en`, `short_en`; grup memakai `name_en`; `site` memakai `title_en` dan `tagline_en`.
-- Status terjemahan isi app: Inggris penuh pada portal, `signature/`, `watermark/`, `game-2048/`, `game-sudoku/`, `password/`, `regex/`, `kompres-gambar/`, `tebak-kata/`, `patungan/`, `terbilang/`, `subnet/`, `waktu/`, `hash/`, `qr/`, `tanggal/`, `memory/`, `ketik-cepat/`, `diff-teks/`, dan `kontras/`. App lain baru menerjemahkan bilah atas, remah roti, dan judul; isinya masih Indonesia. Menambah app baru wajib dwibahasa.
+- Status terjemahan isi app: Inggris penuh pada portal, `signature/`, `watermark/`, `game-2048/`, `game-sudoku/`, `password/`, `regex/`, `kompres-gambar/`, `tebak-kata/`, `patungan/`, `terbilang/`, `subnet/`, `waktu/`, `hash/`, `qr/`, `tanggal/`, `memory/`, `ketik-cepat/`, `diff-teks/`, `kontras/`, dan `htaccess/`. App lain baru menerjemahkan bilah atas, remah roti, dan judul; isinya masih Indonesia. Menambah app baru wajib dwibahasa.
 
 ## Menjalankan di lokal
 
