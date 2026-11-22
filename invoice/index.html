@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="id" data-theme="light" data-lang-src="lang.json">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="referrer" content="no-referrer">
+<title data-i18n="title">Kwitansi dan invoice · Tools SagalaIT</title>
+<link rel="icon" href="data:,">
+<script src="../assets/theme.js"></script>
+<script src="../assets/i18n.js"></script>
+<link rel="stylesheet" href="../assets/app.css">
+<link rel="stylesheet" href="app.css">
+</head>
+<body>
+
+<header class="wrap top">
+  <a class="logo" href="../" aria-label="Tools SagalaIT, ke beranda" data-i18n-attr="aria-label:common.home">S</a>
+  <nav class="crumbs" aria-label="Lokasi" data-i18n-attr="aria-label:common.nav"><a href="../" data-i18n="common.tools">Tools</a><span aria-hidden="true">/</span><a class="crumb-g" href="../#grup-harian" data-i18n="group.harian">Sehari-hari</a><span aria-hidden="true">/</span><span class="crumb-now" aria-current="page" data-i18n="crumb">Kwitansi dan invoice</span></nav>
+  <span class="top-end">
+    <button class="icon-btn" type="button" data-theme-toggle aria-label="Ganti tema terang atau gelap" data-i18n-attr="aria-label:common.theme">
+      <svg width="20" height="20" viewBox="-11 -11 22 22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle r="9"/><path d="M0 -9 A9 9 0 0 1 0 9 Z" fill="currentColor"/></svg>
+    </button>
+  </span>
+</header>
+
+<main class="wrap">
+  <div class="app-head">
+    <div>
+      <h1 data-i18n="h1">Kwitansi dan invoice</h1>
+      <p class="lead" data-i18n="lead">Isi data, lihat dokumennya langsung, lalu cetak atau simpan sebagai PDF lewat dialog cetak browser. Total, diskon, PPN, dan terbilang dihitung otomatis. Draf tersimpan di browser ini saja.</p>
+    </div>
+  </div>
+
+  <div class="iv-grid">
+    <div class="iv-form">
+      <section class="panel iv-p">
+        <div class="panel-head"><h2 data-i18n="g_doc">Dokumen</h2></div>
+        <span class="iv-lbl" id="lblType" data-i18n="f_type">Jenis dokumen</span>
+        <div class="ui-seg iv-seg" role="radiogroup" aria-labelledby="lblType"><label><input type="radio" name="type" value="invoice" checked><span data-i18n="t_inv">Invoice</span></label><label><input type="radio" name="type" value="receipt"><span data-i18n="t_rcp">Kwitansi</span></label></div>
+        <div class="iv-two">
+          <div class="iv-f"><label class="iv-lbl" for="no" data-i18n="f_no"></label><input class="field-sm iv-in" id="no" data-k="no" type="text" autocomplete="off" maxlength="60" placeholder="INV-2026-001"></div>
+          <div class="iv-f"><label class="iv-lbl" for="date" data-i18n="f_date"></label><input class="field-sm iv-in" id="date" data-k="date" type="date" autocomplete="off" ></div>
+          <div id="dueWrap"><div class="iv-f"><label class="iv-lbl" for="due" data-i18n="f_due"></label><input class="field-sm iv-in" id="due" data-k="due" type="date" autocomplete="off" ></div></div>
+        </div>
+      </section>
+      <section class="panel iv-p">
+        <div class="panel-head"><h2 data-i18n="g_from">Pengirim</h2></div>
+        <div class="iv-f"><label class="iv-lbl" for="from.name" data-i18n="f_name"></label><input class="field-sm iv-in" id="from.name" data-k="from.name" type="text" autocomplete="off" maxlength="120"></div>
+        <div class="iv-f"><label class="iv-lbl" for="from.addr" data-i18n="f_addr"></label><textarea class="field iv-ta" id="from.addr" data-k="from.addr" rows="2" autocomplete="off" maxlength="300"></textarea></div>
+        <div class="iv-two"><div class="iv-f"><label class="iv-lbl" for="from.contact" data-i18n="f_contact"></label><input class="field-sm iv-in" id="from.contact" data-k="from.contact" type="text" autocomplete="off" maxlength="120"></div><div class="iv-f"><label class="iv-lbl" for="from.tax" data-i18n="f_npwp"></label><input class="field-sm iv-in" id="from.tax" data-k="from.tax" type="text" autocomplete="off" maxlength="40"></div></div>
+      </section>
+      <section class="panel iv-p">
+        <div class="panel-head"><h2 data-i18n="g_to">Penerima</h2></div>
+        <div class="iv-f"><label class="iv-lbl" for="to.name" data-i18n="f_name"></label><input class="field-sm iv-in" id="to.name" data-k="to.name" type="text" autocomplete="off" maxlength="120"></div>
+        <div class="iv-f"><label class="iv-lbl" for="to.addr" data-i18n="f_addr"></label><textarea class="field iv-ta" id="to.addr" data-k="to.addr" rows="2" autocomplete="off" maxlength="300"></textarea></div>
+        <div id="purposeWrap"><div class="iv-f"><label class="iv-lbl" for="purpose" data-i18n="f_purpose"></label><textarea class="field iv-ta" id="purpose" data-k="purpose" rows="2" autocomplete="off" maxlength="300"></textarea></div></div>
+      </section>
+      <section class="panel iv-p">
+        <div class="panel-head"><h2 data-i18n="g_items">Butir</h2></div>
+        <div id="rows" class="iv-rows"></div>
+        <div class="iv-rowact"><button class="btn btn-sm" type="button" id="btnAdd" data-i18n="i_add">Tambah butir</button><span class="small" id="maxNote" hidden></span></div>
+      </section>
+      <section class="panel iv-p">
+        <div class="panel-head"><h2 data-i18n="g_calc">Diskon dan pajak</h2></div>
+        <span class="iv-lbl" id="lblDisc" data-i18n="f_disc">Diskon</span>
+        <div class="iv-discrow">
+          <div class="ui-seg iv-seg" role="radiogroup" aria-labelledby="lblDisc"><label><input type="radio" name="dtype" value="pct" checked><span data-i18n="d_pct">Persen</span></label><label><input type="radio" name="dtype" value="amt"><span data-i18n="d_amt">Nominal</span></label></div>
+          <input class="field-sm iv-in iv-num" id="discount.value" data-k="discount.value" type="text" inputmode="decimal" autocomplete="off" aria-labelledby="lblDisc" maxlength="20">
+        </div>
+        <div class="iv-f iv-taxrow"><label class="iv-lbl" for="tax.rate" data-i18n="f_tax">Pajak</label>
+          <div class="iv-discrow"><input class="field-sm iv-in iv-num" id="tax.rate" data-k="tax.rate" type="text" inputmode="decimal" autocomplete="off" maxlength="7"><button class="ui-chip iv-chip" type="button" id="chPpn" data-i18n="chip_ppn">PPN 11%</button></div></div>
+        <label class="ui-switch"><input type="checkbox" id="oIncl"><span data-i18n="f_incl">Harga sudah termasuk pajak</span></label>
+        <label class="ui-switch"><input type="checkbox" id="oRound"><span data-i18n="f_round">Bulatkan total ke rupiah</span></label>
+      </section>
+      <section class="panel iv-p">
+        <div class="panel-head"><h2 data-i18n="g_misc">Catatan dan pembayaran</h2></div>
+        <div class="iv-f"><label class="iv-lbl" for="notes" data-i18n="f_notes"></label><textarea class="field iv-ta" id="notes" data-k="notes" rows="2" autocomplete="off" maxlength="400"></textarea></div>
+        <div class="iv-f"><label class="iv-lbl" for="pay" data-i18n="f_pay"></label><textarea class="field iv-ta" id="pay" data-k="pay" rows="2" autocomplete="off" maxlength="300" placeholder="Bank, nomor rekening, atas nama" data-i18n-attr="placeholder:ph_pay"></textarea></div>
+        <div class="iv-two"><div class="iv-f"><label class="iv-lbl" for="place" data-i18n="f_place"></label><input class="field-sm iv-in" id="place" data-k="place" type="text" autocomplete="off" maxlength="60"></div><div class="iv-f"><label class="iv-lbl" for="signer" data-i18n="f_signer"></label><input class="field-sm iv-in" id="signer" data-k="signer" type="text" autocomplete="off" maxlength="80"></div></div>
+      </section>
+      <p class="small iv-draft" data-i18n="draft_note"></p>
+    </div>
+
+    <div class="iv-side">
+      <div class="panel iv-bar">
+        <div class="iv-live"><span class="iv-k" data-i18n="live_total">Total sementara</span><strong id="liveTotal">Rp 0</strong></div>
+        <div class="iv-btns">
+          <button class="btn btn-primary" type="button" id="btnPrint" data-i18n="btn_print">Cetak atau simpan PDF</button>
+          <button class="btn" type="button" id="btnSample" data-i18n="btn_sample">Contoh data</button>
+          <button class="btn btn-danger" type="button" id="btnClear" data-i18n="btn_clear">Kosongkan semua</button>
+        </div>
+        <div class="banner iv-err" id="errBox" role="alert" hidden><div><strong data-i18n="e_h">Perlu diperbaiki</strong><ul id="errList"></ul></div></div>
+        <p class="small iv-warn" id="warnLine" hidden></p>
+      </div>
+      <h2 class="iv-prevh" data-i18n="prev_h">Pratinjau dokumen</h2>
+      <article class="iv-sheet" id="sheet" aria-label="Pratinjau dokumen" data-i18n-attr="aria-label:prev_h"></article>
+    </div>
+  </div>
+
+  <dialog class="iv-dlg" id="dlgClear" aria-labelledby="dlgQ">
+    <p id="dlgQ" data-i18n="clear_q">Hapus semua?</p>
+    <div class="iv-btns"><button class="btn" type="button" id="clearNo" data-i18n="cancel">Batal</button><button class="btn btn-danger" type="button" id="clearYes" data-i18n="clear_ok">Hapus</button></div>
+  </dialog>
+</main>
+
+<script src="terbilang.js"></script>
+<script src="invoice.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
