@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="id" data-theme="light" data-lang-src="lang.json">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="referrer" content="no-referrer">
+<title data-i18n="title">Pembanding teks · Tools SagalaIT</title>
+<link rel="icon" href="data:,">
+<script src="../assets/theme.js"></script>
+<script src="../assets/i18n.js"></script>
+<link rel="stylesheet" href="../assets/app.css">
+<link rel="stylesheet" href="app.css">
+</head>
+<body>
+
+<header class="wrap top">
+  <a class="logo" href="../" aria-label="Tools SagalaIT, ke beranda" data-i18n-attr="aria-label:common.home">S</a>
+  <nav class="crumbs" aria-label="Lokasi" data-i18n-attr="aria-label:common.nav"><a href="../" data-i18n="common.tools">Tools</a><span aria-hidden="true">/</span><a class="crumb-g" href="../#grup-teks" data-i18n="group.teks">Teks dan encoding</a><span aria-hidden="true">/</span><span class="crumb-now" aria-current="page" data-i18n="crumb">Pembanding teks</span></nav>
+  <span class="top-end">
+    <button class="icon-btn" type="button" data-theme-toggle aria-label="Ganti tema terang atau gelap" data-i18n-attr="aria-label:common.theme">
+      <svg width="20" height="20" viewBox="-11 -11 22 22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle r="9"/><path d="M0 -9 A9 9 0 0 1 0 9 Z" fill="currentColor"/></svg>
+    </button>
+  </span>
+</header>
+
+<main class="wrap">
+  <div class="app-head">
+    <div>
+      <h1 data-i18n="h1">Pembanding teks</h1>
+      <p class="lead" data-i18n="lead">Tempel dua teks dan lihat apa yang berubah: baris yang ditambah, dihapus, dan kata yang berbeda di dalam baris. Semua dihitung di browser ini; teks Anda tidak dikirim dan tidak disimpan.</p>
+    </div>
+  </div>
+
+  <section class="panel df-in">
+    <div class="df-inputs">
+      <div class="df-col">
+        <label class="df-lbl" for="ta" data-i18n="a_l">Teks asli</label>
+        <textarea class="field df-ta" id="ta" rows="9" spellcheck="false" autocomplete="off" autocapitalize="off" placeholder="Tempel teks asli di sini" data-i18n-attr="placeholder:a_ph"></textarea>
+        <span class="small df-cnt" id="cntA"></span>
+      </div>
+      <div class="df-col">
+        <label class="df-lbl" for="tb" data-i18n="b_l">Teks baru</label>
+        <textarea class="field df-ta" id="tb" rows="9" spellcheck="false" autocomplete="off" autocapitalize="off" placeholder="Tempel teks baru di sini" data-i18n-attr="placeholder:b_ph"></textarea>
+        <span class="small df-cnt" id="cntB"></span>
+      </div>
+    </div>
+    <div class="df-tools">
+      <button class="btn btn-sm" type="button" id="btnSample" data-i18n="btn_sample">Coba dengan contoh</button>
+      <button class="btn btn-sm" type="button" id="btnSwap" data-i18n="btn_swap">Tukar kiri dan kanan</button>
+      <button class="btn btn-sm" type="button" id="btnClear" data-i18n="btn_clear">Kosongkan</button>
+    </div>
+    <div class="df-opts">
+      <label class="ui-switch"><input type="checkbox" id="oCase"><span data-i18n="opt_case">Abaikan huruf besar dan kecil</span></label>
+      <label class="ui-switch"><input type="checkbox" id="oSpace"><span data-i18n="opt_space">Abaikan perbedaan spasi</span></label>
+      <label class="ui-switch" id="lblHide"><input type="checkbox" id="oHide"><span data-i18n="opt_hide">Sembunyikan baris yang sama</span></label>
+    </div>
+    <div class="df-segs">
+      <div class="ui-seg df-seg" role="radiogroup" aria-label="Tingkat perbandingan" data-i18n-attr="aria-label:gran_l">
+        <label><input type="radio" name="gran" value="line" checked><span data-i18n="g_line">Baris</span></label>
+        <label><input type="radio" name="gran" value="word"><span data-i18n="g_word">Kata</span></label>
+      </div>
+      <div class="ui-seg df-seg" role="radiogroup" aria-label="Tampilan" data-i18n-attr="aria-label:view_l">
+        <label><input type="radio" name="view" value="side" checked><span data-i18n="v_side">Sejajar</span></label>
+        <label><input type="radio" name="view" value="uni"><span data-i18n="v_uni">Satu kolom</span></label>
+      </div>
+    </div>
+  </section>
+
+  <section class="panel df-res">
+    <div class="panel-head"><h2 data-i18n="res_h">Hasil</h2>
+      <div class="df-nav">
+        <button class="btn btn-sm" type="button" id="btnPrev" data-i18n="prev">Perbedaan sebelumnya</button>
+        <button class="btn btn-sm" type="button" id="btnNext" data-i18n="next">Perbedaan berikutnya</button>
+        <button class="btn btn-sm" type="button" id="btnPatch" data-i18n="copy_patch">Salin sebagai diff</button>
+      </div>
+    </div>
+    <div class="df-stats" id="stats" role="status" aria-live="polite"></div>
+    <p class="banner df-note" id="approx" hidden data-i18n="approx"></p>
+    <p class="ui-empty df-empty" id="empty" hidden></p>
+    <div class="df-out" id="out" tabindex="0" role="region" aria-label="Hasil perbandingan" data-i18n-attr="aria-label:out_label"></div>
+    <div class="df-morewrap"><button class="btn" type="button" id="btnMore" hidden></button></div>
+  </section>
+</main>
+
+<script src="diff.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
