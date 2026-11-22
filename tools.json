@@ -527,6 +527,21 @@
       "short_en": "Typing",
       "description_en": "Test your typing speed in time, words, or zen mode: WPM, accuracy, consistency, per-second chart, records, and history with no account",
       "tags_en": ["typing", "typing test", "wpm", "speed", "practice", "keyboard", "accuracy", "zen", "game", "monkeytype"]
+    },
+    {
+      "id": "diff-teks",
+      "name": "Pembanding teks",
+      "short": "Diff",
+      "description": "Bandingkan dua teks per baris atau per kata: baris ditambah, dihapus, dan kata yang berubah, tampilan sejajar atau satu kolom, salin sebagai diff",
+      "group": "teks",
+      "path": "diff-teks/",
+      "icon": "±",
+      "tags": ["diff", "banding", "bandingkan", "teks", "perbedaan", "baris", "kata", "patch", "bandingan", "compare"],
+      "favorite": false,
+      "name_en": "Text diff",
+      "short_en": "Diff",
+      "description_en": "Compare two texts by line or by word: added and removed lines, changed words, side-by-side or single-column view, copy as a diff",
+      "tags_en": ["diff", "compare", "text", "difference", "lines", "words", "patch", "side by side", "unified"]
     }
   ]
 }
