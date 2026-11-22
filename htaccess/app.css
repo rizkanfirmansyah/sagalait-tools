@@ -1,0 +1,32 @@
+/* Gaya khusus Generator .htaccess dan php.ini; semua warna lewat token portal. Awalan kelas: hx- */
+.hx-grid { display: grid; grid-template-columns: minmax(0, 1fr); gap: 16px; align-items: start; }
+@media (min-width: 1000px) { .hx-grid { grid-template-columns: minmax(0, 5fr) minmax(0, 6fr); } .hx-out { position: sticky; top: 12px; } }
+.hx-tabs { display: flex; gap: 8px; margin-bottom: 14px; }
+.hx-tab { min-height: 44px; font-family: var(--mono); }
+.hx-presets { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin-bottom: 12px; }
+.hx-presets .btn-sm, .hx-btns .btn-sm { height: 44px; }
+.hx-lbl { display: block; font-size: 14px; font-weight: 600; color: var(--ink); margin-bottom: 6px; }
+.hx-presets .hx-lbl { margin: 0 4px 0 0; }
+.hx-set { margin: 0 0 12px; padding: 8px 14px 6px; border: 1px solid var(--line); border-radius: var(--r-md); background: var(--well); min-width: 0; }
+.hx-set legend { padding: 0 6px; font-weight: 700; font-size: 14px; color: var(--ink); }
+.hx-sub { display: block; font-size: 12.5px; color: var(--muted); }
+.hx-set .ui-switch, #formPhp > .ui-switch { display: flex; align-items: flex-start; padding: 6px 0; }
+.hx-set .ui-switch input, #formPhp > .ui-switch input { margin-top: 2px; }
+.hx-f { margin: 6px 0 10px; min-width: 0; }
+.hx-seg { display: flex; flex-wrap: wrap; }
+.hx-seg span { min-height: 44px; min-width: 56px; padding: 0 12px; }
+.hx-two { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 0 14px; }
+.hx-txt { width: 100%; height: 44px; font-family: var(--mono); }
+.hx-txt:disabled, .ui-switch input:disabled { opacity: .5; cursor: not-allowed; }
+.hx-btns { display: flex; gap: 8px; }
+.hx-fn { font: 600 14px var(--mono); padding: 2px 8px; border-radius: 6px; background: var(--well); border: 1px solid var(--line); color: var(--ink); margin-left: 6px; }
+pre.hx-pre { max-height: 560px; font-size: 12.5px; white-space: pre; word-break: normal; overflow: auto; tab-size: 4; }
+.hx-pre:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+.hx-meta { margin: 6px 0 0; color: var(--muted); }
+.hx-err { background: var(--err-t); color: var(--err); margin-bottom: 10px; font-weight: 500; }
+.hx-err[hidden], .hx-warn[hidden] { display: none; }
+.hx-err ul, .hx-warn ul { margin: 6px 0 0; padding-left: 18px; }
+.hx-warn { margin-top: 12px; padding: 10px 14px; border: 1px solid var(--warn); border-left-width: 4px; border-radius: var(--r-md); background: var(--warn-t); color: var(--body); }
+.hx-warn li { margin: 4px 0; font-size: 14px; }
+.hx-h3 { margin: 0; font-size: 14px; color: var(--warn); }
+.hx-h3::before { content: "⚠ "; }
