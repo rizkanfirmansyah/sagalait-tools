@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="id" data-theme="light" data-lang-src="lang.json">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="referrer" content="no-referrer">
+<title data-i18n="title">Cek kontras warna · Tools SagalaIT</title>
+<link rel="icon" href="data:,">
+<script src="../assets/theme.js"></script>
+<script src="../assets/i18n.js"></script>
+<link rel="stylesheet" href="../assets/app.css">
+<link rel="stylesheet" href="app.css">
+</head>
+<body>
+
+<header class="wrap top">
+  <a class="logo" href="../" aria-label="Tools SagalaIT, ke beranda" data-i18n-attr="aria-label:common.home">S</a>
+  <nav class="crumbs" aria-label="Lokasi" data-i18n-attr="aria-label:common.nav"><a href="../" data-i18n="common.tools">Tools</a><span aria-hidden="true">/</span><a class="crumb-g" href="../#grup-dev" data-i18n="group.dev">Developer</a><span aria-hidden="true">/</span><span class="crumb-now" aria-current="page" data-i18n="crumb">Cek kontras warna</span></nav>
+  <span class="top-end">
+    <button class="icon-btn" type="button" data-theme-toggle aria-label="Ganti tema terang atau gelap" data-i18n-attr="aria-label:common.theme">
+      <svg width="20" height="20" viewBox="-11 -11 22 22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle r="9"/><path d="M0 -9 A9 9 0 0 1 0 9 Z" fill="currentColor"/></svg>
+    </button>
+  </span>
+</header>
+
+<main class="wrap">
+  <div class="app-head">
+    <div>
+      <h1 data-i18n="h1">Cek kontras warna</h1>
+      <p class="lead" data-i18n="lead">Hitung rasio kontras warna teks dan latar menurut WCAG 2.x, lihat lulus atau tidaknya AA dan AAA, dan dapatkan saran warna terdekat yang lulus. Semua dihitung di browser ini.</p>
+    </div>
+  </div>
+
+  <div class="kn-grid">
+    <section class="panel kn-in">
+      <div class="panel-head"><h2 data-i18n="in_h">Warna</h2><button class="btn btn-sm" type="button" id="btnSwap" data-i18n="swap">Tukar teks dan latar</button></div>
+      <div class="kn-f">
+        <label class="kn-lbl" for="fg" data-i18n="fg_l"></label>
+        <div class="kn-row">
+          <input class="kn-pick" type="color" id="fgPick" aria-label="" data-i18n-attr="aria-label:pick_fg">
+          <input class="field kn-txt" type="text" id="fg" spellcheck="false" autocomplete="off" autocapitalize="off" placeholder="" data-i18n-attr="placeholder:ph" aria-describedby="fgFmt fgErr">
+        </div>
+        <p class="small kn-fmt" id="fgFmt"></p>
+        <p class="small kn-err" id="fgErr" hidden data-i18n="err"></p>
+      </div>
+      <div class="kn-f">
+        <label class="kn-lbl" for="bg" data-i18n="bg_l"></label>
+        <div class="kn-row">
+          <input class="kn-pick" type="color" id="bgPick" aria-label="" data-i18n-attr="aria-label:pick_bg">
+          <input class="field kn-txt" type="text" id="bg" spellcheck="false" autocomplete="off" autocapitalize="off" placeholder="" data-i18n-attr="placeholder:ph" aria-describedby="bgFmt bgErr">
+        </div>
+        <p class="small kn-fmt" id="bgFmt"></p>
+        <p class="small kn-err" id="bgErr" hidden data-i18n="err"></p>
+      </div>
+      <p class="small kn-hint" data-i18n="hint"></p>
+      <h3 class="kn-h3" data-i18n="prev_h">Pratinjau</h3>
+      <div class="kn-prev" id="preview">
+        <p class="kn-pn" data-i18n="prev_n"></p>
+        <p class="kn-pl" data-i18n="prev_l"></p>
+        <span class="kn-pb" data-i18n="prev_btn">Tombol</span>
+      </div>
+    </section>
+
+    <section class="panel kn-res">
+      <div class="panel-head"><h2 data-i18n="res_h">Hasil</h2><button class="btn btn-sm" type="button" id="btnCopy" data-i18n="copy">Salin hasil</button></div>
+      <p class="ui-empty kn-none" id="resNone" hidden data-i18n="res_none"></p>
+      <div id="resBox">
+        <div class="kn-ratio" role="status" aria-live="polite"><span class="kn-rk" data-i18n="ratio_l">Rasio kontras</span><strong class="big" id="ratio">0:1</strong><span class="kn-verdict" id="verdict"></span></div>
+        <h3 class="kn-h3" data-i18n="lv_h">Tingkat kelulusan</h3>
+        <ul class="kn-levels" id="levels"></ul>
+        <p class="small" data-i18n="lv_note"></p>
+        <h3 class="kn-h3" data-i18n="sug_h">Saran</h3>
+        <div id="sugs"></div>
+        <p class="small" data-i18n="sug_note"></p>
+      </div>
+    </section>
+  </div>
+</main>
+
+<script src="kontras.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
