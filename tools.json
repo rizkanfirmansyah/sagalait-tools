@@ -572,6 +572,21 @@
       "short_en": "htaccess",
       "description_en": "Generate an .htaccess (force HTTPS, www, front controller, caching, gzip, block dangerous files, security headers) and a production or development php.ini, with comments and warnings",
       "tags_en": ["htaccess", "php.ini", "apache", "https", "redirect", "www", "rewrite", "cache", "gzip", "hsts", "security headers", "front controller", "opcache"]
+    },
+    {
+      "id": "invoice",
+      "name": "Kwitansi dan invoice",
+      "short": "Invoice",
+      "description": "Buat invoice dan kwitansi dengan butir, diskon, PPN, pembulatan, dan terbilang rupiah otomatis, lalu cetak atau simpan sebagai PDF; draf tersimpan di browser",
+      "group": "harian",
+      "path": "invoice/",
+      "icon": "INV",
+      "tags": ["invoice", "kwitansi", "faktur", "tagihan", "ppn", "pajak", "terbilang", "cetak", "pdf", "bukti pembayaran"],
+      "favorite": false,
+      "name_en": "Receipts and invoices",
+      "short_en": "Invoice",
+      "description_en": "Make invoices and receipts with line items, discount, VAT, rounding, and the amount in words, then print or save as PDF; the draft stays in your browser",
+      "tags_en": ["invoice", "receipt", "bill", "vat", "tax", "print", "pdf", "payment"]
     }
   ]
 }
