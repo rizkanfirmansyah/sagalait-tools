@@ -557,6 +557,21 @@
       "short_en": "Contrast",
       "description_en": "Compute the WCAG 2.x contrast ratio of text and background colors (hex, rgb, hsl), see AA and AAA results, and get the nearest passing colors",
       "tags_en": ["contrast", "color", "wcag", "accessibility", "a11y", "aa", "aaa", "ratio", "hex", "rgb", "hsl"]
+    },
+    {
+      "id": "htaccess",
+      "name": "Generator .htaccess dan php.ini",
+      "short": "htaccess",
+      "description": "Buat .htaccess (paksa HTTPS, www, front controller, cache, gzip, blokir file berbahaya, header keamanan) dan php.ini produksi atau pengembangan, lengkap dengan komentar dan peringatan",
+      "group": "server",
+      "path": "htaccess/",
+      "icon": "ht",
+      "tags": ["htaccess", "php.ini", "apache", "https", "redirect", "www", "rewrite", "cache", "gzip", "hsts", "header keamanan", "front controller", "opcache"],
+      "favorite": false,
+      "name_en": ".htaccess and php.ini generator",
+      "short_en": "htaccess",
+      "description_en": "Generate an .htaccess (force HTTPS, www, front controller, caching, gzip, block dangerous files, security headers) and a production or development php.ini, with comments and warnings",
+      "tags_en": ["htaccess", "php.ini", "apache", "https", "redirect", "www", "rewrite", "cache", "gzip", "hsts", "security headers", "front controller", "opcache"]
     }
   ]
 }
