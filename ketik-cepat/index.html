@@ -1,0 +1,173 @@
+<!doctype html>
+<html lang="id" data-theme="light" data-lang-src="lang.json">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="referrer" content="no-referrer">
+<title data-i18n="title">Ketik cepat · Tools SagalaIT</title>
+<link rel="icon" href="data:,">
+<script src="../assets/theme.js"></script>
+<script src="../assets/i18n.js"></script>
+<link rel="stylesheet" href="../assets/app.css">
+<link rel="stylesheet" href="app.css">
+</head>
+<body>
+
+<header class="wrap top">
+  <a class="logo" href="../" aria-label="Tools SagalaIT, ke beranda" data-i18n-attr="aria-label:common.home">S</a>
+  <nav class="crumbs" aria-label="Lokasi" data-i18n-attr="aria-label:common.nav"><a href="../" data-i18n="common.tools">Tools</a><span aria-hidden="true">/</span><a class="crumb-g" href="../#grup-game" data-i18n="group.game">Game ringan</a><span aria-hidden="true">/</span><span class="crumb-now" aria-current="page" data-i18n="crumb">Ketik cepat</span></nav>
+  <span class="top-end">
+    <button class="icon-btn" type="button" data-theme-toggle aria-label="Ganti tema terang atau gelap" data-i18n-attr="aria-label:common.theme">
+      <svg width="20" height="20" viewBox="-11 -11 22 22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle r="9"/><path d="M0 -9 A9 9 0 0 1 0 9 Z" fill="currentColor"/></svg>
+    </button>
+  </span>
+</header>
+
+<main class="wrap">
+  <div class="app-head">
+    <div>
+      <h1 data-i18n="h1">Ketik cepat</h1>
+      <p class="lead" data-i18n="lead">Uji kecepatan mengetik tanpa akun dan tanpa iklan. Pilih mode waktu, kata, atau zen, lalu mulai mengetik: jam jalan pada ketikan pertama. Hasil, rekor, dan riwayat hanya disimpan di browser ini.</p>
+    </div>
+  </div>
+
+  <div class="kc-root" id="kcRoot" data-size="3" data-align="center" data-caret="smooth">
+    <section class="panel kc-panel">
+      <div class="kc-bar kc-fade" id="kcBar">
+        <div class="ui-seg kc-seg" role="radiogroup" aria-label="Mode" data-i18n-attr="aria-label:mode_l" id="segMode">
+          <label><input type="radio" name="mode" value="time" checked><span data-i18n="m_time">Waktu</span></label>
+          <label><input type="radio" name="mode" value="words"><span data-i18n="m_words">Kata</span></label>
+          <label><input type="radio" name="mode" value="zen"><span data-i18n="m_zen">Zen</span></label>
+        </div>
+        <div class="ui-seg kc-seg" role="radiogroup" id="segAmt" aria-label="Durasi">
+          <label><input type="radio" name="amt" value="15"><span>15</span></label>
+          <label><input type="radio" name="amt" value="30" checked><span>30</span></label>
+          <label><input type="radio" name="amt" value="60"><span>60</span></label>
+          <label><input type="radio" name="amt" value="120"><span>120</span></label>
+        </div>
+        <button class="ui-chip kc-chip" type="button" id="chPunct" aria-pressed="false" data-i18n="punct">Tanda baca</button>
+        <button class="ui-chip kc-chip" type="button" id="chNums" aria-pressed="false" data-i18n="nums">Angka</button>
+        <div class="ui-seg kc-seg" role="radiogroup" aria-label="Bahasa kata" data-i18n-attr="aria-label:lang_l" id="segLang">
+          <label><input type="radio" name="wl" value="id" checked><span data-i18n="lg_id">ID</span></label>
+          <label><input type="radio" name="wl" value="en"><span data-i18n="lg_en">EN</span></label>
+        </div>
+        <button class="ui-chip kc-chip" type="button" id="btnOpts" aria-expanded="false" aria-controls="kcOpts" data-i18n="opts">Opsi</button>
+        <div class="kc-views" role="group" aria-label="Tampilan" data-i18n-attr="aria-label:views_l">
+          <button class="ui-chip kc-chip" type="button" id="tabTest" aria-pressed="true" data-i18n="tab_test">Uji</button>
+          <button class="ui-chip kc-chip" type="button" id="tabStats" aria-pressed="false" data-i18n="tab_stats">Statistik</button>
+        </div>
+      </div>
+
+      <div class="kc-opts kc-fade" id="kcOpts" hidden>
+        <h2 class="vh" data-i18n="opts_h">Opsi tambahan</h2>
+        <div class="kc-opt-grid">
+          <label class="ui-switch"><input type="checkbox" id="oStop"><span><span data-i18n="o_stop">Berhenti di galat</span><small class="kc-sub" data-i18n="o_stop_h"></small></span></label>
+          <label class="ui-switch"><input type="checkbox" id="oBlind"><span><span data-i18n="o_blind">Mode buta</span><small class="kc-sub" data-i18n="o_blind_h"></small></span></label>
+          <label class="ui-switch"><input type="checkbox" id="oNoback"><span><span data-i18n="o_noback">Tanpa mundur</span><small class="kc-sub" data-i18n="o_noback_h"></small></span></label>
+          <label class="ui-switch"><input type="checkbox" id="oSound"><span><span data-i18n="o_sound">Bunyi ketukan</span><small class="kc-sub" data-i18n="o_sound_h"></small></span></label>
+        </div>
+        <div class="kc-sel-grid">
+          <label class="kc-sel"><span data-i18n="o_size">Ukuran huruf</span><select class="field-sm" id="oSize"><option value="1" data-i18n="sz1"></option><option value="2" data-i18n="sz2"></option><option value="3" data-i18n="sz3"></option><option value="4" data-i18n="sz4"></option><option value="5" data-i18n="sz5"></option></select></label>
+          <label class="kc-sel"><span data-i18n="o_align">Rata teks</span><select class="field-sm" id="oAlign"><option value="center" data-i18n="al_center"></option><option value="left" data-i18n="al_left"></option></select></label>
+          <label class="kc-sel"><span data-i18n="o_caret">Kursor</span><select class="field-sm" id="oCaret"><option value="off" data-i18n="ca_off"></option><option value="smooth" data-i18n="ca_smooth"></option><option value="fast" data-i18n="ca_fast"></option></select></label>
+          <label class="kc-sel"><span data-i18n="o_live">Angka hidup</span><select class="field-sm" id="oLive"><option value="none" data-i18n="lv_none"></option><option value="time" data-i18n="lv_time"></option><option value="full" data-i18n="lv_full"></option></select></label>
+        </div>
+      </div>
+
+      <div id="viewTest">
+        <div class="kc-live" id="kcLive" aria-hidden="true"><span id="lvMain"></span><span id="lvWpm"></span><span id="lvAcc"></span></div>
+        <div class="kc-stage" id="kcStage">
+          <div class="kc-words" id="kcWords" aria-hidden="true"><div class="kc-inner" id="kcInner"></div></div>
+          <div class="kc-blur" id="kcBlur"><span id="kcBlurT" data-i18n="blur_prompt">Klik di sini untuk mulai mengetik</span></div>
+          <input class="kc-in" id="kcIn" type="text" role="textbox" inputmode="text" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" enterkeyhint="done" aria-label="Area mengetik" data-i18n-attr="aria-label:in_label" aria-describedby="kcTarget">
+          <p class="vh" id="kcTarget"></p>
+        </div>
+        <div class="kc-act kc-fade">
+          <button class="btn btn-primary" type="button" id="btnRestart"><span data-i18n="restart">Tes baru</span> <span class="kc-hint small" data-i18n="restart_hint">Tab lalu Enter</span></button>
+          <button class="btn" type="button" id="btnPal" data-i18n="pal_open">Perintah</button>
+        </div>
+      </div>
+
+      <div id="viewRes" hidden>
+        <div class="kc-r-top">
+          <div class="kc-rbox" id="rBoxWpm"><span class="kc-rk"><span data-i18n="r_wpm">WPM</span><span class="kc-qw"><button class="kc-q" type="button" aria-expanded="false" aria-controls="tip-wpm" aria-label="?" data-i18n-attr="aria-label:help_btn"><span aria-hidden="true">?</span></button><span class="kc-tip" id="tip-wpm" role="tooltip" hidden data-i18n="tip_wpm"></span></span></span><strong class="kc-rbig" id="rWpm"></strong></div>
+          <div class="kc-rbox" id="rBoxAcc"><span class="kc-rk"><span data-i18n="r_acc">Akurasi</span><span class="kc-qw"><button class="kc-q" type="button" aria-expanded="false" aria-controls="tip-acc" aria-label="?" data-i18n-attr="aria-label:help_btn"><span aria-hidden="true">?</span></button><span class="kc-tip" id="tip-acc" role="tooltip" hidden data-i18n="tip_acc"></span></span></span><strong class="kc-rbig" id="rAcc"></strong></div>
+          <div class="kc-rbox" id="rBoxWords" hidden><span class="kc-rk" data-i18n="z_words">Kata</span><strong class="kc-rbig" id="rZWords"></strong></div>
+          <div class="kc-rbox" id="rBoxChars" hidden><span class="kc-rk" data-i18n="z_chars">Karakter</span><strong class="kc-rbig" id="rZChars"></strong></div>
+          <span class="kc-badge" id="rRec" hidden data-i18n="record">Rekor baru</span>
+        </div>
+        <p class="small kc-znote" id="rZNote" hidden data-i18n="z_note"></p>
+        <figure class="kc-fig" id="rFig">
+          <div id="rChart"></div>
+          <figcaption class="small" id="rAlt"></figcaption>
+          <p class="kc-legend small" aria-hidden="true"><span class="kc-lg kc-lg-wpm" data-i18n="leg_wpm">WPM</span><span class="kc-lg kc-lg-raw" data-i18n="leg_raw">Raw</span><span class="kc-lg kc-lg-err" data-i18n="leg_err">Ada ketikan salah</span></p>
+          <table class="vh"><caption data-i18n="tbl_cap">WPM dan Raw tiap detik</caption><thead><tr><th scope="col" data-i18n="th_s">Detik</th><th scope="col" data-i18n="th_wpm">WPM</th><th scope="col" data-i18n="th_raw">Raw</th><th scope="col" data-i18n="th_err">Salah</th></tr></thead><tbody id="rTbody"></tbody></table>
+        </figure>
+        <dl class="kc-rg" id="rGrid">
+          <div id="rgRaw"><dt><span data-i18n="r_raw">Raw</span><span class="kc-qw"><button class="kc-q" type="button" aria-expanded="false" aria-controls="tip-raw" aria-label="?" data-i18n-attr="aria-label:help_btn"><span aria-hidden="true">?</span></button><span class="kc-tip" id="tip-raw" role="tooltip" hidden data-i18n="tip_raw"></span></span></dt><dd id="rRaw"></dd></div>
+          <div id="rgCons"><dt><span data-i18n="r_cons">Konsistensi</span><span class="kc-qw"><button class="kc-q" type="button" aria-expanded="false" aria-controls="tip-cons" aria-label="?" data-i18n-attr="aria-label:help_btn"><span aria-hidden="true">?</span></button><span class="kc-tip" id="tip-cons" role="tooltip" hidden data-i18n="tip_cons"></span></span></dt><dd id="rCons"></dd></div>
+          <div id="rgChars"><dt><span data-i18n="r_chars">Karakter</span><span class="kc-qw"><button class="kc-q" type="button" aria-expanded="false" aria-controls="tip-chars" aria-label="?" data-i18n-attr="aria-label:help_btn"><span aria-hidden="true">?</span></button><span class="kc-tip" id="tip-chars" role="tooltip" hidden data-i18n="tip_chars"></span></span></dt><dd><span id="rChars"></span><small class="kc-sub" data-i18n="chars_key"></small></dd></div>
+          <div><dt data-i18n="r_mode">Mode</dt><dd id="rMode"></dd></div>
+          <div id="rgLang"><dt data-i18n="r_lang">Bahasa</dt><dd id="rLang"></dd></div>
+          <div><dt data-i18n="r_time">Waktu</dt><dd id="rTime"></dd></div>
+        </dl>
+        <div class="kc-ract">
+          <button class="btn btn-primary" type="button" id="btnNext" data-i18n="next">Tes baru</button>
+          <button class="btn" type="button" id="btnAgain" data-i18n="again">Ulangi tes yang sama</button>
+          <button class="btn" type="button" id="btnCopy" data-i18n="copy">Salin hasil</button>
+          <button class="btn" type="button" id="btnDl" data-i18n="dl">Unduh gambar hasil</button>
+        </div>
+      </div>
+
+      <div id="viewStats" hidden>
+        <div class="kc-tiles">
+          <div class="kc-tile"><span class="kc-k" data-i18n="s_tests">Jumlah tes</span><strong id="sTests">0</strong></div>
+          <div class="kc-tile"><span class="kc-k" data-i18n="s_time">Total waktu mengetik</span><strong id="sTime">0</strong></div>
+          <div class="kc-tile"><span class="kc-k" data-i18n="s_avg10">Rata-rata 10</span><strong id="sAvg10">0</strong></div>
+          <div class="kc-tile"><span class="kc-k" data-i18n="s_avg100">Rata-rata 100</span><strong id="sAvg100">0</strong></div>
+        </div>
+        <h2 class="kc-h2" data-i18n="s_chart">WPM tiap tes</h2>
+        <div id="sChart"></div>
+        <p class="small" id="sChartAlt"></p>
+        <p class="ui-empty" id="sNone" data-i18n="s_none" hidden></p>
+        <h2 class="kc-h2" data-i18n="s_rec_h">Rekor pribadi</h2>
+        <div class="kc-tbl-wrap"><table class="kc-tbl" id="sRecTbl"><thead><tr><th scope="col" data-i18n="th_combo">Kombinasi</th><th scope="col" data-i18n="th_rwpm">WPM</th><th scope="col" data-i18n="th_racc">Akurasi</th><th scope="col" data-i18n="th_date">Tanggal</th></tr></thead><tbody id="sRecBody"></tbody></table></div>
+        <p class="small" id="sRecNone" data-i18n="s_rec_none" hidden></p>
+        <div class="kc-ract">
+          <button class="btn" type="button" id="btnExport" data-i18n="s_export">Ekspor JSON</button>
+          <button class="btn" type="button" id="btnImport" data-i18n="s_import">Impor JSON</button>
+          <button class="btn btn-danger" type="button" id="btnClear" data-i18n="s_clear">Hapus semua</button>
+          <input class="vh" type="file" id="fileImport" accept="application/json,.json" tabindex="-1" aria-hidden="true">
+        </div>
+      </div>
+    </section>
+
+    <p class="small kc-hints kc-fade">
+      <span><kbd class="ui-kbd">Tab</kbd> <kbd class="ui-kbd">Enter</kbd> <span data-i18n="h_restart">tes baru</span></span>
+      <span><kbd class="ui-kbd">Esc</kbd> <span data-i18n="h_esc">jeda</span></span>
+      <span><kbd class="ui-kbd">Ctrl</kbd> <kbd class="ui-kbd">Shift</kbd> <kbd class="ui-kbd">P</kbd> <span data-i18n="h_pal">perintah</span></span>
+      <span><kbd class="ui-kbd">Shift</kbd> <kbd class="ui-kbd">Enter</kbd> <span data-i18n="h_zen">selesai (zen)</span></span>
+    </p>
+  </div>
+
+  <dialog class="kc-dlg" id="pal" aria-labelledby="palH">
+    <h2 id="palH" data-i18n="pal_h">Perintah</h2>
+    <input class="field-sm kc-palq" type="search" id="palQ" autocomplete="off" aria-label="Cari perintah" data-i18n-attr="aria-label:pal_q">
+    <div class="kc-pallist" id="palList"></div>
+    <p class="small" id="palNone" hidden data-i18n="pal_none">Tidak ada perintah yang cocok</p>
+    <p class="small" data-i18n="pal_hint">Enter menjalankan, Esc menutup dan melanjutkan.</p>
+  </dialog>
+  <dialog class="kc-dlg" id="dlgClear" aria-labelledby="dlgClearQ">
+    <p id="dlgClearQ" data-i18n="clear_q">Hapus semua?</p>
+    <div class="kc-ract"><button class="btn" type="button" id="clearNo" data-i18n="cancel">Batal</button><button class="btn btn-danger" type="button" id="clearYes" data-i18n="clear_ok">Hapus</button></div>
+  </dialog>
+  <p class="vh" id="kcAnn" role="status" aria-live="polite"></p>
+</main>
+
+<script src="kata-id.js"></script>
+<script src="kata-en.js"></script>
+<script src="ketik.js"></script>
+<script src="grafik.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
