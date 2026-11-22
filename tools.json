@@ -512,6 +512,21 @@
       "short_en": "Memory",
       "description_en": "Find matching picture card pairs on a 4×4, 4×5, or 6×6 board, with move and time counters and a record for each board",
       "tags_en": ["memory", "cards", "pairs", "game", "matching", "puzzle"]
+    },
+    {
+      "id": "ketik-cepat",
+      "name": "Ketik cepat",
+      "short": "Ketik",
+      "description": "Uji kecepatan mengetik dengan mode waktu, kata, dan zen: WPM, akurasi, konsistensi, grafik per detik, rekor, dan riwayat tanpa akun",
+      "group": "game",
+      "path": "ketik-cepat/",
+      "icon": "kb",
+      "tags": ["ketik", "mengetik", "typing", "wpm", "kecepatan", "latihan", "keyboard", "akurasi", "zen", "game"],
+      "favorite": false,
+      "name_en": "Typing test",
+      "short_en": "Typing",
+      "description_en": "Test your typing speed in time, words, or zen mode: WPM, accuracy, consistency, per-second chart, records, and history with no account",
+      "tags_en": ["typing", "typing test", "wpm", "speed", "practice", "keyboard", "accuracy", "zen", "game", "monkeytype"]
     }
   ]
 }
