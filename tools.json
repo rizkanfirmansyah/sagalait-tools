@@ -542,6 +542,21 @@
       "short_en": "Diff",
       "description_en": "Compare two texts by line or by word: added and removed lines, changed words, side-by-side or single-column view, copy as a diff",
       "tags_en": ["diff", "compare", "text", "difference", "lines", "words", "patch", "side by side", "unified"]
+    },
+    {
+      "id": "kontras",
+      "name": "Cek kontras warna",
+      "short": "Kontras",
+      "description": "Hitung rasio kontras WCAG 2.x warna teks dan latar (hex, rgb, hsl), lihat lulus AA dan AAA, dan dapatkan saran warna terdekat yang lulus",
+      "group": "dev",
+      "path": "kontras/",
+      "icon": "Aa",
+      "tags": ["kontras", "warna", "wcag", "aksesibilitas", "aa", "aaa", "rasio", "hex", "rgb", "hsl", "contrast", "a11y"],
+      "favorite": false,
+      "name_en": "Color contrast checker",
+      "short_en": "Contrast",
+      "description_en": "Compute the WCAG 2.x contrast ratio of text and background colors (hex, rgb, hsl), see AA and AAA results, and get the nearest passing colors",
+      "tags_en": ["contrast", "color", "wcag", "accessibility", "a11y", "aa", "aaa", "ratio", "hex", "rgb", "hsl"]
     }
   ]
 }
