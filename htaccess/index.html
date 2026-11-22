@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="id" data-theme="light" data-lang-src="lang.json">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="referrer" content="no-referrer">
+<title data-i18n="title">Generator .htaccess dan php.ini · Tools SagalaIT</title>
+<link rel="icon" href="data:,">
+<script src="../assets/theme.js"></script>
+<script src="../assets/i18n.js"></script>
+<link rel="stylesheet" href="../assets/app.css">
+<link rel="stylesheet" href="app.css">
+</head>
+<body>
+
+<header class="wrap top">
+  <a class="logo" href="../" aria-label="Tools SagalaIT, ke beranda" data-i18n-attr="aria-label:common.home">S</a>
+  <nav class="crumbs" aria-label="Lokasi" data-i18n-attr="aria-label:common.nav"><a href="../" data-i18n="common.tools">Tools</a><span aria-hidden="true">/</span><a class="crumb-g" href="../#grup-server" data-i18n="group.server">Server dan jaringan</a><span aria-hidden="true">/</span><span class="crumb-now" aria-current="page" data-i18n="crumb">.htaccess dan php.ini</span></nav>
+  <span class="top-end">
+    <button class="icon-btn" type="button" data-theme-toggle aria-label="Ganti tema terang atau gelap" data-i18n-attr="aria-label:common.theme">
+      <svg width="20" height="20" viewBox="-11 -11 22 22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle r="9"/><path d="M0 -9 A9 9 0 0 1 0 9 Z" fill="currentColor"/></svg>
+    </button>
+  </span>
+</header>
+
+<main class="wrap">
+  <div class="app-head">
+    <div>
+      <h1 data-i18n="h1">Generator .htaccess dan php.ini</h1>
+      <p class="lead" data-i18n="lead">Pilih aturan yang Anda butuhkan, lalu salin atau unduh hasilnya: paksa HTTPS, seragamkan www, front controller, cache, gzip, blokir file berbahaya, dan header keamanan, plus php.ini untuk produksi atau pengembangan. Tidak ada yang dikirim ke server.</p>
+    </div>
+  </div>
+
+  <div class="hx-grid">
+    <section class="panel hx-in">
+      <div class="hx-tabs" role="group" aria-label="Jenis berkas" data-i18n-attr="aria-label:tabs_l">
+        <button class="ui-chip hx-tab" type="button" id="tabHt" aria-pressed="true" data-i18n="tab_ht">.htaccess</button>
+        <button class="ui-chip hx-tab" type="button" id="tabPhp" aria-pressed="false" data-i18n="tab_php">php.ini</button>
+      </div>
+
+      <div id="formHt">
+        <div class="hx-presets"><span class="hx-lbl" data-i18n="preset_h">Paket cepat</span>
+          <button class="btn btn-sm" type="button" data-preset="app" data-i18n="pre_app">Aplikasi PHP</button>
+          <button class="btn btn-sm" type="button" data-preset="static" data-i18n="pre_static">Situs statis</button>
+          <button class="btn btn-sm" type="button" data-preset="strict" data-i18n="pre_strict">Keamanan ketat</button>
+        </div>
+        <fieldset class="hx-set"><legend data-i18n="g_addr">Alamat dan pengalihan</legend>
+          <label class="ui-switch"><input type="checkbox" id="oHttps"><span><span data-i18n="o_https"></span><small class="hx-sub" data-i18n="o_https_h"></small></span></label>
+          <label class="ui-switch"><input type="checkbox" id="oProxy"><span><span data-i18n="o_proxy"></span><small class="hx-sub" data-i18n="o_proxy_h"></small></span></label>
+          <div class="hx-f"><span class="hx-lbl" id="lbl_www" data-i18n="o_www"></span><div class="ui-seg hx-seg" role="radiogroup" aria-labelledby="lbl_www"><label><input type="radio" name="www" value="none"><span data-i18n="www_none"></span></label><label><input type="radio" name="www" value="remove"><span data-i18n="www_remove"></span></label><label><input type="radio" name="www" value="add"><span data-i18n="www_add"></span></label></div></div>
+        </fieldset>
+        <fieldset class="hx-set"><legend data-i18n="g_route">Routing</legend>
+          <label class="ui-switch"><input type="checkbox" id="oFront"><span><span data-i18n="o_front"></span><small class="hx-sub" data-i18n="o_front_h"></small></span></label>
+          <div class="hx-two">
+            <div class="hx-f"><label class="hx-lbl" for="oEntry" data-i18n="o_entry">File masuk</label><input class="field-sm hx-txt" id="oEntry" type="text" spellcheck="false" autocomplete="off" autocapitalize="off"></div>
+            <div class="hx-f"><label class="hx-lbl" for="oBase" data-i18n="o_base">RewriteBase</label><input class="field-sm hx-txt" id="oBase" type="text" spellcheck="false" autocomplete="off" autocapitalize="off" placeholder="/sub/" data-i18n-attr="placeholder:ph_base"></div>
+          </div>
+          <label class="ui-switch"><input type="checkbox" id="oAuth"><span><span data-i18n="o_auth"></span><small class="hx-sub" data-i18n="o_auth_h"></small></span></label>
+        </fieldset>
+        <fieldset class="hx-set"><legend data-i18n="g_speed">Kecepatan</legend>
+          <label class="ui-switch"><input type="checkbox" id="oGzip"><span><span data-i18n="o_gzip"></span></span></label>
+          <div class="hx-f"><span class="hx-lbl" id="lbl_cache" data-i18n="o_cache"></span><div class="ui-seg hx-seg" role="radiogroup" aria-labelledby="lbl_cache"><label><input type="radio" name="cache" value="off"><span data-i18n="c_off"></span></label><label><input type="radio" name="cache" value="week"><span data-i18n="c_week"></span></label><label><input type="radio" name="cache" value="month"><span data-i18n="c_month"></span></label><label><input type="radio" name="cache" value="year"><span data-i18n="c_year"></span></label></div></div>
+        </fieldset>
+        <fieldset class="hx-set"><legend data-i18n="g_sec">Keamanan</legend>
+          <label class="ui-switch"><input type="checkbox" id="oDot"><span><span data-i18n="o_dot"></span></span></label>
+          <label class="ui-switch"><input type="checkbox" id="oSens"><span><span data-i18n="o_sens"></span></span></label>
+          <label class="ui-switch"><input type="checkbox" id="oIdx"><span><span data-i18n="o_idx"></span></span></label>
+          <label class="ui-switch"><input type="checkbox" id="oHdr"><span><span data-i18n="o_hdr"></span></span></label>
+          <div class="hx-f"><span class="hx-lbl" id="lbl_hsts" data-i18n="o_hsts"></span><div class="ui-seg hx-seg" role="radiogroup" aria-labelledby="lbl_hsts"><label><input type="radio" name="hsts" value="off"><span data-i18n="h_off"></span></label><label><input type="radio" name="hsts" value="week"><span data-i18n="h_week"></span></label><label><input type="radio" name="hsts" value="half"><span data-i18n="h_half"></span></label><label><input type="radio" name="hsts" value="year"><span data-i18n="h_year"></span></label></div></div>
+          <label class="ui-switch"><input type="checkbox" id="oHstsSub"><span><span data-i18n="o_hsts_sub"></span></span></label>
+          <label class="ui-switch"><input type="checkbox" id="oCsp"><span><span data-i18n="o_csp"></span></span></label>
+        </fieldset>
+      </div>
+
+      <div id="formPhp" hidden>
+        <div class="hx-f"><span class="hx-lbl" id="lbl_profile" data-i18n="o_profile"></span><div class="ui-seg hx-seg" role="radiogroup" aria-labelledby="lbl_profile"><label><input type="radio" name="profile" value="production"><span data-i18n="pf_prod"></span></label><label><input type="radio" name="profile" value="development"><span data-i18n="pf_dev"></span></label></div></div>
+        <div class="hx-two">
+          <div class="hx-f"><label class="hx-lbl" for="pMem" data-i18n="o_mem">memory_limit</label><select class="field-sm hx-txt" id="pMem"><option value="128M" data-i18n="m128"></option><option value="256M" data-i18n="m256"></option><option value="512M" data-i18n="m512"></option><option value="1G" data-i18n="m1g"></option></select></div>
+          <div class="hx-f"><label class="hx-lbl" for="pTz" data-i18n="o_tz">Zona waktu</label><select class="field-sm hx-txt" id="pTz"></select></div>
+          <div class="hx-f"><label class="hx-lbl" for="pUpload" data-i18n="o_upload">upload_max_filesize</label><input class="field-sm hx-txt" id="pUpload" type="text" spellcheck="false" autocomplete="off"></div>
+          <div class="hx-f"><label class="hx-lbl" for="pPost" data-i18n="o_post">post_max_size</label><input class="field-sm hx-txt" id="pPost" type="text" spellcheck="false" autocomplete="off"></div>
+          <div class="hx-f"><label class="hx-lbl" for="pTime" data-i18n="o_time">max_execution_time</label><input class="field-sm hx-txt" id="pTime" type="number" min="0" max="3600" step="1" inputmode="numeric"></div>
+          <div class="hx-f"><label class="hx-lbl" for="pLog" data-i18n="o_log">Berkas log</label><input class="field-sm hx-txt" id="pLog" type="text" spellcheck="false" autocomplete="off" autocapitalize="off" placeholder="/var/log/php/error.log" data-i18n-attr="placeholder:ph_log"></div>
+        </div>
+        <label class="ui-switch"><input type="checkbox" id="pOpc"><span><span data-i18n="o_opc"></span></span></label>
+        <label class="ui-switch"><input type="checkbox" id="pDis"><span><span data-i18n="o_dis"></span></span></label>
+        <label class="ui-switch"><input type="checkbox" id="pFopen"><span><span data-i18n="o_fopen"></span></span></label>
+        <label class="ui-switch"><input type="checkbox" id="pSsec"><span><span data-i18n="o_ssec"></span></span></label>
+      </div>
+    </section>
+
+    <section class="panel hx-out">
+      <div class="panel-head"><h2><span data-i18n="out_h">Hasil</span> <code class="hx-fn" id="fileName">.htaccess</code></h2>
+        <div class="hx-btns"><button class="btn btn-sm btn-primary" type="button" id="btnCopy" data-i18n="btn_copy">Salin</button><button class="btn btn-sm" type="button" id="btnDl" data-i18n="btn_dl">Unduh</button></div>
+      </div>
+      <div class="banner hx-err" id="errBox" role="alert" hidden><div><strong data-i18n="e_h">Perlu diperbaiki</strong><ul id="errList"></ul></div></div>
+      <pre class="src hx-pre" id="outPre" tabindex="0"></pre>
+      <p class="small hx-meta" id="outMeta"></p>
+      <p class="small" id="howTo"></p>
+      <div class="hx-warn" id="warnBox"><h3 class="hx-h3" data-i18n="w_h">Perhatian</h3><ul id="warnList"></ul></div>
+    </section>
+  </div>
+</main>
+
+<script src="gen.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
