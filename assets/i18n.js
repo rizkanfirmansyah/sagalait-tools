@@ -94,6 +94,20 @@
     apply(group);
   }
 
+  /* Deskripsi panjang di bawah judul disembunyikan; tombol (i) membuka dan menutupnya. */
+  function mountLead() {
+    var lead = document.querySelector('.app-head .lead'), h1 = document.querySelector('.app-head h1');
+    if (!lead || !h1 || h1.parentNode.classList.contains('h1row')) return;
+    var row = document.createElement('div'), b = document.createElement('button');
+    row.className = 'h1row'; h1.parentNode.insertBefore(row, h1); row.appendChild(h1);
+    if (!lead.id) lead.id = 'lead-text';
+    b.type = 'button'; b.className = 'lead-btn'; b.textContent = 'i'; b.setAttribute('aria-expanded', 'false'); b.setAttribute('aria-controls', lead.id);
+    b.setAttribute('data-i18n-attr', 'aria-label:common.about,title:common.about');
+    lead.hidden = true;
+    b.addEventListener('click', function () { lead.hidden = !lead.hidden; b.setAttribute('aria-expanded', String(!lead.hidden)); });
+    row.appendChild(b); apply(row);
+  }
+
   function setLang(l, silent) {
     if (LANGS.indexOf(l) < 0 || l === lang) return;
     lang = l; if (!silent) write(l);
@@ -117,7 +131,7 @@
   function finish() {
     if (ready) return;
     ready = true; root.classList.remove('i18n-wait');
-    var go = function () { mountSwitch(); apply(document); waiters.splice(0).forEach(function (f) { f(); }); };
+    var go = function () { mountSwitch(); mountLead(); apply(document); waiters.splice(0).forEach(function (f) { f(); }); };
     if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', go); else go();
   }
   Promise.all(jobs).then(function () { if (ready) apply(document); else finish(); });
