@@ -34,39 +34,39 @@
 <main class="wrap">
   <div class="app-head">
     <div>
-      <h1>Hitung Byte</h1>
-      <p class="lead">Panjang teks dalam byte UTF-8 (yang dihitung strlen() PHP), karakter, dan baris baru. Berguna untuk mencocokkan angka <code>s:N</code> pada string serialize.</p>
+      <h1 data-i18n="h1">Hitung Byte</h1>
+      <p class="lead" id="lead"></p>
     </div>
     <div class="actions">
-      <label class="btn">Pilih file…<input class="vh" type="file" id="file"></label>
-      <button class="btn" id="btnClear" type="button">Bersihkan</button>
+      <label class="btn"><span data-i18n="file">Pilih file…</span><input class="vh" type="file" id="file"></label>
+      <button class="btn" id="btnClear" type="button" data-i18n="clear">Bersihkan</button>
     </div>
   </div>
 
   <div class="app-grid">
     <section class="panel">
-      <div class="panel-head"><h2>Teks</h2><span class="small muted" id="inNote"></span></div>
-      <textarea id="input" class="field tall" spellcheck="false" placeholder="Ketik atau tempel teks di sini"></textarea>
-      <p class="small muted" style="margin-top:10px">Browser mengubah <code>\r\n</code> menjadi <code>\n</code> saat paste. Pakai <b>Pilih file</b> kalau karakter <code>\r</code> harus ikut terhitung.</p>
+      <div class="panel-head"><h2 data-i18n="h_text">Teks</h2><span class="small muted" id="inNote"></span></div>
+      <textarea id="input" class="field tall" spellcheck="false" placeholder="Ketik atau tempel teks di sini" data-i18n-attr="placeholder:ph"></textarea>
+      <p class="small muted" style="margin-top:10px" id="paste"></p>
     </section>
 
     <div class="stack">
       <section class="panel">
         <div class="readout">
           <div class="big" id="bigBytes">0</div>
-          <div class="label">byte UTF-8 (strlen PHP)</div>
+          <div class="label" data-i18n="big_label">byte UTF-8 (strlen PHP)</div>
         </div>
         <div id="stats"></div>
       </section>
 
       <section class="panel" id="serPanel" hidden>
-        <div class="panel-head"><h2>Awalan serialize</h2></div>
+        <div class="panel-head"><h2 data-i18n="h_ser">Awalan serialize</h2></div>
         <div id="serRows"></div>
         <p class="small muted" style="margin-top:10px" id="serNote"></p>
       </section>
 
       <section class="panel" id="mbPanel" hidden>
-        <div class="panel-head"><h2>Karakter multibyte</h2><span class="small muted" id="mbNote"></span></div>
+        <div class="panel-head"><h2 data-i18n="h_mb">Karakter multibyte</h2><span class="small muted" id="mbNote"></span></div>
         <ul class="mb-list" id="mbList"></ul>
       </section>
     </div>
@@ -78,7 +78,8 @@
   'use strict';
   var $ = function (id) { return document.getElementById(id); };
   var esc = function (t) { return String(t).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); };
-  var fmt = function (n) { return n.toLocaleString('id-ID'); };
+  var I = window.SagalaI18n, t = function (k, p) { return I.t(k, p); };
+  var fmt = function (n) { return n.toLocaleString(I.locale); };
   var enc = new TextEncoder();
   var loadedRaw = null, loadedNorm = null;
 
@@ -113,43 +114,44 @@
   function hex(c) { return 'U+' + c.codePointAt(0).toString(16).toUpperCase().padStart(4, '0'); }
 
   function render() {
+    $('lead').innerHTML = t('lead_html'); $('paste').innerHTML = t('paste_html'); /* teks tetap dari kamus, bukan masukan pengguna */
     var ta = $('input').value;
     var text = (loadedRaw !== null && ta === loadedNorm) ? loadedRaw : ta;
     var a = analyze(text);
-    $('inNote').textContent = text ? fmt(a.bytes) + ' byte' : '';
+    $('inNote').textContent = text ? fmt(a.bytes) + ' ' + t('unit_byte') : '';
     $('bigBytes').textContent = fmt(a.bytes);
 
     var nl = a.lf + a.crlf + a.cr;
     var html = '';
-    html += row('Karakter (code point)', fmt(a.codepoints));
-    html += row('Unit UTF-16 (<span class="code">.length</span> di JavaScript)', fmt(a.utf16));
-    html += row('Baris', fmt(a.lines));
-    html += row('Baris baru', nl ? fmt(nl) + ' (LF ' + a.lf + ', CRLF ' + a.crlf + (a.cr ? ', CR ' + a.cr : '') + ')' : '0');
+    html += row(t('r_cp'), fmt(a.codepoints));
+    html += row(t('r_u16'), fmt(a.utf16));
+    html += row(t('r_lines'), fmt(a.lines));
+    html += row(t('r_nl'), nl ? fmt(nl) + ' (LF ' + a.lf + ', CRLF ' + a.crlf + (a.cr ? ', CR ' + a.cr : '') + ')' : '0');
     if (nl) {
-      html += row('Byte jika semua baris baru <span class="code">\\n</span>', fmt(a.asLF));
-      html += row('Byte jika semua baris baru <span class="code">\\r\\n</span>', fmt(a.asCRLF));
+      html += row(t('r_aslf', { c: '<span class="code">\\n</span>' }), fmt(a.asLF));
+      html += row(t('r_ascrlf', { c: '<span class="code">\\r\\n</span>' }), fmt(a.asCRLF));
     }
     $('stats').innerHTML = html;
 
     // awalan s:N untuk string serialize
     var ser = '';
     if (text) {
-      ser += row('Apa adanya', '<span class="code">s:' + a.bytes + ':"</span>', true);
-      if (nl && a.asLF !== a.bytes) ser += row('Baris baru \\n', '<span class="code">s:' + a.asLF + ':"</span>', true);
-      if (nl && a.asCRLF !== a.bytes) ser += row('Baris baru \\r\\n', '<span class="code">s:' + a.asCRLF + ':"</span>', true);
+      ser += row(t('s_asis'), '<span class="code">s:' + a.bytes + ':"</span>', true);
+      if (nl && a.asLF !== a.bytes) ser += row(t('s_nl', { c: '\\n' }), '<span class="code">s:' + a.asLF + ':"</span>', true);
+      if (nl && a.asCRLF !== a.bytes) ser += row(t('s_nl', { c: '\\r\\n' }), '<span class="code">s:' + a.asCRLF + ':"</span>', true);
     }
     $('serRows').innerHTML = ser;
     $('serNote').innerHTML = nl && a.asLF !== a.asCRLF
-      ? 'Form HTML mengirim baris baru sebagai <code>\\r\\n</code>. Kalau angka <code>s:N</code> di datamu tidak cocok, bandingkan dengan dua angka di atas.' : '';
+      ? t('ser_note_html') : '';
     $('serPanel').hidden = !text;
 
     // karakter multibyte
     var keys = Object.keys(a.multi);
     $('mbPanel').hidden = !keys.length;
-    $('mbNote').textContent = keys.length ? fmt(keys.length) + ' jenis' : '';
+    $('mbNote').textContent = keys.length ? t('mb_kinds', { n: fmt(keys.length) }) : '';
     $('mbList').innerHTML = keys.slice(0, 30).map(function (c) {
-      return '<li>' + esc(c) + '<span>' + hex(c) + ', ' + a.multi[c] + ' byte</span></li>';
-    }).join('') + (keys.length > 30 ? '<li>…<span>dan ' + (keys.length - 30) + ' lainnya</span></li>' : '');
+      return '<li>' + esc(c) + '<span>' + hex(c) + ', ' + a.multi[c] + ' ' + t('unit_byte') + '</span></li>';
+    }).join('') + (keys.length > 30 ? '<li>…<span>' + t('mb_more', { n: keys.length - 30 }) + '</span></li>' : '');
   }
 
   $('input').addEventListener('input', render);
@@ -163,7 +165,8 @@
       render();
     });
   };
-  render();
+  I.onReady(render);
+  document.addEventListener('sagalait:lang', render);
 })();
 </script>
 </body>
